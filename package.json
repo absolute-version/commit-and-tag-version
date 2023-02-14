@@ -65,6 +65,6 @@
     "nyc": "^15.1.0",
     "shelljs": "^0.8.4",
     "std-mocks": "^1.0.1",
-    "strip-ansi": "^6.0.0"
+    "strip-ansi": "^7.0.0"
   }
 }
