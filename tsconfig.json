@@ -1,6 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "strict": true,
     // TODO: Remove this once all of the code is converted to TypeScript
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -15,10 +16,13 @@
     "lib": ["esnext"],
     "types": ["node"],
     "paths": {
-      "@lib/*": ["lib/*"],
-      "@test/*": ["test/*"]
+      "@/*": ["src/*"],
+      "@bin/*": ["src/bin/*"],
+      "@lib/*": ["src/lib/*"],
+      "@test/*": ["test/*"],
+      "@mocks/*": ["test/mocks/*"]
     }
   },
-  "include": ["lib", "test", "commitlint.config.cts"],
+  "include": ["src", "test", "commitlint.config.cts", "vitest.config.ts"],
   "exclude": ["node_modules"]
 }
