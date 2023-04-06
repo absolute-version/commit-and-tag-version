@@ -9,7 +9,9 @@
     "test": "nyc mocha --timeout=30000",
     "test:unit": "mocha --exclude test/git.spec.js",
     "coverage": "nyc report --reporter=lcov",
-    "release": "bin/cli.js"
+    "release": "bin/cli.js",
+    "prepare": "husky install",
+    "commit": "cz"
   },
   "nyc": {
     "exclude": [
@@ -56,11 +58,17 @@
     "yargs": "^17.7.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.5.1",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@commitlint/cz-commitlint": "^17.5.0",
+    "@commitlint/format": "^17.4.4",
+    "@commitlint/types": "^17.4.4",
     "@types/node": "^18.15.11",
     "@types/shelljs": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "chai": "^4.3.7",
+    "commitizen": "^4.3.0",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard": "^17.0.0",
@@ -69,6 +77,7 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "mock-fs": "^5.2.0",
     "mockery": "^2.1.0",
@@ -80,6 +89,11 @@
     "strip-ansi": "^6.0.1",
     "typescript": "^5.0.3",
     "unbuild": "^1.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   },
   "volta": {
     "node": "18.15.0",

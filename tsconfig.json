@@ -19,6 +19,6 @@
       "@test/*": ["test/*"]
     }
   },
-  "include": ["lib", "test"],
+  "include": ["lib", "test", "commitlint.config.cts"],
   "exclude": ["node_modules"]
 }
