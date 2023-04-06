@@ -2,8 +2,10 @@ import spec from 'conventional-changelog-config-spec'
 import { getConfiguration } from '@lib/configuration'
 import defaults from '@/defaults'
 import yargs from 'yargs'
+import type { JSONSchema7Definition } from 'json-schema'
+import type { SpecConfig } from '@typings/index'
 
-export default yargs()
+export const cli = yargs()
   .usage('Usage: $0 [options]')
   .option('packageFiles', {
     default: defaults.packageFiles,
@@ -149,12 +151,27 @@ export default yargs()
   .config(getConfiguration())
   .wrap(97)
 
-Object.keys(spec.properties).forEach((propertyKey) => {
-  const property = spec.properties[propertyKey]
-  yargs.option(propertyKey, {
-    type: property.type,
-    describe: property.description,
-    default: defaults[propertyKey] ? defaults[propertyKey] : property.default,
-    group: 'Preset Configuration:'
+// TODO: investigate if this is related to the issue #61 and #31
+if (spec.properties !== undefined) {
+  const properties = spec.properties
+  Object.keys(properties).forEach((propertyKey) => {
+    const property = properties[propertyKey] satisfies JSONSchema7Definition
+    if (
+      typeof property === 'object' &&
+      property.type !== undefined &&
+      property.description !== undefined
+    ) {
+      // Cast propertyKey to be a valid key of spec
+      const key = propertyKey as keyof SpecConfig
+      const { type, description, default: propertyDefault } = property
+      cli.option(key, {
+        type: type as 'boolean' | 'string' | 'number' | 'array',
+        describe: description,
+        default: defaults[key] !== undefined ? defaults[key] : propertyDefault,
+        group: 'Preset Configuration:'
+      })
+    }
   })
-})
+}
+
+export default cli

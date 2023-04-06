@@ -66,6 +66,7 @@
     "@commitlint/types": "^17.4.4",
     "@types/conventional-changelog-config-spec": "^2.1.2",
     "@types/git-semver-tags": "^4.1.1",
+    "@types/json-schema": "^7.0.11",
     "@types/node": "^18.15.11",
     "@types/semver": "^7.3.13",
     "@types/shelljs": "^0.8.11",

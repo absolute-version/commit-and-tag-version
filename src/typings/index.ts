@@ -1,4 +1,5 @@
 import type { Config as SpecConfig } from 'conventional-changelog-config-spec'
+export type { Config as SpecConfig } from 'conventional-changelog-config-spec'
 
 export interface Options {
   /**
