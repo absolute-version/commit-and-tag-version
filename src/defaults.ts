@@ -1,6 +1,22 @@
 import spec from 'conventional-changelog-config-spec'
+import { createRequire } from 'node:module'
+import type { Config } from '@typings/index'
 
-const defaults = {
+/**
+ *
+ * @param preset the name of the preset to resolve
+ * @returns
+ */
+const presetResolver = async (preset: string): Promise<string> => {
+  const resolve =
+    import.meta.resolve !== undefined
+      ? import.meta.resolve
+      : createRequire(import.meta.url).resolve
+
+  return await resolve(preset)
+}
+
+const defaults: Config = {
   infile: 'CHANGELOG.md',
   firstRelease: false,
   sign: false,
@@ -14,17 +30,15 @@ const defaults = {
   dryRun: false,
   tagForce: false,
   gitTagFallback: true,
-  preset: require.resolve('conventional-changelog-conventionalcommits'),
+  preset: presetResolver('conventional-changelog-conventionalcommits'),
   npmPublishHint: undefined
-}
+} satisfies Config
 
 /**
  * Merge in defaults provided by the spec
+ *  with the defaults provided by this package.
  */
-Object.keys(spec.properties).forEach((propertyKey) => {
-  const property = spec.properties[propertyKey]
-  defaults[propertyKey] = property.default
-})
+Object.assign(defaults, spec)
 
 /**
  * Sets the default for `header` (provided by the spec) for backwards

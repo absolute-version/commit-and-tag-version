@@ -2,13 +2,12 @@
   "$schema": "http://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "strict": true,
-    // TODO: Remove this once all of the code is converted to TypeScript
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "noEmit": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
+    "resolveJsonModule": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "esnext",
@@ -17,6 +16,7 @@
     "types": ["node"],
     "paths": {
       "@/*": ["src/*"],
+      "@typings/*": ["src/typings/*"],
       "@bin/*": ["src/bin/*"],
       "@lib/*": ["src/lib/*"],
       "@test/*": ["test/*"],

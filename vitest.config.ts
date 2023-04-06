@@ -9,6 +9,7 @@ export default defineConfig({
     // Alias transformations to match the ones on tsconfig.json paths
     alias: {
       '@': resolve(dir, 'src'),
+      '@typings': resolve(dir, 'src/typings'),
       '@bin': resolve(dir, 'src/bin'),
       '@lib': resolve(dir, 'src/lib'),
       '@test': resolve(dir, 'test'),
