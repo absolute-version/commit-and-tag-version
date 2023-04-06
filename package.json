@@ -45,28 +45,32 @@
     "conventional-changelog-config-spec": "2.1.0",
     "conventional-changelog-conventionalcommits": "5.0.0",
     "conventional-recommended-bump": "6.1.0",
-    "detect-indent": "^6.0.0",
+    "detect-indent": "^6.1.0",
     "detect-newline": "^3.1.0",
     "dotgitignore": "^2.1.0",
-    "figures": "^3.1.0",
+    "figures": "^3.2.0",
     "find-up": "^5.0.0",
-    "git-semver-tags": "^4.0.0",
-    "semver": "^7.1.1",
-    "yargs": "^17.0.0"
+    "git-semver-tags": "^4.1.1",
+    "semver": "^7.3.8",
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^8.16.0",
+    "chai": "^4.3.7",
+    "eslint": "^8.37.0",
     "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "mocha": "^10.0.0",
-    "mock-fs": "^5.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "mocha": "^10.2.0",
+    "mock-fs": "^5.2.0",
     "mockery": "^2.1.0",
     "nyc": "^15.1.0",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "std-mocks": "^1.0.1",
-    "strip-ansi": "^6.0.0"
+    "strip-ansi": "^6.0.1"
+  },
+  "volta": {
+    "node": "18.15.0",
+    "npm": "9.6.4"
   }
 }
