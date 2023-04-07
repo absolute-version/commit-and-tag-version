@@ -1,6 +1,15 @@
 {
-  "extends": "standard",
+  "extends": [
+    "standard",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "settings": {
+    "import/resolver": "typescript"
+  },
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "no-var": "error"
-  }
+  },
+  "root": true
 }
