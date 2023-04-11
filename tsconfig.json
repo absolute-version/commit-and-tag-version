@@ -2,7 +2,9 @@
   "compilerOptions": {
     "noEmit": true,
     "target": "ES2015",
-    "lib": ["esnext"],
+    "lib": [
+      "esnext"
+    ],
     "removeComments": true,
     "useUnknownInCatchVariables": true,
     "allowJs": true,
@@ -22,7 +24,7 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
@@ -32,8 +34,17 @@
     "noPropertyAccessFromIndexSignature": true,
     "baseUrl": ".",
     "outDir": "./dist",
-    "types": ["node", "mocha"]
+    "types": [
+      "node",
+      "mocha"
+    ]
   },
-  "include": ["**/*.js", "**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "**/*.js",
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

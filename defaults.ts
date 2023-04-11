@@ -1,7 +1,8 @@
-import spec from "conventional-changelog-config-spec/versions/2.1.0/schema.json";
 import { PrettyPrint } from "./type-helpers";
+import { Config } from './lib/opts/types';
+import spec from './lib/opts/spec';
 
-const defaults = {
+const defaults: Config = {
   infile: "CHANGELOG.md",
   firstRelease: false,
   sign: false,
@@ -16,7 +17,7 @@ const defaults = {
   tagForce: false,
   gitTagFallback: true,
   preset: require.resolve("conventional-changelog-conventionalcommits"),
-  npmPublishHint: undefined,
+  // npmPublishHint: undefined,
   /**
    * Sets the default for `header` (provided by the spec) for backwards
    * compatibility. This should be removed in the next major version.
@@ -31,22 +32,22 @@ const defaults = {
     "package-lock.json",
     "npm-shrinkwrap.json",
   ],
-} as const;
+  types: spec.types.default,
+  preMajor: spec.preMajor.default,
+  commitUrlFormat: spec.commitUrlFormat.default,
+  compareUrlFormat: spec.compareUrlFormat.default,
+  issueUrlFormat: spec.issueUrlFormat.default,
+  userUrlFormat: spec.userUrlFormat.default,
+  releaseCommitMessageFormat: spec.releaseCommitMessageFormat.default,
+  issuePrefixes: spec.issuePrefixes.default,
+  verbose: false,
+};
 
-type Defaults = PrettyPrint<
-  typeof defaults &
-    Readonly<{
-      [key in keyof typeof spec.properties]: typeof spec.properties[key]["default"];
-    }>
->;
+// type Defaults = PrettyPrint<
+//   typeof defaults &
+//     Readonly<{
+//       [key in keyof typeof specSchema.properties]: typeof specSchema.properties[key]["default"];
+//     }>
+// >;
 
-/**
- * Merge in defaults provided by the spec
- */
-Object.keys(spec.properties).forEach((propertyKey) => {
-  const property = spec.properties[propertyKey as keyof typeof spec.properties];
-  // @ts-expect-error - We used a const assertion to infer literal types for intellisense, so TS thinks defaults is readonly.
-  defaults[propertyKey] = property.default;
-});
-
-export default defaults as Defaults;
+export default defaults;

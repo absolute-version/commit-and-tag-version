@@ -4,13 +4,13 @@
  * modified to support only detecting lock file and not detecting global package manager
  */
 
-const { promises: fs } = require('fs')
-const { resolve } = require('path')
+import { promises as fs } from 'fs';
+import { resolve } from 'path';
 
 /**
  * Check if a path exists
  */
-async function pathExists (p) {
+async function pathExists (p: string) {
   try {
     await fs.access(p)
     return true
@@ -39,7 +39,7 @@ function getTypeofLockFile (cwd = '.') {
   })
 }
 
-const detectPMByLockFile = async (cwd) => {
+const detectPMByLockFile = async (cwd: string) => {
   const type = await getTypeofLockFile(cwd)
   if (type) {
     return type
@@ -48,6 +48,4 @@ const detectPMByLockFile = async (cwd) => {
   return 'npm'
 }
 
-module.exports = {
-  detectPMByLockFile
-}
+export default detectPMByLockFile;
