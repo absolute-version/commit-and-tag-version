@@ -1,8 +1,5 @@
 /* global describe it */
-
-'use strict'
-
-const stringifyPackage = require('../lib/stringify-package')
+import stringifyPackage from '../lib/stringify-package'
 
 require('chai').should()
 

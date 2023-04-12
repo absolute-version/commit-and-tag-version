@@ -3,7 +3,7 @@ import defaults from '../../defaults';
 import jsonUpdater from './types/json';
 import plainTextUpdater from './types/plain-text';
 import gradleUpdater from './types/gradle';
-import { BumpFile } from 'lib/opts/types';
+import { BumpFile } from '../opts/types';
 
 interface Updater {
   readVersion(contents: string): string;
@@ -56,13 +56,13 @@ function getUpdaterTypeFromFilename(filename: string) {
   )
 }
 
-function getUpdaterFromFile(updater: string, filename: string): VersionUpdater {
-  const type = getUpdaterTypeFromFilename(updater);
+function getUpdaterFromFilename(filename: string): VersionUpdater {
+  const type = getUpdaterTypeFromFilename(filename);
   return getUpdaterByType(type, filename);
 }
 
-function getCustomUpdaterFromPath(filename: string): VersionUpdater {
-  const updater = require(path.resolve(process.cwd(), filename));
+function getCustomUpdaterFromPath(updaterFilename: string, filename: string): VersionUpdater {
+  const updater = require(path.resolve(process.cwd(), updaterFilename));
   /**
    * TODO: This doesn't seem right. If just a string is provided, we use
    * that as the loader, but don't know what file to read/write to!
@@ -98,11 +98,11 @@ export function resolveUpdaterObjectFromArgument(arg: BumpFile): VersionUpdater 
    */
   try {
     if (typeof arg === 'string') {
-      return getCustomUpdaterFromPath(arg);
+      return getUpdaterFromFilename(arg);
     } else if ('type' in arg) {
       return getUpdaterByType(arg.type, arg.filename);
     } else {
-      return getUpdaterFromFile(arg.filename, arg.updater);
+      return getCustomUpdaterFromPath(arg.updater, arg.filename);
     }
   } catch (err: any) {
     if (err.code !== 'ENOENT') console.warn(`Unable to obtain updater for: ${JSON.stringify(arg)}\n - Error: ${err.message}\n - Skipping...`)

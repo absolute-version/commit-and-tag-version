@@ -1,15 +1,12 @@
 /* global describe it afterEach */
-
-'use strict'
-
-const shell = require('shelljs')
-const fs = require('fs')
-const { resolve } = require('path')
-const { Readable } = require('stream')
-const mockFS = require('mock-fs')
-const mockery = require('mockery')
-const stdMocks = require('std-mocks')
-const stripAnsi = require('strip-ansi')
+import shell from 'shelljs'
+import fs from 'fs'
+import { resolve } from 'path'
+import { Readable } from 'stream'
+import mockFS from 'mock-fs'
+import mockery from 'mockery'
+import stdMocks from 'std-mocks'
+import stripAnsi from 'strip-ansi'
 
 const cli = require('../command')
 const formatCommitMessage = require('../lib/format-commit-message')

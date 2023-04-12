@@ -12,7 +12,7 @@ import yargs from 'yargs/yargs';
 import { Task } from './lib/opts/types';
 import spec from './lib/opts/spec';
 
-const cmdParser = yargs(process.argv.slice(2))
+export const cmdParser = yargs(process.argv.slice(2))
   .scriptName('commit-and-tag-version')
   .usage('Usage: $0 [options]')
   .help('help').alias('help', 'h')
@@ -229,4 +229,5 @@ const cmdParser = yargs(process.argv.slice(2))
 //   });
 // });
 const argv = cmdParser.parseSync();
+
 export default argv;

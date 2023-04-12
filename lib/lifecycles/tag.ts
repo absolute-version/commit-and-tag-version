@@ -5,13 +5,14 @@ import figures from 'figures';
 import formatCommitMessage from '../format-commit-message';
 import runExecFile from '../run-execFile';
 import runLifecycleScript from '../run-lifecycle-script';
-const { detectPMByLockFile } = require('../detect-package-manager')
+import { Config, Hook } from '../opts/types';
+import detectPMByLockFile from '../detect-package-manager'
 
-export default async function tag(newVersion, pkgPrivate, args) {
-  if (args.skip.tag) return
-  await runLifecycleScript(args, 'pretag')
-  await execTag(newVersion, pkgPrivate, args)
-  await runLifecycleScript(args, 'posttag')
+export default async function tag(newVersion: string, pkgPrivate: boolean, config: Config) {
+  if (config.skip.tag) return
+  await runLifecycleScript(config, Hook.pretag)
+  await execTag(newVersion, pkgPrivate, config)
+  await runLifecycleScript(config, Hook.posttag)
 }
 
 async function detectPublishHint () {
@@ -20,31 +21,31 @@ async function detectPublishHint () {
   return `${npmClientName} ${publishCommand}`
 }
 
-async function execTag (newVersion, pkgPrivate, args) {
+async function execTag (newVersion: string, pkgPrivate: boolean, config: Config) {
   const tagOption = []
-  if (args.sign) {
+  if (config.sign) {
     tagOption.push('-s')
   } else {
     tagOption.push('-a')
   }
-  if (args.tagForce) {
+  if (config.tagForce) {
     tagOption.push('-f')
   }
-  checkpoint(args, 'tagging release %s%s', [args.tagPrefix, newVersion])
-  await runExecFile(args, 'git', ['tag', ...tagOption, args.tagPrefix + newVersion, '-m', `${formatCommitMessage(args.releaseCommitMessageFormat, newVersion)}`])
-  const currentBranch = await runExecFile('', 'git', ['rev-parse', '--abbrev-ref', 'HEAD'])
-  let message = 'git push --follow-tags origin ' + currentBranch.trim()
+  checkpoint(config, 'tagging release %s%s', [config.tagPrefix, newVersion])
+  await runExecFile(config, 'git', ['tag', ...tagOption, config.tagPrefix + newVersion, '-m', `${formatCommitMessage(config.releaseCommitMessageFormat, newVersion)}`])
+  const currentBranch = await runExecFile(config, 'git', ['rev-parse', '--abbrev-ref', 'HEAD'])
+  let message = 'git push --follow-tags origin ' + currentBranch?.trim()
   if (pkgPrivate !== true && Bump.getUpdatedConfigs()['package.json']) {
-    const npmPublishHint = args.npmPublishHint || await detectPublishHint()
+    const npmPublishHint = config.npmPublishHint || await detectPublishHint()
     message += ` && ${npmPublishHint}`
-    if (args.prerelease !== undefined) {
-      if (args.prerelease === '') {
+    if (config.prerelease !== undefined) {
+      if (config.prerelease === '') {
         message += ' --tag prerelease'
       } else {
-        message += ' --tag ' + args.prerelease
+        message += ' --tag ' + config.prerelease
       }
     }
   }
 
-  checkpoint(args, 'Run `%s` to publish', [message], chalk.blue(figures.info))
+  checkpoint(config, 'Run `%s` to publish', [message], chalk.blue(figures.info))
 }

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path'
 import findUp from 'find-up'
 import { readFileSync } from 'fs'
@@ -10,32 +11,46 @@ const CONFIGURATION_FILES = [
   '.versionrc.js'
 ] as const;
 
-export async function getConfiguration(): Promise<FileConfig> {
-  const configPath = findUp.sync(CONFIGURATION_FILES)
-  if (!configPath) {
+export async function getConfiguration(cwd?: string): Promise<FileConfig> {
+  const currentDir = cwd || process.cwd();
+  const configFile = getConfigFile(cwd || process.cwd()); // findUp.sync(CONFIGURATION_FILES)
+  if (!configFile) {
     return {}
   }
-  const config = await readConfigFile(configPath);
 
+  const config = await readConfigFile(configFile, currentDir);
+  console.log(currentDir, configFile, typeof config, config);
+  const contents = fs.readFileSync(configFile, 'utf-8');
+  // console.log(contents);
   /**
    * @todo we could eventually have deeper validation of the configuration (using `ajv`) and
    * provide a more helpful error.
    */
   if (typeof config !== 'object') {
-    throw Error(
-      `[commit-and-tag-version] Invalid configuration in ${configPath} provided. Expected an object but found ${typeof config}.`
+    throw new Error(
+      `[commit-and-tag-version] Invalid configuration in ${configFile} provided. Expected an object but found ${typeof config}.`
     )
   }
 
   return config
 }
-async function readConfigFile(configPath: string): Promise<FileConfig> {
-  const ext = path.extname(configPath);
+
+function getConfigFile(cwd: string) {
+  return CONFIGURATION_FILES.find((file) => fs.existsSync(path.join(cwd, file)));
+}
+
+async function readConfigFile(configFile: string, cwd: string): Promise<FileConfig> {
+  const configPath = path.resolve(cwd, configFile);
+  console.log('configPath', configPath)
+
+  const ext = path.extname(configFile);
   if (ext === '.js' || ext === '.cjs') {
     const jsConfiguration = require(configPath);
     if (typeof jsConfiguration === 'function') {
+      console.log(jsConfiguration());
       return jsConfiguration();
     }
+    console.log(jsConfiguration);
     return jsConfiguration;
   }
   return JSON.parse(readFileSync(configPath, 'utf-8'));

@@ -1,12 +1,10 @@
 /* global describe it beforeEach afterEach */
-
-'use strict'
-
-const shell = require('shelljs')
-const fs = require('fs')
-const { Readable } = require('stream')
-const mockery = require('mockery')
-const stdMocks = require('std-mocks')
+import shell from 'shelljs'
+import fs from 'fs'
+import { Readable } from 'stream'
+import mockery from 'mockery'
+import stdMocks from 'std-mocks'
+import { Hook, Release } from 'lib/opts/types'
 
 require('chai').should()
 
@@ -18,12 +16,12 @@ function exec (opt = '') {
   return require('../index')(opt)
 }
 
-function writePackageJson (version, option) {
+function writePackageJson(version: string, option: any) {
   const pkg = Object.assign({}, option, { version })
   fs.writeFileSync('package.json', JSON.stringify(pkg), 'utf-8')
 }
 
-function writeHook (hookName, causeError, script) {
+function writeHook (hookName: Hook, causeError: boolean, script: string) {
   shell.mkdir('-p', 'scripts')
   let content = script || 'console.error("' + hookName + ' ran")'
   content += causeError ? '\nthrow new Error("' + hookName + '-failure")' : ''
@@ -35,6 +33,11 @@ function getPackageVersion () {
   return JSON.parse(fs.readFileSync('package.json', 'utf-8')).version
 }
 
+interface MockArgs {
+  bump: Release | Error;
+  changelog: string | Error | (string | Error)[];
+  tags: string[];
+}
 /**
  * Mock external conventional-changelog modules
  *
@@ -42,13 +45,13 @@ function getPackageVersion () {
  * changelog?: string | Error | Array<string | Error | (opt) => string | null>
  * tags?: string[] | Error
  */
-function mock ({ bump, changelog, tags }) {
+function mock ({ bump, changelog, tags }: MockArgs) {
   if (bump === undefined) throw new Error('bump must be defined for mock()')
   mockery.enable({ warnOnUnregistered: false, useCleanCache: true })
 
-  mockery.registerMock('conventional-recommended-bump', function (opt, cb) {
-    if (typeof bump === 'function') bump(opt, cb)
-    else if (bump instanceof Error) cb(bump)
+  mockery.registerMock('conventional-recommended-bump', function (opt: string, cb: ()) {
+    // if (typeof bump === 'function') bump(opt, cb)
+    if (bump instanceof Error) cb(bump)
     else cb(null, { releaseType: bump })
   })
 
@@ -70,7 +73,7 @@ function mock ({ bump, changelog, tags }) {
       })
   )
 
-  mockery.registerMock('git-semver-tags', function (_, cb) {
+  mockery.registerMock('git-semver-tags', function (_: any, cb: ) {
     if (tags instanceof Error) cb(tags)
     else cb(null, tags || [])
   })

@@ -4,48 +4,40 @@
  * modified to support only detecting lock file and not detecting global package manager
  */
 
-import { promises as fs } from 'fs';
+import { access } from 'fs/promises';
 import { resolve } from 'path';
 
 /**
  * Check if a path exists
  */
-async function pathExists (p: string) {
+async function pathExists(p: string) {
   try {
-    await fs.access(p)
+    await access(p)
     return true
   } catch {
     return false
   }
 }
 
-function getTypeofLockFile (cwd = '.') {
-  return Promise.all([
-    pathExists(resolve(cwd, 'yarn.lock')),
-    pathExists(resolve(cwd, 'package-lock.json')),
-    pathExists(resolve(cwd, 'pnpm-lock.yaml'))
-  ]).then(([isYarn, isNpm, isPnpm]) => {
-    let value = null
+async function getTypeofLockFile(cwd: string) {
+  const yarnCheck = pathExists(resolve(cwd, 'yarn.lock'));
+  const npmCheck = pathExists(resolve(cwd, 'package-lock.json'));
+  const pnpmCheck = pathExists(resolve(cwd, 'pnpm-lock.yaml'));
 
-    if (isYarn) {
-      value = 'yarn'
-    } else if (isPnpm) {
-      value = 'pnpm'
-    } else if (isNpm) {
-      value = 'npm'
-    }
+  const isYarn = await yarnCheck;
+  const isNpm = await npmCheck;
+  const isPnpm = await pnpmCheck;
+  if (isYarn) return 'yarn';
+  if (isNpm) return 'npm';
+  if (isPnpm) return 'pnpm';
 
-    return value
-  })
+  return '';
 }
 
-const detectPMByLockFile = async (cwd: string) => {
+export default async function detectPMByLockFile(cwd = '.') {
   const type = await getTypeofLockFile(cwd)
   if (type) {
     return type
   }
-
   return 'npm'
 }
-
-export default detectPMByLockFile;

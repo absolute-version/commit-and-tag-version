@@ -4,7 +4,7 @@ import formatCommitMessage from '../format-commit-message';
 import path from 'path';
 import runExecFile from '../run-execFile';
 import runLifecycleScript from '../run-lifecycle-script';
-import { Config, Hook } from 'lib/opts/types';
+import { Config, Hook } from '../opts/types';
 
 export default async function (config: Config, newVersion: string) {
   if (config.skip.commit) return;

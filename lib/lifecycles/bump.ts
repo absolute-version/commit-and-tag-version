@@ -1,17 +1,17 @@
 import chalk from 'chalk'
 import checkpoint from '../checkpoint'
-import conventionalRecommendedBump, { Callback } from 'conventional-recommended-bump'
+import semver, { ReleaseType } from 'semver'
+import conventionalRecommendedBump from 'conventional-recommended-bump'
 import figures from 'figures'
 import fs from 'fs'
 import DotGitignore from 'dotgitignore'
 import path from 'path'
+
 import presetLoader from '../preset-loader'
 import runLifecycleScript from '../run-lifecycle-script'
-import semver from 'semver'
 import writeFile from '../write-file'
 import { resolveUpdaterObjectFromArgument } from '../updaters'
-import { Config, Hook, Release } from 'lib/opts/types'
-import { ReleaseType } from 'semver'
+import { Config, Hook, Release } from '../opts/types'
 
 let configsToUpdate: Record<string, boolean> = {};
 

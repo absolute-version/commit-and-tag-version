@@ -1,12 +1,13 @@
 const REPLACER = /version: "(.*)"/
 
-module.exports.readVersion = function (contents) {
-  return REPLACER.exec(contents)[1]
+module.exports.readVersion = function (contents: string) {
+  const version = REPLACER.exec(contents);
+  return version ? version[1] : '';
 }
 
-module.exports.writeVersion = function (contents, version) {
+module.exports.writeVersion = function (contents: string, version: string) {
   return contents.replace(
-    REPLACER.exec(contents)[0],
-    `version: "${version}"`
+    REPLACER,
+    `version: "${version}"`,
   )
 }

@@ -5,7 +5,7 @@ import fs from 'fs';
 import presetLoader from '../preset-loader';
 import runLifecycleScript from '../run-lifecycle-script';
 import writeFile from '../write-file';
-import { Config, Hook } from 'lib/opts/types';
+import { Config, Hook } from '../opts/types';
 
 const START_OF_LAST_RELEASE_PATTERN = /(^#+ \[?[0-9]+\.[0-9]+\.[0-9]+|<a name=)/m
 

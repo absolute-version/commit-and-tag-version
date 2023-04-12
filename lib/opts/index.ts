@@ -1,9 +1,9 @@
+import fs from 'fs';
 import path from "path";
-import { getConfiguration as getConfigFromFile } from "../configuration";
+import { getConfiguration } from "../configuration";
 import { isin } from "../../type-helpers";
 import { Config, FileConfig, LegacyConfig, SkipLifecycleSteps, Task } from './types';
-import defaults from 'defaults';
-import argv from 'command';
+import defaults from '../../defaults';
 
 /** The configuration options that are not supported by standard-version (as of version 9.5.0). */
 const catVOnlyFeatures = [
@@ -12,13 +12,28 @@ const catVOnlyFeatures = [
   "tagForce",
 ];
 
-export async function getMergedConfig(cwd?: string): Promise<Config> {
+async function loadPackageJson(cwd?: string): Promise<any> {
   const searchDir = cwd ?? process.cwd();
-  const pkgJson = await import(path.join(searchDir, "package.json"));
+  const pkgPath = path.join(searchDir, 'package.json');
+  if (fs.existsSync(pkgPath)) {
+    return await import(pkgPath);
+  }
+  return {};
+}
+
+export async function getMergedConfig(argv: any, cwd?: string): Promise<Config> {
+  // const searchDir = cwd ?? process.cwd();
+  const pkgJson = await loadPackageJson(cwd); // await import(path.join(searchDir, "package.json"));
+  console.log(pkgJson['commit-and-tag-version']);
   const legacyConf = convertLegacy(pkgJson["standard-version"] ?? {});
   const modernConf: FileConfig = pkgJson["commit-and-tag-version"] ?? {};
-  const cliConf = convertCliConfig();
-  const configFromFile = await getConfigFromFile();
+  const cliConf = convertCliConfig(argv);
+  const configFromFile = await getConfiguration();
+
+  // console.log('legacyConf', legacyConf);
+  // console.log('modernConf', modernConf);
+  // console.log('cliConf', cliConf);
+  // console.log('configFromFile', configFromFile);
 
   // Check for legacy config properties that will be overwritten
   Object.keys(legacyConf).forEach((key) => {
@@ -35,7 +50,6 @@ export async function getMergedConfig(cwd?: string): Promise<Config> {
     ...configFromFile,
     ...cliConf,
   };
-
   const defaultConfig = { ...defaults };
 
   /**
@@ -48,11 +62,6 @@ export async function getMergedConfig(cwd?: string): Promise<Config> {
       ...merged.packageFiles,
     ]));
   }
-
-  const config: Config = {
-    ...defaults,
-
-  };
 
   return {
     ...defaultConfig,
@@ -95,16 +104,17 @@ function convertLegacy(legacyConf: LegacyConfig): FileConfig {
   return config;
 }
 
-function resolveCliValue(key: string): any {
+function resolveCliValue(argv: any, key: string): any {
   if (key === 'skip') {
     return convertCliSkip(argv.skip || []);
   }
+  return argv[key];
 }
 
-function convertCliConfig(): FileConfig {
+function convertCliConfig(argv: any): FileConfig {
   const config: FileConfig = {};
   Object.keys(argv).forEach((key) => {
-    const value = resolveCliValue(key);
+    const value = resolveCliValue(argv, key);
     const modernKey = resolveKey(key);
     config[modernKey] = value;
   });

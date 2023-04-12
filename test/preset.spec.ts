@@ -1,15 +1,17 @@
 /* global describe it beforeEach, afterEach */
 
-const shell = require('shelljs')
-const fs = require('fs')
+import shell from 'shelljs'
+import fs from 'fs'
+import { cmdParser } from '../command'
+import cli from '../index';
+import { Task } from '../lib/opts/types';
 
 require('chai').should()
 
-function exec (opt) {
-  const cli = require('../command')
-  opt = cli.parse(`commit-and-tag-version ${opt} --silent`)
-  opt.skip = { commit: true, tag: true }
-  return require('../index')(opt)
+function exec (opt?: string) {
+  const argv = cmdParser.parseSync(`commit-and-tag-version ${opt} --silent`)
+  argv.skip = [Task.commit, Task.tag];
+  return cli(argv)
 }
 
 describe('presets', () => {
@@ -17,7 +19,7 @@ describe('presets', () => {
     shell.rm('-rf', 'tmp')
     shell.config.silent = true
     shell.mkdir('tmp')
-    shell.cd('tmp')
+    shell.cd('./tmp')
     shell.exec('git init')
     shell.exec('git config commit.gpgSign false')
     shell.exec('git config core.autocrlf false')
@@ -37,6 +39,7 @@ describe('presets', () => {
   it('Conventional Commits (default)', async function () {
     await exec()
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8')
+    console.log(content);
     content.should.contain('### Features')
     content.should.not.contain('### Performance Improvements')
     content.should.not.contain('### Custom')

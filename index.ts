@@ -9,15 +9,15 @@ import printError from './lib/print-error';
 import tag from './lib/lifecycles/tag';
 import { resolveUpdaterObjectFromArgument } from './lib/updaters';
 import { getMergedConfig } from './lib/opts';
-import { BumpFile, Config } from 'lib/opts/types';
+import { BumpFile, Config } from './lib/opts/types';
 
 interface PackageInfo {
   version: string;
   private: boolean;
 }
 
-export default async function standardVersion() {
-  const config = await getMergedConfig();
+export default async function standardVersion(argv: any) {
+  const config = await getMergedConfig(argv);
 
   if (
     config.header &&
