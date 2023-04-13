@@ -10,7 +10,7 @@
     "fix": "eslint . --fix",
     "posttest": "eslint .",
     "test": "nyc ts-mocha --type-check --timeout=30000 test/",
-    "test:unit": "mocha -r ts-node/register -j 1 test/**/config-files.spec.ts",
+    "test:unit": "mocha -r ts-node/register -j 1 test/**/cli.spec.ts",
     "coverage": "nyc report --reporter=lcov",
     "release": "dist/bin/cli.js",
     "build": "npx tsc && tsup"

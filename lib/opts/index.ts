@@ -24,16 +24,10 @@ async function loadPackageJson(cwd?: string): Promise<any> {
 export async function getMergedConfig(argv: any, cwd?: string): Promise<Config> {
   // const searchDir = cwd ?? process.cwd();
   const pkgJson = await loadPackageJson(cwd); // await import(path.join(searchDir, "package.json"));
-  console.log(pkgJson['commit-and-tag-version']);
   const legacyConf = convertLegacy(pkgJson["standard-version"] ?? {});
   const modernConf: FileConfig = pkgJson["commit-and-tag-version"] ?? {};
   const cliConf = convertCliConfig(argv);
   const configFromFile = await getConfiguration();
-
-  // console.log('legacyConf', legacyConf);
-  // console.log('modernConf', modernConf);
-  // console.log('cliConf', cliConf);
-  // console.log('configFromFile', configFromFile);
 
   // Check for legacy config properties that will be overwritten
   Object.keys(legacyConf).forEach((key) => {
@@ -61,6 +55,7 @@ export async function getMergedConfig(argv: any, cwd?: string): Promise<Config> 
       ...(merged.bumpFiles || []),
       ...merged.packageFiles,
     ]));
+
   }
 
   return {

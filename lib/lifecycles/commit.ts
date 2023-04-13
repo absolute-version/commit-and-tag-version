@@ -16,56 +16,64 @@ export default async function (config: Config, newVersion: string) {
 }
 
 async function execCommit (config: Config, newVersion: string) {
-  let msg = 'committing %s'
-  let paths: string[] = []
+  const paths: string[] = []
   const verify: string[] = !config.noVerify ? ['--no-verify'] : [];
   const sign: string[] = config.sign ? ['-S'] : []
-  const toAdd: string[] = [];
+  const addFiles: string[] = [];
 
-  // only start with a pre-populated paths list when CHANGELOG processing is not skipped
+  // only start with a pre-populated paths list
+  // when CHANGELOG processing is not skipped
   if (!config.skip.changelog) {
-    paths = [config.infile]
-    toAdd.push(config.infile)
+    // paths.push(config.infile);
+    addFiles.push(config.infile);
   }
 
   // commit any of the config files that we've updated
   // the version # for.
   Object.keys(bump.getUpdatedConfigs()).forEach(function (p) {
-    paths.unshift(p)
-    toAdd.push(path.relative(process.cwd(), p))
+    // paths.unshift(p)
+    // addFiles.push(path.relative(process.cwd(), p))
+    addFiles.push(p)
 
     // account for multiple files in the output message
-    if (paths.length > 1) {
-      msg += ' and %s'
-    }
+    // if (paths.length > 1) {
+    //   msg += ' and %s'
+    // }
   })
 
   if (config.commitAll) {
-    msg += ' and %s'
+    // msg += ' and %s'
     paths.push('all staged files')
   }
 
-  checkpoint(config, msg, paths)
+  const msg = `committing ${addFiles.join(', ')}`;
+  checkpoint(config, msg, []);
 
   // nothing to do, exit without commit anything
-  if (!config.commitAll && config.skip.changelog && config.skip.bump && toAdd.length === 0) {
-    return
+  if (!config.commitAll && config.skip.changelog && config.skip.bump && addFiles.length === 0) {
+    return;
   }
 
-  await runExecFile(config, 'git', ['add'].concat(toAdd))
+  const cwd = process.cwd();
+  const addFilePaths = addFiles.map((f) => path.relative(cwd, f));
+
+  await runExecFile(config, 'git', ['add'].concat(addFilePaths));
+
+  const commitMsg = [
+    '-m',
+    `${formatCommitMessage(config.releaseCommitMessageFormat, newVersion)}`
+  ];
+
+  const cmdArgs = ['commit'].concat(
+    verify,
+    sign,
+    config.commitAll ? [] : addFilePaths,
+    commitMsg,
+  );
+
   await runExecFile(
     config,
     'git',
-    [
-      'commit'
-    ].concat(
-      verify,
-      sign,
-      config.commitAll ? [] : toAdd,
-      [
-        '-m',
-        `${formatCommitMessage(config.releaseCommitMessageFormat, newVersion)}`
-      ]
-    )
+    cmdArgs,
   )
 }

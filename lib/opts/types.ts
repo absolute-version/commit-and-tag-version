@@ -1,5 +1,6 @@
 import { Config as SpecConfig } from "conventional-changelog-config-spec";
 import type { PrettyPrint } from "../../type-helpers";
+import { ParserOptions, WriterOptions } from 'conventional-changelog-core';
 
 export type Release = "minor" | "major" | "patch";
 

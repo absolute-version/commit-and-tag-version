@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import checkpoint from '../checkpoint';
 import conventionalChangelog from 'conventional-changelog';
 import fs from 'fs';
-import presetLoader from '../preset-loader';
 import runLifecycleScript from '../run-lifecycle-script';
 import writeFile from '../write-file';
 import { Config, Hook } from '../opts/types';
@@ -34,21 +33,24 @@ function outputChangelog(config: Config, newVersion: string) {
     const context = { version: newVersion }
     const changelogStream = conventionalChangelog(
       {
-        // debug: config.verbose && console.info.bind(console, 'conventional-changelog'),
-        // TODO: Same issue here with debug and preset
+        debug: config.verbose ? console.info.bind(console, 'conventional-changelog') : undefined,
         preset: config.preset, // presetLoader(config),
         tagPrefix: config.tagPrefix,
-        releaseCount: config.releaseCount
+
+        releaseCount: config.releaseCount,
+        config: {
+          parserOpts: {
+            issuePrefixes: config.issuePrefixes,
+          },
+        },
       },
       context,
       {
         merges: null,
         path: config.path,
         showSignature: false,
+
       },
-      // TODO: Where did parserOpts and writerOpts come from?
-      // config.parserOpts,
-      // config.writerOpts
     ).on('error', function (err) {
       return reject(err)
     });

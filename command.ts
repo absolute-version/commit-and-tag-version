@@ -86,7 +86,7 @@ export const cmdParser = yargs(process.argv.slice(2))
       // default: defaults.commitAll
     },
     silent: {
-      alias: ['s', 'q', 'quiet'],
+      alias: ['q', 'quiet'],
       describe: "Don't print logs and errors",
       boolean: true,
       // default: defaults.silent

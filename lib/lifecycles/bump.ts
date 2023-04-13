@@ -1,13 +1,12 @@
 import chalk from 'chalk'
 import checkpoint from '../checkpoint'
-import semver, { ReleaseType } from 'semver'
+import semver from 'semver'
 import conventionalRecommendedBump from 'conventional-recommended-bump'
 import figures from 'figures'
 import fs from 'fs'
 import DotGitignore from 'dotgitignore'
 import path from 'path'
 
-import presetLoader from '../preset-loader'
 import runLifecycleScript from '../run-lifecycle-script'
 import writeFile from '../write-file'
 import { resolveUpdaterObjectFromArgument } from '../updaters'
@@ -39,22 +38,25 @@ async function Bump(config: Config, version: string) {
   const stdout = await runLifecycleScript(config, Hook.prebump);
   if (stdout && stdout.trim().length) results.releaseAs = stdout.trim() as Release;
 
-  const expectedReleaseType = await bumpVersion(config.releaseAs, version, config);
+  const expectedReleaseType = await getExpectedReleaseType(config);
+
+  if (!expectedReleaseType) {
+    throw new Error('Unable to determine expected release type')
+  }
 
   if (!config.firstRelease) {
     const releaseType = getReleaseType(
       config.prerelease,
       expectedReleaseType,
       version
-    )
-    const releaseTypeAsVersion =
-      releaseType === 'pre' + expectedReleaseType
-        ? semver.valid(expectedReleaseType + '-' + config.prerelease + '.0')
-        : semver.valid(releaseType);
+    );
+    // Removed this as semver.valid() as used will always return null
+    // const releaseTypeAsVersion =
+    //   releaseType.startsWith('pre')
+    //     ? semver.valid(expectedReleaseType + '-' + config.prerelease + '.0')
+    //     : semver.valid(releaseType);
 
-    // TODO: semver.inc() possibly returns null.
-    results.newVersion =
-      releaseTypeAsVersion || semver.inc(version, releaseType, !!config.prerelease) || version;
+    results.newVersion = semver.inc(version, releaseType, !!config.prerelease) || version;
 
     updateConfigs(config, results.newVersion);
   } else {
@@ -73,8 +75,12 @@ Bump.getUpdatedConfigs = function () {
   return configsToUpdate
 }
 
-function getReleaseType (prerelease: string | boolean | undefined, expectedReleaseType: Release, currentVersion: string): ReleaseType {
-  if (typeof prerelease === 'string') {
+function getReleaseType(
+  prerelease: string | boolean | undefined,
+  expectedReleaseType: Release,
+  currentVersion: string,
+): semver.ReleaseType {
+  if (prerelease) {
     if (isInPrerelease(currentVersion)) {
       const currentActiveType = getCurrentActiveType(currentVersion);
       if (
@@ -101,7 +107,7 @@ function getReleaseType (prerelease: string | boolean | undefined, expectedRelea
  * @param expectType
  * @return {boolean}
  */
-function shouldContinuePrerelease (version: string, expectType: ReleaseType) {
+function shouldContinuePrerelease (version: string, expectType: semver.ReleaseType) {
   return getCurrentActiveType(version) === expectType;
 }
 
@@ -114,8 +120,13 @@ const TypeList: Release[] = ['patch', 'minor', 'major'];
 /**
  * extract the in-pre-release type in target version
  */
-function getCurrentActiveType(version: string) {
-  return TypeList.find((type) => semver[type](version));
+function getCurrentActiveType(version: string): Release | undefined {
+  const parsed = semver.parse(version);
+  if ((parsed?.patch ?? 0) > 0) return 'patch';
+  if ((parsed?.minor ?? 0) > 0) return 'minor';
+  if ((parsed?.patch ?? 0) > 0) return 'patch';
+
+  return undefined;
 }
 
 /**
@@ -126,32 +137,37 @@ function getTypePriority(type: Release) {
   return TypeList.indexOf(type);
 }
 
-async function bumpVersion(releaseAs: Release | undefined, currentVersion: string, config: Config) {
-  return await new Promise<Release>((resolve, reject) => {
-    if (releaseAs) {
-      resolve(releaseAs);
+async function getExpectedReleaseType(config: Config): Promise<Release | undefined> {
+  return await new Promise<Release | undefined>((resolve, reject) => {
+    if (config.releaseAs) {
+      resolve(config.releaseAs);
     } else {
-      const presetOptions = presetLoader(config)
-      if (typeof presetOptions === 'object') {
-        if (semver.lt(currentVersion, '1.0.0')) presetOptions['preMajor'] = true
-      }
-      // TODO: conventionalRecommendedBump options preset type is string | undefined, not an object
-      // TODO: conventionalRecommendedBump options does not include a debug property
+      // const presetOptions = presetLoader(config)
+      // if (typeof presetOptions === 'object') {
+      //   if (semver.lt(currentVersion, '1.0.0')) presetOptions['preMajor'] = true
+      // }
+      const bumpOptions: conventionalRecommendedBump.Options = {
+        preset: config.preset,
+        path: config.path,
+        tagPrefix: config.tagPrefix,
+        lernaPackage: config.lernaPackage,
+      };
+
+      // Is this needed?
+      // if (config.issuePrefixes) {
+      //   bumpOptions.config = {
+      //     parserOpts: {
+      //       issuePrefixes: config.issuePrefixes,
+      //     },
+      //   };
+      // }
       conventionalRecommendedBump(
-        {
-          // debug:
-          //   config.verbose &&
-          //   console.info.bind(console, 'conventional-recommended-bump'),
-          preset: config.preset, // presetOptions,
-          path: config.path,
-          tagPrefix: config.tagPrefix,
-          lernaPackage: config.lernaPackage
-        },
+        bumpOptions,
         function (err, release) {
           if (err) {
             reject(err);
           } else {
-            resolve(release.releaseType! as Release);
+            resolve(release.releaseType);
           }
         }
       )
@@ -169,24 +185,28 @@ function updateConfigs(config: Config, newVersion: string) {
   const dotgit = DotGitignore()
   config.bumpFiles.forEach(function (bumpFile) {
     const updater = resolveUpdaterObjectFromArgument(bumpFile)
-    if (!updater) {
-      return
-    }
-    const configPath = path.resolve(process.cwd(), updater.filename)
+
+    if (!updater) return;
+    if (dotgit.ignore(updater.filename)) return;
+
     try {
-      if (dotgit.ignore(updater.filename)) return
+      const configPath = path.resolve(process.cwd(), updater.filename)
       const stat = fs.lstatSync(configPath)
 
-      if (!stat.isFile()) return
+      if (!stat.isFile()) return;
+
       const contents = fs.readFileSync(configPath, 'utf8')
       const newContents = updater.updater.writeVersion(contents, newVersion)
       const realNewVersion = updater.updater.readVersion(newContents)
+
       checkpoint(
         config,
         'bumping version in ' + updater.filename + ' from %s to %s',
         [updater.updater.readVersion(contents), realNewVersion]
       )
+
       writeFile(config, configPath, newContents)
+
       // flag any config files that we modify the version # for
       // as having been updated.
       configsToUpdate[updater.filename] = true

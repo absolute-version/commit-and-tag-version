@@ -19,9 +19,6 @@ export async function getConfiguration(cwd?: string): Promise<FileConfig> {
   }
 
   const config = await readConfigFile(configFile, currentDir);
-  console.log(currentDir, configFile, typeof config, config);
-  const contents = fs.readFileSync(configFile, 'utf-8');
-  // console.log(contents);
   /**
    * @todo we could eventually have deeper validation of the configuration (using `ajv`) and
    * provide a more helpful error.
@@ -41,16 +38,13 @@ function getConfigFile(cwd: string) {
 
 async function readConfigFile(configFile: string, cwd: string): Promise<FileConfig> {
   const configPath = path.resolve(cwd, configFile);
-  console.log('configPath', configPath)
 
   const ext = path.extname(configFile);
   if (ext === '.js' || ext === '.cjs') {
     const jsConfiguration = require(configPath);
     if (typeof jsConfiguration === 'function') {
-      console.log(jsConfiguration());
       return jsConfiguration();
     }
-    console.log(jsConfiguration);
     return jsConfiguration;
   }
   return JSON.parse(readFileSync(configPath, 'utf-8'));

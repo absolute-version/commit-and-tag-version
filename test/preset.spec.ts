@@ -39,7 +39,6 @@ describe('presets', () => {
   it('Conventional Commits (default)', async function () {
     await exec()
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8')
-    console.log(content);
     content.should.contain('### Features')
     content.should.not.contain('### Performance Improvements')
     content.should.not.contain('### Custom')
