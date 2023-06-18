@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [11.2.2](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.1...v11.2.2) (2023-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency conventional-changelog-conventionalcommits to v6 ([285f5e7](https://github.com/absolute-version/commit-and-tag-version/commit/285f5e7c9d415c029fe6b6f4781f6ccfa71a0151))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v6 ([#81](https://github.com/absolute-version/commit-and-tag-version/issues/81)) ([ab67fa4](https://github.com/absolute-version/commit-and-tag-version/commit/ab67fa43b644f8078530ca7927054cd8cf5add77))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v6.1.0 ([39827d3](https://github.com/absolute-version/commit-and-tag-version/commit/39827d386ce8c3dbad7605ef872975ebe48db72a))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v6.1.0 ([#86](https://github.com/absolute-version/commit-and-tag-version/issues/86)) ([a8580d5](https://github.com/absolute-version/commit-and-tag-version/commit/a8580d5859c6c44ed82ac244eabad967eca0d4b8))
+* **deps:** update dependency conventional-recommended-bump to v7 ([5978564](https://github.com/absolute-version/commit-and-tag-version/commit/59785644f2cd7980139c49086f3ba662f63a7179))
+* **deps:** update dependency conventional-recommended-bump to v7 ([#83](https://github.com/absolute-version/commit-and-tag-version/issues/83)) ([1c9f82e](https://github.com/absolute-version/commit-and-tag-version/commit/1c9f82eca486dceda244d37f5264f992b9a5c57e))
+* **deps:** update dependency git-semver-tags to v5 ([97e0237](https://github.com/absolute-version/commit-and-tag-version/commit/97e0237d645e1686f96418a1f2d8dbd6bfeca90b))
+* **deps:** update dependency git-semver-tags to v5 ([#80](https://github.com/absolute-version/commit-and-tag-version/issues/80)) ([46ea506](https://github.com/absolute-version/commit-and-tag-version/commit/46ea506c5f2e5300f195462a6c2339cbe4b98fcb))
+
 ## [11.2.1](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.0...v11.2.1) (2023-04-05)
 
 
