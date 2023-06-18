@@ -1,0 +1,51 @@
+{
+    "compilerOptions": {
+      "noEmit": true,
+      "target": "ES2015",
+      "lib": [
+        "esnext"
+      ],
+      "checkJs": true,
+      "removeComments": true,
+      "useUnknownInCatchVariables": true,
+      "allowJs": true,
+      "skipLibCheck": true,
+      "sourceMap": true,
+      "strict": true,
+      "exactOptionalPropertyTypes": true,
+      "forceConsistentCasingInFileNames": true,
+      "esModuleInterop": true,
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "isolatedModules": false,
+      "noErrorTruncation": true,
+      "noUncheckedIndexedAccess": true,
+      "noFallthroughCasesInSwitch": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noImplicitAny": true,
+      "noUnusedLocals": false,
+      "noUnusedParameters": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictBindCallApply": true,
+      "strictPropertyInitialization": true,
+      "noImplicitOverride": true,
+      "noPropertyAccessFromIndexSignature": true,
+      "baseUrl": ".",
+      "outDir": "./dist",
+      "types": [
+        "node",
+        "mocha"
+      ],
+    },
+    "include": [
+      "**/*.js",
+      "**/*.ts"
+    ],
+    "exclude": [
+      "node_modules",
+      "dist"
+    ],
+  }

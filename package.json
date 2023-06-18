@@ -55,6 +55,20 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/conventional-changelog": "^3.1.1",
+    "@types/conventional-changelog-config-spec": "^2.1.2",
+    "@types/conventional-changelog-core": "^4.2.2",
+    "@types/conventional-recommended-bump": "^6.1.0",
+    "@types/git-semver-tags": "^4.1.1",
+    "@types/mocha": "^10.0.1",
+    "@types/mockery": "^1.4.30",
+    "@types/node": "^20.2.5",
+    "@types/shelljs": "^0.8.12",
+    "@types/std-mocks": "^1.0.1",
+    "@types/yargs": "^17.0.24",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
     "chai": "^4.2.0",
     "eslint": "^8.16.0",
     "eslint-config-standard": "^17.0.0",
@@ -67,6 +81,7 @@
     "nyc": "^15.1.0",
     "shelljs": "^0.8.4",
     "std-mocks": "^1.0.1",
-    "strip-ansi": "^6.0.0"
+    "strip-ansi": "^6.0.0",
+    "typescript": "^5.1.3"
   }
 }
