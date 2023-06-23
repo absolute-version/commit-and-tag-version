@@ -2,14 +2,18 @@
   "name": "commit-and-tag-version",
   "version": "11.2.2",
   "description": "replacement for `npm version` with automatic CHANGELOG generation",
-  "bin": "bin/cli.js",
+  "bin": "dist/bin/cli.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "fix": "eslint . --fix",
     "posttest": "eslint .",
-    "test": "nyc mocha --timeout=30000",
-    "test:unit": "mocha --exclude test/git.spec.js",
+    "test": "nyc ts-mocha --type-check --timeout=30000 test/",
+    "test:unit": "mocha -r ts-node/register -j 1 test/**/cli.spec.ts",
     "coverage": "nyc report --reporter=lcov",
-    "release": "bin/cli.js"
+    "release": "dist/bin/cli.js",
+    "build": "npx tsc && tsup"
   },
   "nyc": {
     "exclude": [
@@ -32,7 +36,8 @@
   ],
   "author": "Ben Coe <ben@npmjs.com>",
   "contributors": [
-    "Timothy Jones <timothy.l.jones@gmail.com> (https://github.com/TimothyJones)"
+    "Timothy Jones <timothy.l.jones@gmail.com> (https://github.com/TimothyJones)",
+    "Alec Helmturner <alec@helmturner.dev> (https://github.com/helmturner)"
   ],
   "license": "ISC",
   "bugs": {
@@ -52,21 +57,55 @@
     "find-up": "^5.0.0",
     "git-semver-tags": "^5.0.0",
     "semver": "^7.1.1",
+    "ts-node": "^10.9.1",
     "yargs": "^17.0.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/conventional-changelog": "^3.1.1",
+    "@types/conventional-changelog-config-spec": "^2.1.2",
+    "@types/conventional-changelog-core": "^4.2.1",
+    "@types/conventional-recommended-bump": "^6.1.0",
+    "@types/git-semver-tags": "^4.1.1",
+    "@types/mocha": "^10.0.1",
+    "@types/mockery": "^1.4.30",
+    "@types/node": "^18.15.3",
+    "@types/shelljs": "^0.8.11",
+    "@types/std-mocks": "^1.0.1",
+    "@types/yargs": "^17.0.24",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
     "chai": "^4.2.0",
     "eslint": "^8.16.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.0",
     "eslint-plugin-promise": "^6.0.0",
+    "json-schema": "^0.4.0",
     "mocha": "^10.0.0",
     "mock-fs": "^5.0.0",
     "mockery": "^2.1.0",
     "nyc": "^15.1.0",
     "shelljs": "^0.8.4",
     "std-mocks": "^1.0.1",
-    "strip-ansi": "^6.0.0"
+    "strip-ansi": "^6.0.0",
+    "ts-mocha": "^10.0.0",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.3"
+  },
+  "tsup": {
+    "minify": true,
+    "minifyIdentifiers": false,
+    "treeshake": true,
+    "tsconfig": "tsconfig.json",
+    "dts": true,
+    "entry": [
+      "./src/index.ts"
+    ],
+    "outDir": "./dist",
+    "format": [
+      "esm",
+      "cjs"
+    ]
   }
 }
