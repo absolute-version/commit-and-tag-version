@@ -1,30 +1,31 @@
-const path = require('path')
-const findUp = require('find-up')
-const { readFileSync } = require('fs')
+import path from 'path'
+import findUp from 'find-up'
+import { readFileSync } from 'fs'
+import { Config } from './opts'
 
 const CONFIGURATION_FILES = [
   '.versionrc',
-  '.versionrc.cjs',
   '.versionrc.json',
+  '.versionrc.cjs',
   '.versionrc.js'
-]
+] as const;
 
-module.exports.getConfiguration = function () {
-  let config = {}
+export async function getConfiguration () {
+  let config: Partial<Config> = {}
   const configPath = findUp.sync(CONFIGURATION_FILES)
   if (!configPath) {
     return config
   }
   const ext = path.extname(configPath)
   if (ext === '.js' || ext === '.cjs') {
-    const jsConfiguration = require(configPath)
+    const jsConfiguration = await import(configPath)
     if (typeof jsConfiguration === 'function') {
       config = jsConfiguration()
     } else {
       config = jsConfiguration
     }
   } else {
-    config = JSON.parse(readFileSync(configPath))
+    config = JSON.parse(readFileSync(configPath, 'utf-8'))
   }
 
   /**
