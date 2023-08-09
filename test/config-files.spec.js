@@ -22,15 +22,15 @@ function exec () {
  *
  * Mocks should be unregistered in test cleanup by calling unmock()
  *
- * bump?: 'major' | 'minor' | 'patch' | Error | (opt, cb) => { cb(err) | cb(null, { releaseType }) }
+ * bump?: 'major' | 'minor' | 'patch' | Error | (opt, parserOpts, cb) => { cb(err) | cb(null, { releaseType }) }
  * changelog?: string | Error | Array<string | Error | (opt) => string | null>
  * tags?: string[] | Error
  */
 function mock ({ bump, changelog, tags } = {}) {
   mockery.enable({ warnOnUnregistered: false, useCleanCache: true })
 
-  mockery.registerMock('conventional-recommended-bump', function (opt, cb) {
-    if (typeof bump === 'function') bump(opt, cb)
+  mockery.registerMock('conventional-recommended-bump', function (opt, parserOpts, cb) {
+    if (typeof bump === 'function') bump(opt, parserOpts, cb)
     else if (bump instanceof Error) cb(bump)
     else cb(null, bump ? { releaseType: bump } : {})
   })

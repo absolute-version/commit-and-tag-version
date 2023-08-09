@@ -36,7 +36,7 @@ function getPackageVersion () {
  *
  * Mocks should be unregistered in test cleanup by calling unmock()
  *
- * bump?: 'major' | 'minor' | 'patch' | Error | (opt, cb) => { cb(err) | cb(null, { releaseType }) }
+ * bump?: 'major' | 'minor' | 'patch' | Error | (opt, parserOpts, cb) => { cb(err) | cb(null, { releaseType }) }
  * changelog?: string | Error | Array<string | Error | (opt) => string | null>
  * execFile?: ({ dryRun, silent }, cmd, cmdArgs) => Promise<string>
  * fs?: { [string]: string | Buffer | any }
@@ -46,8 +46,8 @@ function getPackageVersion () {
 function mock ({ bump, changelog, execFile, fs, pkg, tags } = {}) {
   mockery.enable({ warnOnUnregistered: false, useCleanCache: true })
 
-  mockery.registerMock('conventional-recommended-bump', function (opt, cb) {
-    if (typeof bump === 'function') bump(opt, cb)
+  mockery.registerMock('conventional-recommended-bump', function (opt, parserOpts, cb) {
+    if (typeof bump === 'function') bump(opt, parserOpts, cb)
     else if (bump instanceof Error) cb(bump)
     else cb(null, bump ? { releaseType: bump } : {})
   })
@@ -405,7 +405,7 @@ describe('cli', function () {
 
     it('creates a prerelease with a new minor version after two prerelease patches', async function () {
       let releaseType = 'patch'
-      const bump = (_, cb) => cb(null, { releaseType })
+      const bump = (_, __, cb) => cb(null, { releaseType })
       mock({
         bump,
         fs: { 'CHANGELOG.md': 'legacy header format<a name="1.0.0">\n' }
