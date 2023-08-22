@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [11.2.3](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.2...v11.2.3) (2023-08-22)
+
+
+### Bug Fixes
+
+* **bump:** propagate the parserOpts from args to conventionalRecommendedBump, fixing an issue with custom headerPatterns ([#89](https://github.com/absolute-version/commit-and-tag-version/issues/89)) ([bc685be](https://github.com/absolute-version/commit-and-tag-version/commit/bc685be46ca90417a03867717393bb9018e6036c))
+
 ## [11.2.2](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.1...v11.2.2) (2023-06-18)
 
 
