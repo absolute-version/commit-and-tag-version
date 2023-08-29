@@ -769,6 +769,22 @@ describe('commit-and-tag-version', function () {
     fs.readFileSync('build.gradle.kts', 'utf-8').should.equal(expected)
   })
 
+  it('bumps version in .NET `Project.csproj` file', async function () {
+    const expected = fs.readFileSync('./test/mocks/Project-6.4.0.csproj', 'utf-8')
+    const filename = 'Project.csproj'
+    mock({
+      bump: 'minor',
+      fs: {
+        [filename]: fs.readFileSync('./test/mocks/Project-6.3.1.csproj')
+      }
+    })
+    await exec({
+      packageFiles: [{ filename, type: 'csproj' }],
+      bumpFiles: [{ filename, type: 'csproj' }]
+    })
+    fs.readFileSync(filename, 'utf-8').should.equal(expected)
+  })
+
   it('bumps version # in npm-shrinkwrap.json', async function () {
     mock({
       bump: 'minor',

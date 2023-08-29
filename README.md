@@ -19,6 +19,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
     - [How It Works:](#how-it-works)
     - [`bumpFiles`, `packageFiles` and `updaters`](#bumpfiles-packagefiles-and-updaters)
     - [Gradle Support (Java/Kotlin)](#gradle-support-javakotlin)
+    - [.NET Support](#net-support)
   - [Installing `commit-and-tag-version`](#installing-commit-and-tag-version)
     - [As a local `npm run` script](#as-a-local-npm-run-script)
     - [As global `bin`](#as-global-bin)
@@ -88,6 +89,13 @@ If you are using Gradle, then just point to your `build.gradle` file (or `build.
 commit-and-tag-version --packageFiles build.gradle --bumpFiles build.gradle
 ```
 
+### .NET Support
+
+If you are using .NET with `.csproj` files.
+This is going to read and update only the `<Version>` tag in the file.
+```sh
+commit-and-tag-version --packageFiles <YOUR-PROJECT-NAME>.csproj --bumpFiles <YOUR-PROJECT-NAME>.csproj
+```
 
 ## Installing `commit-and-tag-version`
 
