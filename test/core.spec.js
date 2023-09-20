@@ -280,6 +280,20 @@ describe('cli', function () {
         getPackageVersion().should.equal('9.9.9')
       })
 
+      it('should not allow prebump hook to return a releaseAs command', async function () {
+        mock({
+          bump: 'minor',
+          fs: { 'CHANGELOG.md': 'legacy header format<a name="1.0.0">\n' }
+        })
+
+        await exec({
+          scripts: {
+            prebump: "node -e \"console.log('major')\""
+          }
+        })
+        getPackageVersion().should.equal('1.1.0')
+      })
+
       it('should allow prebump hook to return an arbitrary string', async function () {
         mock({
           bump: 'minor',
@@ -374,6 +388,16 @@ describe('cli', function () {
           getPackageVersion().should.equal(`${nextVersion[type]}-${type}.0`)
         })
       })
+
+      it('exits with error if an invalid release type is provided', async function () {
+        mock({ bump: 'minor', fs: { 'CHANGELOG.md': '' } })
+        try {
+          await exec('--release-as invalid')
+          throw new Error('That should not have worked')
+        } catch (error) {
+          error.message.should.match(/releaseAs must be one of/)
+        }
+      })
     })
 
     describe('release-as-exact', function () {
@@ -424,11 +448,59 @@ describe('cli', function () {
           bump: 'patch',
           fs: { 'CHANGELOG.md': 'legacy header format<a name="100.0.0-amazing.0">\n' },
           pkg: {
-            version: '100.0.0-amazing.0'
+            version: '100.0.0-amazing.1'
           }
         })
         await exec('--release-as 100.0.0-amazing.0 --prerelease amazing')
-        should.equal(getPackageVersion(), '100.0.0-amazing.1')
+        should.equal(getPackageVersion(), '100.0.0-amazing.2')
+      })
+
+      it('release 100.0.0 with prerelease amazing correctly sets version', async function () {
+        mock({
+          bump: 'patch',
+          fs: { 'CHANGELOG.md': 'legacy header format<a name="100.0.0-amazing.0">\n' },
+          pkg: {
+            version: '99.0.0-amazing.0'
+          }
+        })
+        await exec('--release-as 100.0.0 --prerelease amazing')
+        should.equal(getPackageVersion(), '100.0.0-amazing.0')
+      })
+
+      it('release 100.0.0-amazing.0 with prerelease amazing correctly sets version', async function () {
+        mock({
+          bump: 'patch',
+          fs: { 'CHANGELOG.md': 'legacy header format<a name="100.0.0-amazing.0">\n' },
+          pkg: {
+            version: '99.0.0-amazing.0'
+          }
+        })
+        await exec('--release-as 100.0.0-amazing.0 --prerelease amazing')
+        should.equal(getPackageVersion(), '100.0.0-amazing.0')
+      })
+
+      it('release 100.0.0-amazing.0 with prerelease amazing retains build metadata', async function () {
+        mock({
+          bump: 'patch',
+          fs: { 'CHANGELOG.md': 'legacy header format<a name="100.0.0-amazing.0">\n' },
+          pkg: {
+            version: '100.0.0-amazing.0'
+          }
+        })
+        await exec('--release-as 100.0.0-amazing.0+build.1234 --prerelease amazing')
+        should.equal(getPackageVersion(), '100.0.0-amazing.1+build.1234')
+      })
+
+      it('release 100.0.0-amazing.3 with prerelease amazing correctly sets prerelease version', async function () {
+        mock({
+          bump: 'patch',
+          fs: { 'CHANGELOG.md': 'legacy header format<a name="100.0.0-amazing.0">\n' },
+          pkg: {
+            version: '100.0.0-amazing.0'
+          }
+        })
+        await exec('--release-as 100.0.0-amazing.3 --prerelease amazing')
+        should.equal(getPackageVersion(), '100.0.0-amazing.3')
       })
     })
 
@@ -455,6 +527,26 @@ describe('cli', function () {
 
       await exec('--prerelease dev')
       getPackageVersion().should.equal('1.1.0-dev.2')
+    })
+
+    it('exits with error if an invalid release version is provided', async function () {
+      mock({ bump: 'minor', fs: { 'CHANGELOG.md': '' } })
+      try {
+        await exec('--release-as 10.2')
+        throw new Error('That should not have worked')
+      } catch (error) {
+        error.message.should.match(/releaseAs must be one of/)
+      }
+    })
+
+    it('exits with error if release version conflicts with prerelease', async function () {
+      mock({ bump: 'minor', fs: { 'CHANGELOG.md': '' } })
+      try {
+        await exec('--release-as 1.2.3-amazing.2 --prerelease awesome')
+        throw new Error('That should not have worked')
+      } catch (error) {
+        error.message.should.match(/releaseAs and prerelease have conflicting prerelease identifiers/)
+      }
     })
   })
 
