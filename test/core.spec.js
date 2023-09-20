@@ -277,6 +277,35 @@ describe('cli', function () {
         })
         const { stdout } = flush()
         stdout.join('').should.match(/9\.9\.9/)
+        getPackageVersion().should.equal('9.9.9')
+      })
+
+      it('should allow prebump hook to return an arbitrary string', async function () {
+        mock({
+          bump: 'minor',
+          fs: { 'CHANGELOG.md': 'legacy header format<a name="1.0.0">\n' }
+        })
+
+        await exec({
+          scripts: {
+            prebump: "node -e \"console.log('Hello World')\""
+          }
+        })
+        getPackageVersion().should.equal('1.1.0')
+      })
+
+      it('should allow prebump hook to return a version with build info', async function () {
+        mock({
+          bump: 'minor',
+          fs: { 'CHANGELOG.md': 'legacy header format<a name="1.0.0">\n' }
+        })
+
+        await exec({
+          scripts: {
+            prebump: "node -e \"console.log('9.9.9-test+build')\""
+          }
+        })
+        getPackageVersion().should.equal('9.9.9-test+build')
       })
     })
 
