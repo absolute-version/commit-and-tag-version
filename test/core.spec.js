@@ -14,7 +14,10 @@ const stripAnsi = require('strip-ansi')
 const cli = require('../command')
 const formatCommitMessage = require('../lib/format-commit-message')
 
-const should = require('chai').should()
+const chai = require('chai')
+const should = chai.should()
+const expect = chai.expect
+chai.use(require('chai-as-promised'))
 
 // set by mock()
 let standardVersion
@@ -157,12 +160,7 @@ describe('cli', function () {
       mock({ bump: 'minor', changelog: 'foo\n' })
       await exec('--skip.changelog true')
       getPackageVersion().should.equal('1.1.0')
-      try {
-        fs.readFileSync('CHANGELOG.md', 'utf-8')
-        throw new Error('File should not exist')
-      } catch (err) {
-        err.code.should.equal('ENOENT')
-      }
+      expect(() => fs.readFileSync('CHANGELOG.md', 'utf-8')).to.throw(/ENOENT/)
     })
   })
 
@@ -217,12 +215,7 @@ describe('cli', function () {
 
     it('[DEPRECATED] (--changelogHeader) exits with error if changelog header matches last version search regex', async function () {
       mock({ bump: 'minor', fs: { 'CHANGELOG.md': '' } })
-      try {
-        await exec('--changelogHeader="## 3.0.2"')
-        throw new Error('That should not have worked')
-      } catch (error) {
-        error.message.should.match(/custom changelog header must not match/)
-      }
+      expect(exec('--changelogHeader="## 3.0.2"')).to.be.rejectedWith(/custom changelog header must not match/)
     })
   })
 
@@ -249,17 +242,11 @@ describe('cli', function () {
           fs: { 'CHANGELOG.md': 'legacy header format<a name="1.0.0">\n' }
         })
 
-        try {
-          await exec({
-            scripts: {
-              prerelease: "node -e \"throw new Error('prerelease' + ' fail')\""
-            }
-          })
-          /* istanbul ignore next */
-          throw new Error('Unexpected success')
-        } catch (error) {
-          error.message.should.match(/prerelease fail/)
-        }
+        expect(exec({
+          scripts: {
+            prerelease: "node -e \"throw new Error('prerelease' + ' fail')\""
+          }
+        })).to.be.rejectedWith(/prerelease fail/)
       })
     })
 
@@ -345,18 +332,12 @@ describe('cli', function () {
           fs: { 'CHANGELOG.md': 'legacy header format<a name="1.0.0">\n' }
         })
 
-        try {
-          await exec({
-            scripts: {
-              postbump: "node -e \"throw new Error('postbump' + ' fail')\""
-            }
-          })
-          await exec('--patch')
-          /* istanbul ignore next */
-          throw new Error('Unexpected success')
-        } catch (error) {
-          error.message.should.match(/postbump fail/)
-        }
+        expect(exec({
+          scripts: {
+            postbump: "node -e \"throw new Error('postbump' + ' fail')\""
+          }
+        })).to.be.rejectedWith(/postbump fail/)
+        expect(exec('--patch')).to.be.rejectedWith(/postbump fail/)
       })
     })
   })
@@ -391,12 +372,8 @@ describe('cli', function () {
 
       it('exits with error if an invalid release type is provided', async function () {
         mock({ bump: 'minor', fs: { 'CHANGELOG.md': '' } })
-        try {
-          await exec('--release-as invalid')
-          throw new Error('That should not have worked')
-        } catch (error) {
-          error.message.should.match(/releaseAs must be one of/)
-        }
+
+        expect(exec('--release-as invalid')).to.be.rejectedWith(/releaseAs must be one of/)
       })
     })
 
@@ -531,22 +508,15 @@ describe('cli', function () {
 
     it('exits with error if an invalid release version is provided', async function () {
       mock({ bump: 'minor', fs: { 'CHANGELOG.md': '' } })
-      try {
-        await exec('--release-as 10.2')
-        throw new Error('That should not have worked')
-      } catch (error) {
-        error.message.should.match(/releaseAs must be one of/)
-      }
+
+      expect(exec('--release-as 10.2')).to.be.rejectedWith(/releaseAs must be one of/)
     })
 
     it('exits with error if release version conflicts with prerelease', async function () {
       mock({ bump: 'minor', fs: { 'CHANGELOG.md': '' } })
-      try {
-        await exec('--release-as 1.2.3-amazing.2 --prerelease awesome')
-        throw new Error('That should not have worked')
-      } catch (error) {
-        error.message.should.match(/releaseAs and prerelease have conflicting prerelease identifiers/)
-      }
+
+      expect(exec('--release-as 1.2.3-amazing.2 --prerelease awesome')).to.be
+        .rejectedWith(/releaseAs and prerelease have conflicting prerelease identifiers/)
     })
   })
 
@@ -599,35 +569,20 @@ describe('commit-and-tag-version', function () {
 
   it('should exit on bump error', async function () {
     mock({ bump: new Error('bump err') })
-    try {
-      await exec()
-      /* istanbul ignore next */
-      throw new Error('Unexpected success')
-    } catch (err) {
-      err.message.should.match(/bump err/)
-    }
+
+    expect(exec()).to.be.rejectedWith(/bump err/)
   })
 
   it('should exit on changelog error', async function () {
     mock({ bump: 'minor', changelog: new Error('changelog err') })
-    try {
-      await exec()
-      /* istanbul ignore next */
-      throw new Error('Unexpected success')
-    } catch (err) {
-      err.message.should.match(/changelog err/)
-    }
+
+    expect(exec()).to.be.rejectedWith(/changelog err/)
   })
 
   it('should exit with error without a package file to bump', async function () {
     mock({ bump: 'patch', pkg: false })
-    try {
-      await exec({ gitTagFallback: false })
-      /* istanbul ignore next */
-      throw new Error('Unexpected success')
-    } catch (err) {
-      err.message.should.equal('no package file found')
-    }
+    
+    expect(exec({ gitTagFallback: false })).to.be.rejectedWith('no package file found')
   })
 
   it('bumps version # in bower.json', async function () {
@@ -1001,24 +956,20 @@ describe('with mocked git', function () {
 
   it('fails if git add fails', async function () {
     const gitArgs = [['add', 'CHANGELOG.md', 'package.json']]
+    const gitError = new Error('Command failed: git\nfailed add')
     const execFile = (_args, cmd, cmdArgs) => {
       cmd.should.equal('git')
       const expected = gitArgs.shift()
       cmdArgs.should.deep.equal(expected)
+
       if (expected[0] === 'add') {
-        return Promise.reject(new Error('Command failed: git\nfailed add'))
+        return Promise.reject(gitError)
       }
       return Promise.resolve('')
     }
     mock({ bump: 'patch', changelog: 'foo\n', execFile })
 
-    try {
-      await exec({}, true)
-      /* istanbul ignore next */
-      throw new Error('Unexpected success')
-    } catch (error) {
-      error.message.should.match(/failed add/)
-    }
+    expect(exec({}, true)).to.be.rejectedWith(gitError)
   })
 
   it('fails if git commit fails', async function () {
@@ -1026,24 +977,19 @@ describe('with mocked git', function () {
       ['add', 'CHANGELOG.md', 'package.json'],
       ['commit', 'CHANGELOG.md', 'package.json', '-m', 'chore(release): 1.0.1']
     ]
+    const gitError = new Error('Command failed: git\nfailed commit')
     const execFile = (_args, cmd, cmdArgs) => {
       cmd.should.equal('git')
       const expected = gitArgs.shift()
       cmdArgs.should.deep.equal(expected)
       if (expected[0] === 'commit') {
-        return Promise.reject(new Error('Command failed: git\nfailed commit'))
+        return Promise.reject(gitError)
       }
       return Promise.resolve('')
     }
     mock({ bump: 'patch', changelog: 'foo\n', execFile })
 
-    try {
-      await exec({}, true)
-      /* istanbul ignore next */
-      throw new Error('Unexpected success')
-    } catch (error) {
-      error.message.should.match(/failed commit/)
-    }
+    expect(exec({}, true)).to.be.rejectedWith(gitError)
   })
 
   it('fails if git tag fails', async function () {
@@ -1052,23 +998,18 @@ describe('with mocked git', function () {
       ['commit', 'CHANGELOG.md', 'package.json', '-m', 'chore(release): 1.0.1'],
       ['tag', '-a', 'v1.0.1', '-m', 'chore(release): 1.0.1']
     ]
+    const gitError = new Error('Command failed: git\nfailed tag')
     const execFile = (_args, cmd, cmdArgs) => {
       cmd.should.equal('git')
       const expected = gitArgs.shift()
       cmdArgs.should.deep.equal(expected)
       if (expected[0] === 'tag') {
-        return Promise.reject(new Error('Command failed: git\nfailed tag'))
+        return Promise.reject(gitError)
       }
       return Promise.resolve('')
     }
     mock({ bump: 'patch', changelog: 'foo\n', execFile })
 
-    try {
-      await exec({}, true)
-      /* istanbul ignore next */
-      throw new Error('Unexpected success')
-    } catch (error) {
-      error.message.should.match(/failed tag/)
-    }
+    expect(exec({}, true)).to.be.rejectedWith(gitError)
   })
 })
