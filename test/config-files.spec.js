@@ -8,7 +8,9 @@ const { Readable } = require('stream')
 const mockery = require('mockery')
 const stdMocks = require('std-mocks')
 
-require('chai').should()
+const chai = require('chai')
+const expect = chai.expect
+chai.use(require('chai-as-promised'))
 
 function exec () {
   const cli = require('../command')
@@ -168,12 +170,7 @@ describe('config files', () => {
   it('throws an error when a non-object is returned from .versionrc.js', async function () {
     mock({ bump: 'minor' })
     fs.writeFileSync('.versionrc.js', 'module.exports = 3', 'utf-8')
-    try {
-      await exec()
-      /* istanbul ignore next */
-      throw new Error('Unexpected success')
-    } catch (error) {
-      error.message.should.match(/Invalid configuration/)
-    }
+
+    expect(exec).to.throw(/Invalid configuration/)
   })
 })

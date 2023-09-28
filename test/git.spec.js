@@ -8,7 +8,9 @@ const { Readable } = require('stream')
 const mockery = require('mockery')
 const stdMocks = require('std-mocks')
 
-require('chai').should()
+const chai = require('chai')
+const expect = chai.expect
+chai.use(require('chai-as-promised'))
 
 function exec (opt = '') {
   if (typeof opt === 'string') {
@@ -356,13 +358,7 @@ describe('git', function () {
       )
 
       mock({ bump: 'minor' })
-      try {
-        await exec('--patch')
-        /* istanbul ignore next */
-        throw new Error('Unexpected success')
-      } catch (error) {
-        error.message.should.match(/precommit-failure/)
-      }
+      expect(exec('--patch')).to.be.rejectedWith(/precommit-failure/)
     })
 
     it('should allow an alternate commit message to be provided by precommit script', async function () {
