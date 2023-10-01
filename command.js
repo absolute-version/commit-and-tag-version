@@ -126,6 +126,11 @@ const yargs = require('yargs')
     default: defaults.npmPublishHint,
     describe: 'Customized publishing hint'
   })
+  .option('noBumpWhenEmptyChanges', {
+    type: 'boolean',
+    default: false,
+    describe: 'Avoid bumping files and generating changelog if there are no changes.'
+  })
   .check((argv) => {
     if (typeof argv.scripts !== 'object' || Array.isArray(argv.scripts)) {
       throw Error('scripts must be an object')
