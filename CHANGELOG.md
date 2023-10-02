@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [11.2.4](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.3...v11.2.4) (2023-10-02)
+
+
+### Bug Fixes
+
+* allow bump task to handle versions with build metadata ([33913ee](https://github.com/absolute-version/commit-and-tag-version/commit/33913ee03bff2dfc26c9ffc942e1191c1f767949))
+* handle invalid versions passed to releaseAs ([33913ee](https://github.com/absolute-version/commit-and-tag-version/commit/33913ee03bff2dfc26c9ffc942e1191c1f767949))
+
 ## [11.2.3](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.2...v11.2.3) (2023-08-22)
 
 
