@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [11.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.4...v11.3.0) (2023-10-10)
+
+
+### Features
+
+* **updater:** add .csproj file support ([#95](https://github.com/absolute-version/commit-and-tag-version/issues/95)) ([a96554c](https://github.com/absolute-version/commit-and-tag-version/commit/a96554c9467bacdf6c9d898b223883ee32f63c15))
+
 ## [11.2.4](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.3...v11.2.4) (2023-10-02)
 
 
