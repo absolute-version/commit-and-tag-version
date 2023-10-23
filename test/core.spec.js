@@ -15,7 +15,6 @@ const cli = require('../command')
 const formatCommitMessage = require('../lib/format-commit-message')
 
 const chai = require('chai')
-const {header} = require("../defaults");
 const should = chai.should()
 const expect = chai.expect
 chai.use(require('chai-as-promised'))
@@ -197,7 +196,7 @@ describe('cli', function () {
       const changelog100 =
           '### [1.0.0](/compare/v0.0.1...v1.0.0) (YYYY-MM-DD)\n\n\n### Features\n\n* Version one feature set\n'
 
-      const initialChangelog = frontMatter + '\n' + standardVersionHeader + '\n' + changelog100;
+      const initialChangelog = frontMatter + '\n' + standardVersionHeader + '\n' + changelog100
 
       mock({
         bump: 'patch',
@@ -207,7 +206,7 @@ describe('cli', function () {
       })
       await exec()
       const content = fs.readFileSync('CHANGELOG.md', 'utf-8')
-      content.should.equal(frontMatter + '\n' + header + '\n' + changelog101 + changelog100 )
+      content.should.equal(frontMatter + '\n' + header + '\n' + changelog101 + changelog100)
     })
 
     it('appends the new release above the last release, removing the old header (new format), and retains any front matter', async function () {
@@ -221,7 +220,7 @@ describe('cli', function () {
       const changelog100 =
           '### [1.0.0](/compare/v0.0.1...v1.0.0) (YYYY-MM-DD)\n\n\n### Features\n\n* Version one feature set\n'
 
-      const initialChangelog = frontMatter + '\n' + header + '\n' + changelog100;
+      const initialChangelog = frontMatter + '\n' + header + '\n' + changelog100
 
       mock({
         bump: 'patch',
@@ -231,8 +230,8 @@ describe('cli', function () {
       })
       await exec()
 
-      let content = fs.readFileSync('CHANGELOG.md', 'utf-8')
-      content.should.equal(frontMatter + '\n' + header + '\n' + changelog101 + changelog100 )
+      const content = fs.readFileSync('CHANGELOG.md', 'utf-8')
+      content.should.equal(frontMatter + '\n' + header + '\n' + changelog101 + changelog100)
     })
 
     it('appends the new release above the last release, removing the old header (new format)', async function () {
