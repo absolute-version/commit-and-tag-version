@@ -754,6 +754,52 @@ describe('commit-and-tag-version', function () {
     ).version.should.equal('6.4.0')
   })
 
+  it('bumps version in Maven `pom.xml` file with CRLF Line Endings', async function () {
+    const expected = fs.readFileSync('./test/mocks/pom-6.4.0-crlf.xml', 'utf-8')
+    const filename = 'pom.xml'
+    mock({
+      bump: 'minor',
+      fs: {
+        [filename]: fs.readFileSync('./test/mocks/pom-6.3.1-crlf.xml')
+      }
+    })
+    await exec({
+      packageFiles: [{ filename, type: 'maven' }],
+      bumpFiles: [{ filename, type: 'maven' }]
+    })
+    fs.readFileSync(filename, 'utf-8').should.equal(expected)
+  })
+
+  it('bumps version in Maven `pom.xml` file with LF Line Endings', async function () {
+    const expected = fs.readFileSync('./test/mocks/pom-6.4.0-lf.xml', 'utf-8')
+    const filename = 'pom.xml'
+    mock({
+      bump: 'minor',
+      fs: {
+        [filename]: fs.readFileSync('./test/mocks/pom-6.3.1-lf.xml')
+      }
+    })
+    await exec({
+      packageFiles: [{ filename, type: 'maven' }],
+      bumpFiles: [{ filename, type: 'maven' }]
+    })
+    fs.readFileSync(filename, 'utf-8').should.equal(expected)
+  })
+
+  it('exits with error if version missing in Maven `pom.xml` file', async function () {
+    const filename = 'pom.xml'
+    mock({
+      bump: 'minor',
+      fs: {
+        [filename]: fs.readFileSync('./test/mocks/pom-no-version.xml')
+      }
+    })
+    expect(exec({
+      packageFiles: [{ filename, type: 'maven' }],
+      bumpFiles: [{ filename, type: 'maven' }]
+    })).to.be.rejectedWith(/Failed to read the version field in your pom file - is it present\?/)
+  })
+
   it('bumps version in Gradle `build.gradle.kts` file', async function () {
     const expected = fs.readFileSync('./test/mocks/build-6.4.0.gradle.kts', 'utf-8')
     mock({

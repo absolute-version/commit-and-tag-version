@@ -51,7 +51,9 @@
     "figures": "^3.1.0",
     "find-up": "^5.0.0",
     "git-semver-tags": "^5.0.0",
+    "jsdom": "^22.1.0",
     "semver": "^7.1.1",
+    "w3c-xmlserializer": "^4.0.0",
     "yargs": "^17.0.0"
   },
   "devDependencies": {
