@@ -167,7 +167,7 @@ describe('cli', function () {
   describe('CHANGELOG.md exists', function () {
     it('appends the new release above the last release, removing the old header (legacy format), and does not retain any front matter', async function () {
       const frontMatter =
-          '---\nstatus: new\n---'
+          '---\nstatus: new\n---\n'
       mock({
         bump: 'patch',
         changelog: 'release 1.0.1\n',
@@ -188,7 +188,7 @@ describe('cli', function () {
           '# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.'
 
       const frontMatter =
-          '---\nstatus: new\n---'
+          '---\nstatus: new\n---\n'
 
       const changelog101 =
           '### [1.0.1](/compare/v1.0.0...v1.0.1) (YYYY-MM-DD)\n\n\n### Bug Fixes\n\n* patch release ABCDEFXY\n'
@@ -212,7 +212,7 @@ describe('cli', function () {
     it('appends the new release above the last release, removing the old header (new format), and retains any front matter', async function () {
       const { header } = require('../defaults')
       const frontMatter =
-          '---\nstatus: new\n---'
+          '---\nstatus: new\n---\n'
 
       const changelog101 =
           '### [1.0.1](/compare/v1.0.0...v1.0.1) (YYYY-MM-DD)\n\n\n### Bug Fixes\n\n* patch release ABCDEFXY\n'
