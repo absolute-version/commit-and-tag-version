@@ -15,6 +15,7 @@ const cli = require('../command')
 const formatCommitMessage = require('../lib/format-commit-message')
 
 const chai = require('chai')
+const {header} = require("../defaults");
 const should = chai.should()
 const expect = chai.expect
 chai.use(require('chai-as-promised'))
@@ -165,20 +166,51 @@ describe('cli', function () {
   })
 
   describe('CHANGELOG.md exists', function () {
-    it('appends the new release above the last release, removing the old header (legacy format)', async function () {
+    it('appends the new release above the last release, removing the old header (legacy format), and does not retain any front matter', async function () {
+      const frontMatter =
+          '---\nstatus: new\n---'
       mock({
         bump: 'patch',
         changelog: 'release 1.0.1\n',
-        fs: { 'CHANGELOG.md': 'legacy header format<a name="1.0.0">\n' },
+        fs: { 'CHANGELOG.md': frontMatter + 'legacy header format<a name="1.0.0">\n' },
         tags: ['v1.0.0']
       })
       await exec()
       const content = fs.readFileSync('CHANGELOG.md', 'utf-8')
       content.should.match(/1\.0\.1/)
       content.should.not.match(/legacy header format/)
+      content.should.not.match(/---status: new---/)
     })
 
-    it('retains any frontmatter in an existing Changelog with correct header', async function () {
+    it('appends the new release above the last release, replacing the old header (standard-version format) with header (new format), and retains any front matter', async function () {
+      const { header } = require('../defaults')
+
+      const standardVersionHeader =
+          '# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.'
+
+      const frontMatter =
+          '---\nstatus: new\n---'
+
+      const changelog101 =
+          '### [1.0.1](/compare/v1.0.0...v1.0.1) (YYYY-MM-DD)\n\n\n### Bug Fixes\n\n* patch release ABCDEFXY\n'
+
+      const changelog100 =
+          '### [1.0.0](/compare/v0.0.1...v1.0.0) (YYYY-MM-DD)\n\n\n### Features\n\n* Version one feature set\n'
+
+      const initialChangelog = frontMatter + '\n' + standardVersionHeader + '\n' + changelog100;
+
+      mock({
+        bump: 'patch',
+        changelog: changelog101,
+        fs: { 'CHANGELOG.md': initialChangelog },
+        tags: ['v1.0.0']
+      })
+      await exec()
+      const content = fs.readFileSync('CHANGELOG.md', 'utf-8')
+      content.should.equal(frontMatter + '\n' + header + '\n' + changelog101 + changelog100 )
+    })
+
+    it('appends the new release above the last release, removing the old header (new format), and retains any front matter', async function () {
       const { header } = require('../defaults')
       const frontMatter =
           '---\nstatus: new\n---'
