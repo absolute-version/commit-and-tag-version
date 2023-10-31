@@ -848,7 +848,7 @@ describe('cli', function () {
           [filename]: fs.readFileSync('./test/mocks/pom-no-version.xml')
         }
       })
-      expect(
+      await expect(
         exec({
           packageFiles: [{ filename, type: 'maven' }],
           bumpFiles: [{ filename, type: 'maven' }]
