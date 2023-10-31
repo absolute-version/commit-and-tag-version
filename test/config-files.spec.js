@@ -64,7 +64,7 @@ function mock ({ bump, changelog, tags } = {}) {
   return () => stdMocks.flush()
 }
 
-describe('config files', () => {
+describe('config files', function () {
   beforeEach(function () {
     shell.rm('-rf', 'tmp')
     shell.config.silent = true

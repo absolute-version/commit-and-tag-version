@@ -109,7 +109,7 @@ describe('git', function () {
     }
   })
 
-  describe('tagPrefix', () => {
+  describe('tagPrefix', function () {
     // TODO: Use unmocked git-semver-tags and stage a git environment
     it('will add prefix onto tag based on version from package', async function () {
       writePackageJson('1.2.0')
@@ -243,8 +243,8 @@ describe('git', function () {
     getPackageVersion().should.equal('1.1.0-0')
   })
 
-  describe('gitTagFallback', () => {
-    it('defaults to 1.0.0 if no tags in git history', async () => {
+  describe('gitTagFallback', function () {
+    it('defaults to 1.0.0 if no tags in git history', async function () {
       shell.rm('package.json')
       mock({ bump: 'minor' })
       await exec({})
@@ -252,7 +252,7 @@ describe('git', function () {
       output.stdout.should.include('v1.1.0')
     })
 
-    it('bases version on greatest version tag, if tags are found', async () => {
+    it('bases version on greatest version tag, if tags are found', async function () {
       shell.rm('package.json')
       mock({ bump: 'minor', tags: ['v3.9.0', 'v5.0.0', 'v3.0.0'] })
       await exec({})
@@ -261,7 +261,7 @@ describe('git', function () {
     })
   })
 
-  describe('configuration', () => {
+  describe('configuration', function () {
     it('.versionrc : releaseCommitMessageFormat', async function () {
       fs.writeFileSync(
         '.versionrc',
@@ -358,7 +358,7 @@ describe('git', function () {
       )
 
       mock({ bump: 'minor' })
-      expect(exec('--patch')).to.be.rejectedWith(/precommit-failure/)
+      await expect(exec('--patch')).to.be.rejectedWith(/precommit-failure/)
     })
 
     it('should allow an alternate commit message to be provided by precommit script', async function () {
