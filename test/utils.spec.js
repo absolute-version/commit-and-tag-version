@@ -26,7 +26,7 @@ function mockNpm () {
   }
 }
 
-describe('utils', () => {
+describe('utils', function () {
   it('detectPMByLockFile should work', async function () {
     const { setLockFile } = mockNpm()
     const { detectPMByLockFile } = require('../lib/detect-package-manager')

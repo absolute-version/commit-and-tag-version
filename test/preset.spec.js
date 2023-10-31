@@ -12,7 +12,7 @@ function exec (opt) {
   return require('../index')(opt)
 }
 
-describe('presets', () => {
+describe('presets', function () {
   beforeEach(function () {
     shell.rm('-rf', 'tmp')
     shell.config.silent = true
