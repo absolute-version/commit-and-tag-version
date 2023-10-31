@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.0.0](https://github.com/absolute-version/commit-and-tag-version/compare/v11.3.0...v12.0.0) (2023-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop support for node 14, 16. Now supports node 18 and 20.
+
+### Bug Fixes
+
+* Drop support for node 14, 16. Now supports node 18 and 20. ([b1a58bc](https://github.com/absolute-version/commit-and-tag-version/commit/b1a58bc2a786da48fbcec248204ff8631c79606e))
+* preserve frontmatter when updating changelog  ([#108](https://github.com/absolute-version/commit-and-tag-version/issues/108)) ([abdcfe2](https://github.com/absolute-version/commit-and-tag-version/commit/abdcfe295023f46c8724463940fff6a220434fad))
+
 ## [11.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.4...v11.3.0) (2023-10-10)
 
 
