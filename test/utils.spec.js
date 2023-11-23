@@ -1,50 +1,36 @@
-const mockery = require('mockery');
 const { promises: fsp } = require('fs');
-require('chai').should();
 
-function mockNpm() {
-  mockery.enable({ warnOnUnregistered: false, useCleanCache: true });
-  let lockFile = '';
+let mockFs;
 
-  const fsMock = {
-    promises: {
-      access: async function (path) {
-        if (lockFile && path.endsWith(lockFile)) {
-          return true;
-        }
-        await fsp.access(path);
-      },
-    },
-  };
-  mockery.registerMock('fs', fsMock);
-  return {
-    setLockFile(file) {
-      lockFile = file;
-    },
-  };
-}
+const setLockFile = (lockFile) => {
+  if (mockFs) {
+    mockFs.mockRestore();
+  }
+  mockFs = jest.spyOn(fsp, 'access').mockImplementation(async (path) => {
+    if (lockFile && path.endsWith(lockFile)) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error('Invalid lockfile'));
+  });
+};
 
 describe('utils', function () {
   it('detectPMByLockFile should work', async function () {
-    const { setLockFile } = mockNpm();
     const { detectPMByLockFile } = require('../lib/detect-package-manager');
 
     let pm = await detectPMByLockFile();
-    pm.should.equal('npm');
+    expect(pm).toEqual('npm');
 
     setLockFile('yarn.lock');
     pm = await detectPMByLockFile();
-    pm.should.equal('yarn');
+    expect(pm).toEqual('yarn');
 
     setLockFile('package-lock.json');
     pm = await detectPMByLockFile();
-    pm.should.equal('npm');
+    expect(pm).toEqual('npm');
 
     setLockFile('pnpm-lock.yaml');
     pm = await detectPMByLockFile();
-    pm.should.equal('pnpm');
-
-    mockery.deregisterAll();
-    mockery.disable();
+    expect(pm).toEqual('pnpm');
   });
 });

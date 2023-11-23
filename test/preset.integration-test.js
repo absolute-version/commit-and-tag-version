@@ -1,8 +1,6 @@
 const shell = require('shelljs');
 const fs = require('fs');
 
-require('chai').should();
-
 function exec(opt) {
   const cli = require('../command');
   opt = cli.parse(`commit-and-tag-version ${opt} --silent`);
@@ -35,16 +33,16 @@ describe('presets', function () {
   it('Conventional Commits (default)', async function () {
     await exec();
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
-    content.should.contain('### Features');
-    content.should.not.contain('### Performance Improvements');
-    content.should.not.contain('### Custom');
+    expect(content).toContain('### Features');
+    expect(content).not.toContain('### Performance Improvements');
+    expect(content).not.toContain('### Custom');
   });
 
   it('Angular', async function () {
     await exec('--preset angular');
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
-    content.should.contain('### Features');
-    content.should.contain('### Performance Improvements');
-    content.should.not.contain('### Custom');
+    expect(content).toContain('### Features');
+    expect(content).toContain('### Performance Improvements');
+    expect(content).not.toContain('### Custom');
   });
 });

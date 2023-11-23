@@ -14,3 +14,10 @@ npm-debug.log
 
 # coverage
 coverage
+
+# temp dir
+tmp
+test-temp
+
+# test report
+junit.xml

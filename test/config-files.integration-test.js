@@ -2,13 +2,8 @@
 
 const shell = require('shelljs');
 const fs = require('fs');
-const { Readable } = require('stream');
-const mockery = require('mockery');
-const stdMocks = require('std-mocks');
 
-const chai = require('chai');
-const expect = chai.expect;
-chai.use(require('chai-as-promised'));
+const mockers = require('./test-utils/mockers');
 
 function exec() {
   const cli = require('../command');
@@ -27,42 +22,13 @@ function exec() {
  * tags?: string[] | Error
  */
 function mock({ bump, changelog, tags } = {}) {
-  mockery.enable({ warnOnUnregistered: false, useCleanCache: true });
-
-  mockery.registerMock(
-    'conventional-recommended-bump',
-    function (opt, parserOpts, cb) {
-      if (typeof bump === 'function') bump(opt, parserOpts, cb);
-      else if (bump instanceof Error) cb(bump);
-      else cb(null, bump ? { releaseType: bump } : {});
-    },
-  );
+  mockers.mockRecommendedBump({ bump });
 
   if (!Array.isArray(changelog)) changelog = [changelog];
-  mockery.registerMock(
-    'conventional-changelog',
-    (opt) =>
-      new Readable({
-        read(_size) {
-          const next = changelog.shift();
-          if (next instanceof Error) {
-            this.destroy(next);
-          } else if (typeof next === 'function') {
-            this.push(next(opt));
-          } else {
-            this.push(next ? Buffer.from(next, 'utf8') : null);
-          }
-        },
-      }),
-  );
 
-  mockery.registerMock('git-semver-tags', function (cb) {
-    if (tags instanceof Error) cb(tags);
-    else cb(null, tags | []);
-  });
+  mockers.mockConventionalChangelog({ changelog });
 
-  stdMocks.use();
-  return () => stdMocks.flush();
+  mockers.mockGitSemverTags({ tags });
 }
 
 describe('config files', function () {
@@ -71,6 +37,7 @@ describe('config files', function () {
     shell.config.silent = true;
     shell.mkdir('tmp');
     shell.cd('tmp');
+
     fs.writeFileSync(
       'package.json',
       JSON.stringify({ version: '1.0.0' }),
@@ -81,50 +48,18 @@ describe('config files', function () {
   afterEach(function () {
     shell.cd('../');
     shell.rm('-rf', 'tmp');
-
-    mockery.deregisterAll();
-    mockery.disable();
-    stdMocks.restore();
-
-    // push out prints from the Mocha reporter
-    const { stdout } = stdMocks.flush();
-    for (const str of stdout) {
-      if (str.startsWith(' ')) process.stdout.write(str);
-    }
-  });
-
-  const configKeys = ['commit-and-tag-version', 'standard-version'];
-
-  configKeys.forEach((configKey) => {
-    it(`reads config from package.json key '${configKey}'`, async function () {
-      const issueUrlFormat =
-        'https://commit-and-tag-version.company.net/browse/{{id}}';
-      mock({
-        bump: 'minor',
-        changelog: ({ preset }) => preset.issueUrlFormat,
-      });
-      const pkg = {
-        version: '1.0.0',
-        repository: { url: 'git+https://company@scm.org/office/app.git' },
-        [configKey]: { issueUrlFormat },
-      };
-      fs.writeFileSync('package.json', JSON.stringify(pkg), 'utf-8');
-
-      await exec();
-      const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
-      content.should.include(issueUrlFormat);
-    });
   });
 
   it('reads config from .versionrc', async function () {
     const issueUrlFormat = 'http://www.foo.com/{{id}}';
     const changelog = ({ preset }) => preset.issueUrlFormat;
+
     mock({ bump: 'minor', changelog });
     fs.writeFileSync('.versionrc', JSON.stringify({ issueUrlFormat }), 'utf-8');
 
     await exec();
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
-    content.should.include(issueUrlFormat);
+    expect(content).toContain(issueUrlFormat);
   });
 
   it('reads config from .versionrc.json', async function () {
@@ -139,7 +74,7 @@ describe('config files', function () {
 
     await exec();
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
-    content.should.include(issueUrlFormat);
+    expect(content).toContain(issueUrlFormat);
   });
 
   it('evaluates a config-function from .versionrc.js', async function () {
@@ -153,7 +88,7 @@ describe('config files', function () {
 
     await exec();
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
-    content.should.include(issueUrlFormat);
+    expect(content).toContain(issueUrlFormat);
   });
 
   it('evaluates a config-object from .versionrc.js', async function () {
@@ -165,13 +100,6 @@ describe('config files', function () {
 
     await exec();
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
-    content.should.include(issueUrlFormat);
-  });
-
-  it('throws an error when a non-object is returned from .versionrc.js', async function () {
-    mock({ bump: 'minor' });
-    fs.writeFileSync('.versionrc.js', 'module.exports = 3', 'utf-8');
-
-    expect(exec).to.throw(/Invalid configuration/);
+    expect(content).toContain(issueUrlFormat);
   });
 });

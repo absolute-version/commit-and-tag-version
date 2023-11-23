@@ -9,19 +9,14 @@
     "format:base": "prettier \"./**/*.{ts,js}\"",
     "format:fix": "npm run format:base -- --write",
     "format:check": "npm run format:base -- --check",
-    "test": "nyc mocha --timeout=30000",
-    "test:unit": "mocha --exclude test/git.spec.js",
-    "coverage": "nyc report --reporter=lcov",
+    "test": "jest --verbose --testTimeout 30000 --silent",
+    "test:unit": "jest --verbose --testPathIgnorePatterns test/git.integration-test.js --silent",
+    "test:git-integration": "jest --verbose --testTimeout 30000 --testPathPattern test/git.integration-test.js",
     "release": "bin/cli.js"
-  },
-  "nyc": {
-    "exclude": [
-      "tmp/**"
-    ]
   },
   "repository": "absolute-version/commit-and-tag-version",
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "keywords": [
     "conventional-changelog",
@@ -41,7 +36,81 @@
   "bugs": {
     "url": "https://github.com/absolute-version/commit-and-tag-version/issues"
   },
+  "eslintConfig": {
+    "extends": [
+      "prettier",
+      "eslint:recommended"
+    ],
+    "env": {
+      "node": true,
+      "es6": true,
+      "jest/globals": true
+    },
+    "overrides": [
+      {
+        "files": [
+          "test/**"
+        ],
+        "plugins": [
+          "jest"
+        ],
+        "extends": [
+          "prettier",
+          "eslint:recommended",
+          "plugin:jest/recommended"
+        ],
+        "rules": {
+          "jest/prefer-expect-assertions": "off",
+          "jest/expect-expect": "off"
+        }
+      }
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2023
+    },
+    "plugins": [
+      "jest"
+    ],
+    "rules": {
+      "no-var": "error",
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "_.*"
+        }
+      ]
+    }
+  },
   "homepage": "https://github.com/absolute-version/commit-and-tag-version#readme",
+  "jest": {
+    "cacheDirectory": "test-tmp",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts}",
+      "!**/node_modules/**",
+      "!**/tmp/**",
+      "!**/test/**",
+      "!**/coverage/**"
+    ],
+    "coverageReporters": [
+      "lcov", "text"
+    ],
+    "projects": [
+      {
+        "displayName": "Unit Test",
+        "testMatch": [
+          "**/test/*.spec.js"
+        ]
+      },
+      {
+        "displayName": "Integration Test",
+        "runner": "jest-serial-runner",
+        "testMatch": [
+          "**/test/*.integration-test.js"
+        ]
+      }
+    ]
+  },
   "dependencies": {
     "chalk": "^2.4.2",
     "conventional-changelog": "3.1.25",
@@ -58,22 +127,16 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@fintechstudios/eslint-plugin-chai-as-promised": "^3.1.0",
-    "chai": "^4.3.10",
-    "chai-as-promised": "^7.1.1",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-mocha": "^10.2.0",
+    "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-n": "^15.2.0",
     "eslint-plugin-promise": "^6.1.1",
-    "mocha": "^10.2.0",
-    "mock-fs": "^5.2.0",
-    "mockery": "^2.1.0",
-    "nyc": "^15.1.0",
+    "jest": "^29.7.0",
+    "jest-serial-runner": "^1.2.1",
     "prettier": "3.0.3",
     "shelljs": "^0.8.5",
-    "std-mocks": "^2.0.0",
     "strip-ansi": "^6.0.0"
   }
 }
