@@ -9,9 +9,9 @@
     "format:base": "prettier \"./**/*.{ts,js}\"",
     "format:fix": "npm run format:base -- --write",
     "format:check": "npm run format:base -- --check",
-    "test": "jest --verbose --testTimeout 30000 --silent",
-    "test:unit": "jest --verbose --testPathIgnorePatterns test/git.integration-test.js --silent",
-    "test:git-integration": "jest --verbose --testTimeout 30000 --testPathPattern test/git.integration-test.js",
+    "test": "jest",
+    "test:unit": "jest --testPathIgnorePatterns test/git.integration-test.js",
+    "test:git-integration": "jest --testPathPattern test/git.integration-test.js",
     "release": "bin/cli.js"
   },
   "repository": "absolute-version/commit-and-tag-version",
@@ -36,82 +36,7 @@
   "bugs": {
     "url": "https://github.com/absolute-version/commit-and-tag-version/issues"
   },
-  "eslintConfig": {
-    "extends": [
-      "prettier",
-      "eslint:recommended"
-    ],
-    "env": {
-      "node": true,
-      "es6": true,
-      "jest/globals": true
-    },
-    "overrides": [
-      {
-        "files": [
-          "test/**"
-        ],
-        "plugins": [
-          "jest"
-        ],
-        "extends": [
-          "prettier",
-          "eslint:recommended",
-          "plugin:jest/recommended"
-        ],
-        "rules": {
-          "jest/prefer-expect-assertions": "off",
-          "jest/expect-expect": "off"
-        }
-      }
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2023
-    },
-    "plugins": [
-      "jest"
-    ],
-    "rules": {
-      "no-var": "error",
-      "no-unused-vars": [
-        "error",
-        {
-          "argsIgnorePattern": "_.*"
-        }
-      ]
-    }
-  },
   "homepage": "https://github.com/absolute-version/commit-and-tag-version#readme",
-  "jest": {
-    "cacheDirectory": "test-tmp",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "**/*.{js,jsx,ts}",
-      "!**/node_modules/**",
-      "!**/tmp/**",
-      "!**/test/**",
-      "!**/coverage/**",
-      "!**/bin/**"
-    ],
-    "coverageReporters": [
-      "lcov", "text"
-    ],
-    "projects": [
-      {
-        "displayName": "Unit Test",
-        "testMatch": [
-          "**/test/*.spec.js"
-        ]
-      },
-      {
-        "displayName": "Integration Test",
-        "runner": "jest-serial-runner",
-        "testMatch": [
-          "**/test/*.integration-test.js"
-        ]
-      }
-    ]
-  },
   "dependencies": {
     "chalk": "^2.4.2",
     "conventional-changelog": "3.1.25",

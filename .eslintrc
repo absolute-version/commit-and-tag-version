@@ -1,0 +1,49 @@
+{
+  "extends": [
+    "prettier",
+    "eslint:recommended"
+  ],
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "overrides": [
+    {
+      "env": {
+        "node": true,
+        "es6": true,
+        "jest/globals": true
+      },
+      "files": [
+        "test/**"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "extends": [
+        "prettier",
+        "eslint:recommended",
+        "plugin:jest/recommended"
+      ],
+      "rules": {
+        "jest/prefer-expect-assertions": "off",
+        "jest/expect-expect": "off"
+      }
+    }
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2023
+  },
+  "plugins": [
+    "jest"
+  ],
+  "rules": {
+    "no-var": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "_.*"
+      }
+    ]
+  }
+}
