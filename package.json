@@ -53,7 +53,7 @@
     "dotgitignore": "^2.1.0",
     "figures": "^3.1.0",
     "find-up": "^5.0.0",
-    "git-semver-tags": "^5.0.0",
+    "git-semver-tags": "^7.0.0",
     "semver": "^7.5.4",
     "yargs": "^17.7.2"
   },
