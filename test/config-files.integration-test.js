@@ -31,12 +31,21 @@ function mock({ bump, changelog, tags } = {}) {
   mockers.mockGitSemverTags({ tags });
 }
 
+function setupTestDirectory() {
+  shell.rm('-rf', 'config-files-temp');
+  shell.config.silent = true;
+  shell.mkdir('config-files-temp');
+  shell.cd('config-files-temp');
+}
+
+function resetShell() {
+  shell.cd('../');
+  shell.rm('-rf', 'config-files-temp');
+}
+
 describe('config files', function () {
   beforeEach(function () {
-    shell.rm('-rf', 'tmp');
-    shell.config.silent = true;
-    shell.mkdir('tmp');
-    shell.cd('tmp');
+    setupTestDirectory();
 
     fs.writeFileSync(
       'package.json',
@@ -46,8 +55,8 @@ describe('config files', function () {
   });
 
   afterEach(function () {
-    shell.cd('../');
-    shell.rm('-rf', 'tmp');
+    resetShell();
+    4;
   });
 
   it('reads config from .versionrc', async function () {

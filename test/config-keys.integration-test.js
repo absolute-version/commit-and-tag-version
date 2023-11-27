@@ -31,12 +31,21 @@ function mock({ bump, changelog, tags } = {}) {
   mockers.mockGitSemverTags({ tags });
 }
 
+function setupTempGitRepo() {
+  shell.rm('-rf', 'config-keys-temp');
+  shell.config.silent = true;
+  shell.mkdir('config-keys-temp');
+  shell.cd('config-keys-temp');
+}
+
+function resetShell() {
+  shell.cd('../');
+  shell.rm('-rf', 'config-keys-temp');
+}
+
 describe('config files', function () {
   beforeEach(function () {
-    shell.rm('-rf', 'tmp');
-    shell.config.silent = true;
-    shell.mkdir('tmp');
-    shell.cd('tmp');
+    setupTempGitRepo();
 
     fs.writeFileSync(
       'package.json',
@@ -46,8 +55,7 @@ describe('config files', function () {
   });
 
   afterEach(function () {
-    shell.cd('../');
-    shell.rm('-rf', 'tmp');
+    resetShell();
   });
 
   const configKeys = ['commit-and-tag-version', 'standard-version'];

@@ -8,26 +8,34 @@ function exec(opt) {
   return require('../index')(opt);
 }
 
+function setupTempGitRepo() {
+  shell.rm('-rf', 'preset-temp');
+  shell.config.silent = true;
+  shell.mkdir('preset-temp');
+  shell.cd('preset-temp');
+  shell.exec('git init');
+  shell.exec('git config commit.gpgSign false');
+  shell.exec('git config core.autocrlf false');
+  shell.exec('git commit --allow-empty -m "initial commit"');
+  shell.exec('git commit --allow-empty -m "feat: A feature commit."');
+  shell.exec('git commit --allow-empty -m "perf: A performance change."');
+  shell.exec('git commit --allow-empty -m "chore: A chore commit."');
+  shell.exec('git commit --allow-empty -m "ci: A ci commit."');
+  shell.exec('git commit --allow-empty -m "custom: A custom commit."');
+}
+
+function resetShell() {
+  shell.cd('../');
+  shell.rm('-rf', 'preset-temp');
+}
+
 describe('presets', function () {
   beforeEach(function () {
-    shell.rm('-rf', 'tmp');
-    shell.config.silent = true;
-    shell.mkdir('tmp');
-    shell.cd('tmp');
-    shell.exec('git init');
-    shell.exec('git config commit.gpgSign false');
-    shell.exec('git config core.autocrlf false');
-    shell.exec('git commit --allow-empty -m "initial commit"');
-    shell.exec('git commit --allow-empty -m "feat: A feature commit."');
-    shell.exec('git commit --allow-empty -m "perf: A performance change."');
-    shell.exec('git commit --allow-empty -m "chore: A chore commit."');
-    shell.exec('git commit --allow-empty -m "ci: A ci commit."');
-    shell.exec('git commit --allow-empty -m "custom: A custom commit."');
+    setupTempGitRepo();
   });
 
   afterEach(function () {
-    shell.cd('../');
-    shell.rm('-rf', 'tmp');
+    resetShell();
   });
 
   it('Conventional Commits (default)', async function () {

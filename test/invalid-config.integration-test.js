@@ -31,6 +31,18 @@ function mock({ bump, changelog, tags } = {}) {
   mockers.mockGitSemverTags({ tags });
 }
 
+function setupTestDirectory() {
+  shell.rm('-rf', 'invalid-config-temp');
+  shell.config.silent = true;
+  shell.mkdir('invalid-config-temp');
+  shell.cd('invalid-config-temp');
+}
+
+function resetShell() {
+  shell.cd('../');
+  shell.rm('-rf', 'invalid-config-temp');
+}
+
 /**
  * This test is very sensitive to the setup of "tmp" directories and must currently be run in it's own "Jest" runner instance.
  * By default Jest spawns a Runner per-test file even if running serially each test in a File
@@ -39,10 +51,7 @@ function mock({ bump, changelog, tags } = {}) {
  */
 describe('invalid .versionrc', function () {
   beforeEach(function () {
-    shell.rm('-rf', 'tmp');
-    shell.config.silent = true;
-    shell.mkdir('tmp');
-    shell.cd('tmp');
+    setupTestDirectory();
 
     fs.writeFileSync(
       'package.json',
@@ -52,8 +61,7 @@ describe('invalid .versionrc', function () {
   });
 
   afterEach(function () {
-    shell.cd('../');
-    shell.rm('-rf', 'tmp');
+    resetShell();
   });
 
   it('throws an error when a non-object is returned from .versionrc.js', async function () {

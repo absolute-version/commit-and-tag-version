@@ -1,5 +1,4 @@
 const config = {
-  cacheDirectory: 'test-tmp',
   collectCoverage: true,
   collectCoverageFrom: [
     '**/*.{js,jsx,ts}',

@@ -36,21 +36,25 @@ function writePackageJson(version, option) {
   fs.writeFileSync('package.json', JSON.stringify(pkg), 'utf-8');
 }
 
-function setup() {
-  shell.rm('-rf', 'test-temp');
+function setupTempGitRepo() {
+  shell.rm('-rf', 'commit-message-config-temp');
   shell.config.silent = true;
-  shell.mkdir('test-temp');
-  shell.cd('test-temp');
+  shell.mkdir('commit-message-config-temp');
+  shell.cd('commit-message-config-temp');
   shell.exec('git init');
   shell.exec('git config commit.gpgSign false');
   shell.exec('git config core.autocrlf false');
   shell.exec('git commit --allow-empty -m"root-commit"');
+}
+
+function setup() {
+  setupTempGitRepo();
   writePackageJson('1.0.0');
 }
 
 function reset() {
   shell.cd('../');
-  shell.rm('-rf', 'test-temp');
+  shell.rm('-rf', 'commit-message-config-temp');
 }
 
 describe('configuration', function () {

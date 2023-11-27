@@ -36,26 +36,37 @@ function writeHook(hookName, causeError, script) {
   fs.chmodSync('scripts/' + hookName + '.js', '755');
 }
 
-function setup() {
-  shell.rm('-rf', 'test-temp');
+function setupTempGitRepo() {
+  shell.rm('-rf', 'pre-commit-hook-temp');
   shell.config.silent = true;
-  shell.mkdir('test-temp');
-  shell.cd('test-temp');
+  shell.mkdir('pre-commit-hook-temp');
+  shell.cd('pre-commit-hook-temp');
   shell.exec('git init');
   shell.exec('git config commit.gpgSign false');
   shell.exec('git config core.autocrlf false');
   shell.exec('git commit --allow-empty -m"root-commit"');
+}
+
+function setup() {
+  setupTempGitRepo();
   writePackageJson('1.0.0');
 }
 
-function reset() {
-  shell.cd('../');
-  shell.rm('-rf', 'test-temp');
-
-  // Clear mock calls but don't reset implementation
+function clearCapturedSpyCalls() {
   consoleInfoSpy.mockClear();
   consoleWarnSpy.mockClear();
   consoleErrorSpy.mockClear();
+}
+
+function resetShell() {
+  shell.cd('../');
+  shell.rm('-rf', 'pre-commit-hook-temp');
+}
+
+function reset() {
+  resetShell();
+
+  clearCapturedSpyCalls();
 }
 
 /**

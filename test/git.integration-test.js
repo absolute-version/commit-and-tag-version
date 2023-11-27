@@ -65,26 +65,37 @@ function verifyLogNotPrinted(expectedLog, spy = consoleInfoSpy) {
   expect(desiredLog).toBeUndefined();
 }
 
+function clearCapturedSpyCalls() {
+  consoleInfoSpy.mockClear();
+  consoleWarnSpy.mockClear();
+}
+
+function resetShell() {
+  shell.cd('../');
+  shell.rm('-rf', 'git-repo-temp');
+}
+
+function setupTempGitRepo() {
+  shell.rm('-rf', 'git-repo-temp');
+  shell.config.silent = true;
+  shell.mkdir('git-repo-temp');
+  shell.cd('git-repo-temp');
+  shell.exec('git init');
+  shell.exec('git config commit.gpgSign false');
+  shell.exec('git config core.autocrlf false');
+  shell.exec('git commit --allow-empty -m"root-commit"');
+}
+
 describe('git', function () {
   function setup() {
-    shell.rm('-rf', 'test-temp');
-    shell.config.silent = true;
-    shell.mkdir('test-temp');
-    shell.cd('test-temp');
-    shell.exec('git init');
-    shell.exec('git config commit.gpgSign false');
-    shell.exec('git config core.autocrlf false');
-    shell.exec('git commit --allow-empty -m"root-commit"');
+    setupTempGitRepo();
     writePackageJson('1.0.0');
   }
 
   function reset() {
-    shell.cd('../');
-    shell.rm('-rf', 'test-temp');
+    resetShell();
 
-    // Clear mock calls but don't reset implementation
-    consoleInfoSpy.mockClear();
-    consoleWarnSpy.mockClear();
+    clearCapturedSpyCalls();
   }
 
   beforeEach(function () {

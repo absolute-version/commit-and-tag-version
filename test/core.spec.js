@@ -198,15 +198,21 @@ function mock({
   writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
 }
 
-function unmock() {
-  // Clear mock calls but don't reset implementation
+function clearCapturedSpyCalls() {
   consoleInfoSpy.mockClear();
   consoleErrorSpy.mockClear();
+}
 
-  // Clear mock calls and restore Spy to use real implementation - ready to re-mock
+function restoreMocksToRealImplementation() {
   readFileSyncSpy.mockRestore();
   writeFileSyncSpy.mockRestore();
   lstatSyncSpy.mockRestore();
+}
+
+function unmock() {
+  clearCapturedSpyCalls();
+
+  restoreMocksToRealImplementation();
 
   standardVersion = null;
 }
