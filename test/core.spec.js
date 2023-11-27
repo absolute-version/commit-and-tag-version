@@ -4,7 +4,7 @@ const shell = require('shelljs');
 const stripAnsi = require('strip-ansi');
 const fs = require('fs');
 
-const mockers = require('./test-utils/mockers');
+const mockers = require('./mocks/jest-mocks');
 
 const runExecFile = require('../lib/run-execFile');
 

@@ -3,7 +3,7 @@
 const shell = require('shelljs');
 const fs = require('fs');
 
-const mockers = require('./test-utils/mockers');
+const mockers = require('./mocks/jest-mocks');
 
 function exec(opt = '') {
   if (typeof opt === 'string') {

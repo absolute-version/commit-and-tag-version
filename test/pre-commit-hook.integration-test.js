@@ -3,7 +3,7 @@
 const shell = require('shelljs');
 const fs = require('fs');
 
-const mockers = require('./test-utils/mockers');
+const mockers = require('./mocks/jest-mocks');
 
 // Jest swallows most standard console logs not explicitly defined into a custom logger
 // see: https://stackoverflow.com/questions/51555568/remove-logging-the-origin-line-in-jest
