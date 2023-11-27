@@ -31,8 +31,12 @@ function mock({ bump, changelog, tags } = {}) {
   mockers.mockGitSemverTags({ tags });
 }
 
-// Really picky about running - works fine when run individually or in it's on file/jest-runner
-// but falls over if run as part of all tests in config-files.test
+/**
+ * This test is very sensitive to the setup of "tmp" directories and must currently be run in it's own "Jest" runner instance.
+ * By default Jest spawns a Runner per-test file even if running serially each test in a File
+ * When we refactored from Mocha -> Jest, if this test was run as part of a larger test-suite, it would always fail, due to presence of a valid .verisonrc
+ * somewhere in the "real" or "tmp" filesystem, despite the shell code seemingly setting up and tearing down correctly
+ */
 describe('invalid .versionrc', function () {
   beforeEach(function () {
     shell.rm('-rf', 'tmp');
