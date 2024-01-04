@@ -1475,6 +1475,42 @@ describe('cli', function () {
       expect(gitArgs).toHaveLength(0);
     });
 
+    it('--signedoff adds signed-off-by to the commit message', async function () {
+      const gitArgs = [
+        ['add', 'CHANGELOG.md', 'package.json', 'package-lock.json'],
+        [
+          'commit',
+          '--signoff',
+          'CHANGELOG.md',
+          'package.json',
+          'package-lock.json',
+          '-m',
+          'chore(release): 1.0.1',
+        ],
+        ['tag', '-a', 'v1.0.1', '-m', 'chore(release): 1.0.1'],
+        ['rev-parse', '--abbrev-ref', 'HEAD'],
+      ];
+
+      runExecFile.mockImplementation((_args, cmd, cmdArgs) => {
+        expect(cmd).toEqual('git');
+
+        const expected = gitArgs.shift();
+        expect(cmdArgs).toEqual(expected);
+
+        if (expected[0] === 'rev-parse') return Promise.resolve('master');
+
+        return Promise.resolve('');
+      });
+
+      mock({
+        bump: 'patch',
+        changelog: 'foo\n',
+      });
+
+      await exec('--signoff', true);
+      expect(gitArgs).toHaveLength(0);
+    });
+
     it('--tag-force forces tag replacement', async function () {
       const gitArgs = [
         ['add', 'CHANGELOG.md', 'package.json', 'package-lock.json'],

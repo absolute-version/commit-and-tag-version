@@ -48,6 +48,11 @@ const yargs = require('yargs')
     type: 'boolean',
     default: defaults.sign,
   })
+  .option('signoff', {
+    describe: 'Should the git commit have a "Signed-off-by" trailer',
+    type: 'boolean',
+    default: defaults.signoff,
+  })
   .option('no-verify', {
     alias: 'n',
     describe:

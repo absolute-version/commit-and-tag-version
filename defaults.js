@@ -4,6 +4,7 @@ const defaults = {
   infile: 'CHANGELOG.md',
   firstRelease: false,
   sign: false,
+  signoff: false,
   noVerify: false,
   commitAll: false,
   silent: false,

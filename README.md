@@ -279,6 +279,10 @@ commit-and-tag-version --no-verify
 
 If you have your GPG key set up, add the `--sign` or `-s` flag to your `commit-and-tag-version` command.
 
+### Signed-off-by trailer
+
+To add the "Signed-off-by" trailer to the commit message add the `--signoff` flag to your `commit-and-tag-version` command.
+
 ### Lifecycle Scripts
 
 `commit-and-tag-version` supports lifecycle scripts. These allow you to execute your
