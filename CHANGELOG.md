@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.1.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.0.0...v12.1.0) (2024-01-06)
+
+
+### Features
+
+* Add signoff option ([#120](https://github.com/absolute-version/commit-and-tag-version/issues/120)) ([d107e38](https://github.com/absolute-version/commit-and-tag-version/commit/d107e38eb906dfb21658d12803b7308f2e3dda7d))
+
 ## [12.0.0](https://github.com/absolute-version/commit-and-tag-version/compare/v11.3.0...v12.0.0) (2023-10-31)
 
 
