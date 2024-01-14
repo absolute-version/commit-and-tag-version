@@ -1180,29 +1180,97 @@ describe('cli', function () {
       });
     });
 
+    it('bumps version in Maven `pom.xml` file with CRLF Line Endings', async function () {
+      const expected = fs.readFileSync(
+        './test/mocks/pom-6.4.0-crlf.xml',
+        'utf-8',
+      );
+      const filename = 'pom.xml';
+      mock({
+        bump: 'minor',
+        realTestFiles: [
+          {
+            filename,
+            path: './test/mocks/pom-6.3.1-crlf.xml',
+          },
+        ],
+      });
+      await exec({
+        packageFiles: [{ filename, type: 'maven' }],
+        bumpFiles: [{ filename, type: 'maven' }],
+      });
+
+      // filePath is the first arg passed to writeFileSync
+      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+        writeFileSyncSpy,
+        filename,
+      });
+
+      if (!packageJsonWriteFileSynchCall) {
+        throw new Error(`writeFileSynch not invoked with path ${filename}`);
+      }
+
+      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+      expect(calledWithContentStr).toEqual(expected);
+    });
+
+    it('bumps version in Maven `pom.xml` file with LF Line Endings', async function () {
+      const expected = fs.readFileSync(
+        './test/mocks/pom-6.4.0-lf.xml',
+        'utf-8',
+      );
+      const filename = 'pom.xml';
+      mock({
+        bump: 'minor',
+        realTestFiles: [
+          {
+            filename,
+            path: './test/mocks/pom-6.3.1-lf.xml',
+          },
+        ],
+      });
+      await exec({
+        packageFiles: [{ filename, type: 'maven' }],
+        bumpFiles: [{ filename, type: 'maven' }],
+      });
+
+      // filePath is the first arg passed to writeFileSync
+      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+        writeFileSyncSpy,
+        filename,
+      });
+
+      if (!packageJsonWriteFileSynchCall) {
+        throw new Error(`writeFileSynch not invoked with path ${filename}`);
+      }
+
+      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+      expect(calledWithContentStr).toEqual(expected);
+    });
+
     it('bumps version in Gradle `build.gradle.kts` file', async function () {
       const expected = fs.readFileSync(
         './test/mocks/build-6.4.0.gradle.kts',
         'utf-8',
       );
 
+      const filename = 'build.gradle.kts';
       mock({
         bump: 'minor',
         realTestFiles: [
           {
-            filename: 'build.gradle.kts',
+            filename,
             path: './test/mocks/build-6.3.1.gradle.kts',
           },
         ],
       });
 
       await exec({
-        packageFiles: [{ filename: 'build.gradle.kts', type: 'gradle' }],
-        bumpFiles: [{ filename: 'build.gradle.kts', type: 'gradle' }],
+        packageFiles: [{ filename, type: 'gradle' }],
+        bumpFiles: [{ filename, type: 'gradle' }],
       });
 
       // filePath is the first arg passed to writeFileSync
-      const filename = 'build.gradle.kts';
       const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
         writeFileSyncSpy,
         filename,

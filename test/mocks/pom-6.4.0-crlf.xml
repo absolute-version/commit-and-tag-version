@@ -1,0 +1,30 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.mycompany.app</groupId>
+    <artifactId>my-app</artifactId>
+    <version>3.0.0</version>
+  </parent>
+
+  <groupId>com.mycompany.app</groupId>
+  <artifactId>my-module</artifactId>
+  <version>6.4.0</version>
+
+  <properties>
+    <some.version>2.0.0</some.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.some.dependency</groupId>
+      <artifactId>some-artifact</artifactId>
+      <version>${some.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.another.dependency</groupId>
+      <artifactId>another-artifact</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+  </dependencies>
+</project>

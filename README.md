@@ -6,7 +6,6 @@
 
 > **`Why was it renamed commit-and-tag-version?`**. I didn't want to scope the package or name it `standard-version-fork`, and it was a good opportunity to make the purpose of the tool clearer. I also wanted to distinguish it from the other tool in this organisation, [`absolute-version`](https://github.com/absolute-version/absolute-version-js), which just prints version information for pre-releases. 
 
-
 A utility for versioning using [semver](https://semver.org/) and CHANGELOG generation powered by [Conventional Commits](https://conventionalcommits.org).
 
 ![ci](https://github.com/absolute-version/commit-and-tag-version/workflows/ci/badge.svg)
@@ -20,6 +19,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
 - [Commit and Tag Version](#commit-and-tag-version)
     - [How It Works:](#how-it-works)
     - [`bumpFiles`, `packageFiles` and `updaters`](#bumpfiles-packagefiles-and-updaters)
+    - [Maven Support (Java/Kotlin)](#maven-support-javakotlin)
     - [Gradle Support (Java/Kotlin)](#gradle-support-javakotlin)
     - [.NET Support](#net-support)
   - [Installing `commit-and-tag-version`](#installing-commit-and-tag-version)
@@ -55,7 +55,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
   - [License](#license)
 
 
-### How It Works:
+### How It Works
 
 1. Follow the [Conventional Commits Specification](https://conventionalcommits.org) in your repository.
 2. When you're ready to release, run `commit-and-tag-version`.
@@ -83,6 +83,14 @@ By default, `commit-and-tag-version` assumes you're working in a NodeJS based pr
 
 That said, if you find your self asking [How can I use commit-and-tag-version for additional metadata files, languages or version files?](#can-i-use-commit-and-tag-version-for-additional-metadata-files-languages-or-version-files) – these configuration options will help!
 
+### Maven Support (Java/Kotlin)
+
+If you are using Maven, then just point to your `pom.xml` file.
+
+```sh
+commit-and-tag-version --packageFiles pom.xml --bumpFiles pom.xml
+```
+
 ### Gradle Support (Java/Kotlin)
 
 If you are using Gradle, then just point to your `build.gradle` file (or `build.gradle.kts` if using Kotlin DSL).
@@ -95,6 +103,7 @@ commit-and-tag-version --packageFiles build.gradle --bumpFiles build.gradle
 
 If you are using .NET with `.csproj` files.
 This is going to read and update only the `<Version>` tag in the file.
+
 ```sh
 commit-and-tag-version --packageFiles <YOUR-PROJECT-NAME>.csproj --bumpFiles <YOUR-PROJECT-NAME>.csproj
 ```
@@ -148,7 +157,7 @@ You can configure `commit-and-tag-version` either by:
 1. Placing a `commit-and-tag-version` stanza in your `package.json` (assuming
    your project is JavaScript).
 
-   > Note for users who have migrated to 
+   > Note for users who have migrated to
    `commit-and-tag-version` from `standard-version`: the previous package.json configuration key of `standard-version` will still work.
 
 2. Creating a `.versionrc`, `.versionrc.json` or `.versionrc.js`.
@@ -312,7 +321,7 @@ Simply add the following to your package.json to configure lifecycle scripts:
 ```
 
 As an example to change from using GitHub to track your items to using your projects Jira use a
-`postchangelog` script to replace the url fragment containing 'https://github.com/`myproject`/issues/'
+`postchangelog` script to replace the url fragment containing '<https://github.com/`myproject`/issues/>'
 with a link to your Jira - assuming you have already installed [replace](https://www.npmjs.com/package/replace)
 
 ```json
