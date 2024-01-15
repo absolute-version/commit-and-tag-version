@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.2.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.1.0...v12.2.0) (2024-01-15)
+
+
+### Features
+
+* **updater:** add maven pom.xml file support ([#33](https://github.com/absolute-version/commit-and-tag-version/issues/33), [#109](https://github.com/absolute-version/commit-and-tag-version/issues/109)) ([#123](https://github.com/absolute-version/commit-and-tag-version/issues/123)) ([6466beb](https://github.com/absolute-version/commit-and-tag-version/commit/6466bebf849bbdcdaebf493a1ccce9670c469fde))
+
 ## [12.1.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.0.0...v12.1.0) (2024-01-06)
 
 
