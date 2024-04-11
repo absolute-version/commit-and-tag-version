@@ -52,6 +52,7 @@
     "jsdom": "^23.2.0",
     "semver": "^7.5.4",
     "w3c-xmlserializer": "^5.0.0",
+    "yaml": "^2.4.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

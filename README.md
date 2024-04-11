@@ -108,6 +108,15 @@ This is going to read and update only the `<Version>` tag in the file.
 commit-and-tag-version --packageFiles <YOUR-PROJECT-NAME>.csproj --bumpFiles <YOUR-PROJECT-NAME>.csproj
 ```
 
+### YAML Support
+
+If you are using YAML files.
+This is going to read and update only the `version:` tag in the file.
+
+```sh
+commit-and-tag-version --packageFiles file.yaml --bumpFiles file.yaml
+```
+
 ## Installing `commit-and-tag-version`
 
 ### As a local `npm run` script

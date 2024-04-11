@@ -1365,6 +1365,78 @@ describe('cli', function () {
       verifyPackageVersion({ writeFileSyncSpy, expectedVersion: '1.1.0' });
     });
 
+    it('bumps version in Dart `pubspec.yaml` file', async function () {
+      const expected = fs.readFileSync(
+        './test/mocks/pubspec-6.4.0.yaml',
+        'utf-8',
+      );
+
+      const filename = 'pubspec.yaml';
+      mock({
+        bump: 'minor',
+        realTestFiles: [
+          {
+            filename,
+            path: './test/mocks/pubspec-6.3.1.yaml',
+          },
+        ],
+      });
+
+      await exec({
+        packageFiles: [{ filename, type: 'yaml' }],
+        bumpFiles: [{ filename, type: 'yaml' }],
+      });
+
+      // filePath is the first arg passed to writeFileSync
+      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+        writeFileSyncSpy,
+        filename,
+      });
+
+      if (!packageJsonWriteFileSynchCall) {
+        throw new Error(`writeFileSynch not invoked with path ${filename}`);
+      }
+
+      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+      expect(calledWithContentStr).toEqual(expected);
+    });
+
+    it('bumps version in Dart `pubspec.yaml` file with CRLF line endings', async function () {
+      const expected = fs.readFileSync(
+        './test/mocks/pubspec-6.4.0-crlf.yaml',
+        'utf-8',
+      );
+
+      const filename = 'pubspec.yaml';
+      mock({
+        bump: 'minor',
+        realTestFiles: [
+          {
+            filename,
+            path: './test/mocks/pubspec-6.3.1-crlf.yaml',
+          },
+        ],
+      });
+
+      await exec({
+        packageFiles: [{ filename, type: 'yaml' }],
+        bumpFiles: [{ filename, type: 'yaml' }],
+      });
+
+      // filePath is the first arg passed to writeFileSync
+      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+        writeFileSyncSpy,
+        filename,
+      });
+
+      if (!packageJsonWriteFileSynchCall) {
+        throw new Error(`writeFileSynch not invoked with path ${filename}`);
+      }
+
+      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+      expect(calledWithContentStr).toEqual(expected);
+    });
+
     describe('skip', function () {
       it('allows bump and changelog generation to be skipped', async function () {
         const changelogContent = 'legacy header format<a name="1.0.0">\n';
