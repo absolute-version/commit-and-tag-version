@@ -1180,6 +1180,74 @@ describe('cli', function () {
       });
     });
 
+    it('bumps version in OpenAPI `openapi.yaml` file with CRLF Line Endings', async function () {
+      const expected = fs.readFileSync(
+        './test/mocks/openapi-1.3.0-crlf.yaml',
+        'utf-8',
+      );
+      const filename = 'openapi.yaml';
+      mock({
+        bump: 'minor',
+        realTestFiles: [
+          {
+            filename,
+            path: './test/mocks/openapi-1.2.3-crlf.yaml',
+          },
+        ],
+      });
+      await exec({
+        packageFiles: [{ filename, type: 'openapi' }],
+        bumpFiles: [{ filename, type: 'openapi' }],
+      });
+
+      // filePath is the first arg passed to writeFileSync
+      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+        writeFileSyncSpy,
+        filename,
+      });
+
+      if (!packageJsonWriteFileSynchCall) {
+        throw new Error(`writeFileSynch not invoked with path ${filename}`);
+      }
+
+      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+      expect(calledWithContentStr).toEqual(expected);
+    });
+
+    it('bumps version in OpenAPI `openapi.yaml` file with LF Line Endings', async function () {
+      const expected = fs.readFileSync(
+        './test/mocks/openapi-1.3.0-lf.yaml',
+        'utf-8',
+      );
+      const filename = 'openapi.yaml';
+      mock({
+        bump: 'minor',
+        realTestFiles: [
+          {
+            filename,
+            path: './test/mocks/openapi-1.2.3-lf.yaml',
+          },
+        ],
+      });
+      await exec({
+        packageFiles: [{ filename, type: 'openapi' }],
+        bumpFiles: [{ filename, type: 'openapi' }],
+      });
+
+      // filePath is the first arg passed to writeFileSync
+      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+        writeFileSyncSpy,
+        filename,
+      });
+
+      if (!packageJsonWriteFileSynchCall) {
+        throw new Error(`writeFileSynch not invoked with path ${filename}`);
+      }
+
+      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+      expect(calledWithContentStr).toEqual(expected);
+    });
+
     it('bumps version in Maven `pom.xml` file with CRLF Line Endings', async function () {
       const expected = fs.readFileSync(
         './test/mocks/pom-6.4.0-crlf.xml',
