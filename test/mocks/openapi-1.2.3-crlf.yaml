@@ -1,0 +1,12 @@
+openapi: "3.0.2"
+info:
+  title: Mock API
+  description: >-
+    Description of Mock API
+  version: "1.2.3"
+  termsOfService: http://swagger.io/terms/
+externalDocs:
+  description: Find out more
+  url: https://example.com/foo/bar
+servers:
+  - url: http://example.com
