@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.2.0...v12.3.0) (2024-04-19)
+
+
+### Features
+
+* **updater:** add YAML support ([#137](https://github.com/absolute-version/commit-and-tag-version/issues/137)) ([b9dccc2](https://github.com/absolute-version/commit-and-tag-version/commit/b9dccc23ec05e4026899c676f3275d4dedf8c686))
+
+
+### Bug Fixes
+
+* Add debug messages for exclusions during bump lifecycle ([#131](https://github.com/absolute-version/commit-and-tag-version/issues/131)) ([a9191f2](https://github.com/absolute-version/commit-and-tag-version/commit/a9191f293eb9302afb1093ad37e9fa076f6b37a2))
+
 ## [12.2.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.1.0...v12.2.0) (2024-01-15)
 
 
