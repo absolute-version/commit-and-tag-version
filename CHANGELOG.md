@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.4.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.3.0...v12.4.0) (2024-04-19)
+
+
+### Features
+
+* Add OpenAPI version support ([#136](https://github.com/absolute-version/commit-and-tag-version/issues/136)) ([007b1b0](https://github.com/absolute-version/commit-and-tag-version/commit/007b1b0386651f2fbd6e8a9f552a2a34702086ca))
+
 ## [12.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.2.0...v12.3.0) (2024-04-19)
 
 
