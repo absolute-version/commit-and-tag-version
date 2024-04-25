@@ -22,6 +22,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
     - [Maven Support (Java/Kotlin)](#maven-support-javakotlin)
     - [Gradle Support (Java/Kotlin)](#gradle-support-javakotlin)
     - [.NET Support](#net-support)
+    - [YAML Support](#yaml-support)
     - [OpenAPI Support](#openapi-support)
   - [Installing `commit-and-tag-version`](#installing-commit-and-tag-version)
     - [As a local `npm run` script](#as-a-local-npm-run-script)
