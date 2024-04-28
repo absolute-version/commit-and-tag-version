@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.4.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.0...v12.4.1) (2024-04-28)
+
+
+### Bug Fixes
+
+* raise the 'openapi'-updater to a higher order of precedence above the 'yaml'-updater ([#143](https://github.com/absolute-version/commit-and-tag-version/issues/143)) ([37fe178](https://github.com/absolute-version/commit-and-tag-version/commit/37fe178fdba051c665414565fe4b0e61336aff18))
+
 ## [12.4.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.3.0...v12.4.0) (2024-04-19)
 
 
