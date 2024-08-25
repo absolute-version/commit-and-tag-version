@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.4.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.1...v12.4.2) (2024-08-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency conventional-changelog to v4 ([#176](https://github.com/absolute-version/commit-and-tag-version/issues/176)) ([8d15fc7](https://github.com/absolute-version/commit-and-tag-version/commit/8d15fc788edc2fd5d901ccbbbacb3452eabc3091))
+
 ## [12.4.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.0...v12.4.1) (2024-04-28)
 
 
