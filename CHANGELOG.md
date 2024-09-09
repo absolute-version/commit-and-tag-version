@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.4.3](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.2...v12.4.3) (2024-09-09)
+
+
+### Bug Fixes
+
+* Correct issue where downstream dependency would throw `options.debug is not a function` ([4280bcf](https://github.com/absolute-version/commit-and-tag-version/commit/4280bcf102b78d1995b24ec9238219db81730ebd))
+
 ## [12.4.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.1...v12.4.2) (2024-08-25)
 
 
