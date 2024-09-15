@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.4.4](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.3...v12.4.4) (2024-09-15)
+
+
+### Bug Fixes
+
+* sanitize double quotes result from stdout ([#186](https://github.com/absolute-version/commit-and-tag-version/issues/186)) ([8dbeb79](https://github.com/absolute-version/commit-and-tag-version/commit/8dbeb794b960c6ea27527353ad2c55884f48b469))
+
 ## [12.4.3](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.2...v12.4.3) (2024-09-09)
 
 
