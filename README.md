@@ -24,6 +24,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
     - [.NET Support](#net-support)
     - [YAML Support](#yaml-support)
     - [OpenAPI Support](#openapi-support)
+    - [Python Support](#python-support)
   - [Installing `commit-and-tag-version`](#installing-commit-and-tag-version)
     - [As a local `npm run` script](#as-a-local-npm-run-script)
     - [As global `bin`](#as-global-bin)
@@ -125,6 +126,14 @@ If you are using OpenAPI, then just point to your `openapi.yaml` file.
 
 ```sh
 commit-and-tag-version --packageFiles openapi.yaml --bumpFiles openapi.yaml
+```
+
+### Python Support
+
+If you are using Python ***with Poetry***, then point to your `pyproject.toml` file.
+
+```sh
+commit-and-tag-version --packageFiles pyproject.toml --bumpFiles pyproject.toml
 ```
 
 ## Installing `commit-and-tag-version`

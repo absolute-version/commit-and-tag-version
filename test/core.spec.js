@@ -1130,6 +1130,43 @@ describe('cli', function () {
           console.warn = origWarn;
         }
       });
+
+      it('bumps version in Python `pyproject.toml` file', async function () {
+        const expected = fs.readFileSync(
+          './test/mocks/pyproject-1.1.0.toml',
+          'utf-8',
+        );
+  
+        const filename = 'python.toml';
+        mock({
+          bump: 'minor',
+          realTestFiles: [
+            {
+              filename,
+              path: './test/mocks/pyproject-1.0.0.toml',
+            },
+          ],
+        });
+  
+        await exec({
+          packageFiles: [{ filename, type: 'python' }],
+          bumpFiles: [{ filename, type: 'python' }],
+        });
+  
+        // filePath is the first arg passed to writeFileSync
+        const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+          writeFileSyncSpy,
+          filename,
+        });
+  
+        if (!packageJsonWriteFileSynchCall) {
+          throw new Error(`writeFileSynch not invoked with path ${filename}`);
+        }
+  
+        const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+        expect(calledWithContentStr).toEqual(expected);
+      });
+  
     });
 
     it('`packageFiles` are bumped along with `bumpFiles` defaults [commit-and-tag-version#533]', async function () {
