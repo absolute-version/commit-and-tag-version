@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.5.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.4...v12.5.0) (2024-10-10)
+
+
+### Features
+
+* **python:** add poetry support ([#188](https://github.com/absolute-version/commit-and-tag-version/issues/188)) ([01f08e9](https://github.com/absolute-version/commit-and-tag-version/commit/01f08e9093e255f81394c97bcac59e057f5717dc))
+
 ## [12.4.4](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.3...v12.4.4) (2024-09-15)
 
 
