@@ -44,16 +44,16 @@
     "conventional-changelog-config-spec": "2.1.0",
     "conventional-changelog-conventionalcommits": "6.1.0",
     "conventional-recommended-bump": "7.0.1",
-    "detect-indent": "^6.0.0",
+    "detect-indent": "^6.1.0",
     "detect-newline": "^3.1.0",
     "dotgitignore": "^2.1.0",
-    "figures": "^3.1.0",
+    "figures": "^3.2.0",
     "find-up": "^5.0.0",
-    "git-semver-tags": "^5.0.0",
-    "jsdom": "^25.0.0",
+    "git-semver-tags": "^5.0.1",
+    "jsdom": "^25.0.1",
     "semver": "^7.6.3",
     "w3c-xmlserializer": "^5.0.0",
-    "yaml": "^2.4.1",
+    "yaml": "^2.6.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -66,8 +66,8 @@
     "eslint-plugin-promise": "^7.1.0",
     "jest": "^29.7.0",
     "jest-serial-runner": "^1.2.1",
-    "prettier": "3.3.2",
+    "prettier": "^3.3.3",
     "shelljs": "^0.8.5",
-    "strip-ansi": "^6.0.0"
+    "strip-ansi": "^6.0.1"
   }
 }
