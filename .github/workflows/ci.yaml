@@ -12,7 +12,6 @@ jobs:
       matrix:
         node: [
           18,
-          20.4, # Known good version of 20 which ran the previous Mocha and mock-fs based tests. If you go back to re-run those, tests Node 20.4 is the last version mock-fs worked with
           20,
           lts/*
         ]
