@@ -69,6 +69,7 @@ module.exports = async function standardVersion(argv) {
             : false,
       };
       break;
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       /* This probably shouldn't be empty? */
     }
