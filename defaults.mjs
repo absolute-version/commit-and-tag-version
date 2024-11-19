@@ -1,4 +1,12 @@
-const spec = require('conventional-changelog-config-spec');
+import spec from 'conventional-changelog-config-spec';
+
+let preset = import.meta.resolve('conventional-changelog-conventionalcommits');
+
+// Workaround for limitation on `node:path.isAbsolute()` (can't handle file:// on absolute path)
+preset = preset.replace("file://", "")
+
+// Workaround specific to Windows (removes etra slash at the beginning of absolute path)
+preset = preset.replace(/^(\/)([A-Z]:\/.*)$/, "$2")
 
 const defaults = {
   infile: 'CHANGELOG.md',
@@ -15,7 +23,7 @@ const defaults = {
   dryRun: false,
   tagForce: false,
   gitTagFallback: true,
-  preset: require.resolve('conventional-changelog-conventionalcommits'),
+  preset: preset,
   npmPublishHint: undefined,
 };
 
@@ -41,4 +49,4 @@ defaults.bumpFiles = defaults.packageFiles.concat([
   'npm-shrinkwrap.json',
 ]);
 
-module.exports = defaults;
+export default defaults;

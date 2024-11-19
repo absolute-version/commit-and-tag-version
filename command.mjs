@@ -1,8 +1,9 @@
-const spec = require('conventional-changelog-config-spec');
-const { getConfiguration } = require('./lib/configuration');
-const defaults = require('./defaults');
+import spec from 'conventional-changelog-config-spec';
+import { getConfiguration } from './lib/configuration.mjs';
+import defaults from './defaults.mjs';
+import yargs from 'yargs';
 
-const yargs = require('yargs')
+const yargsObj = yargs()
   .usage('Usage: $0 [options]')
   .option('packageFiles', {
     default: defaults.packageFiles,
@@ -150,12 +151,12 @@ const yargs = require('yargs')
   )
   .pkgConf('standard-version')
   .pkgConf('commit-and-tag-version')
-  .config(getConfiguration())
+  .config(await getConfiguration())
   .wrap(97);
 
 Object.keys(spec.properties).forEach((propertyKey) => {
   const property = spec.properties[propertyKey];
-  yargs.option(propertyKey, {
+  yargsObj.option(propertyKey, {
     type: property.type,
     describe: property.description,
     default: defaults[propertyKey] ? defaults[propertyKey] : property.default,
@@ -163,4 +164,4 @@ Object.keys(spec.properties).forEach((propertyKey) => {
   });
 });
 
-module.exports = yargs;
+export default yargsObj;
