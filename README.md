@@ -629,6 +629,25 @@ with other package managers for other ecosystems).
 
 When you are ready to release v1.0.0, add `--release-as 1.0.0` to the options.
 
+
+### Commit examples that show up in CHANGELOG
+
+##### Supported commits 👍
+feat(someScope)!: this is included, case insensitive 👍
+fix: this will be included, case insensitive 👍
+Fix: this will be included, case insensitive 👍
+fix(someScope): this is included, case insensitive 👍
+feat: this will be included, case insensitive 👍
+feat(someScope): this is included, case insensitive 👍
+Feat(someScope): this is included, case insensitive 👍
+feAt(someScope): this is included, case insensitive 👍
+
+##### Unsupported commits ❌
+update: excluded ❌
+anythingNotFeatOrFixOrBREAKING CHANGE: excluded ❌
+update/someScope: excluded ❌
+ci: excluded ❌
+
 ## License
 
 ISC
