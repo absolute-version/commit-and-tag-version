@@ -79,7 +79,7 @@ module.exports = async function standardVersion(argv) {
     if (pkg && pkg.version) {
       version = pkg.version;
     } else if (args.gitTagFallback) {
-      version = await latestSemverTag(args.tagPrefix);
+      version = await latestSemverTag(args);
     } else {
       throw new Error('no package file found');
     }

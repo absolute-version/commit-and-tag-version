@@ -272,6 +272,14 @@ describe('git', function () {
       const output = shell.exec('git tag');
       expect(output.stdout).toContain('v5.1.0');
     });
+
+    it('uses only relevant prerelease tags', async function () {
+      shell.rm('package.json');
+      mock({ bump: 'minor', tags: ['v1.1.0-b.0', 'v1.1.0-a.0', 'v1.0.0-b.0'] });
+      await exec('--prerelease a');
+      const output = shell.exec('git tag');
+      expect(output.stdout).toContain('1.1.0-a.1');
+    });
   });
 
   describe('Run ... to publish', function () {
