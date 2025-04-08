@@ -1,15 +1,15 @@
-const bump = require('./lib/lifecycles/bump');
-const changelog = require('./lib/lifecycles/changelog');
-const commit = require('./lib/lifecycles/commit');
-const fs = require('fs');
-const latestSemverTag = require('./lib/latest-semver-tag');
-const path = require('path');
-const printError = require('./lib/print-error');
-const tag = require('./lib/lifecycles/tag');
-const { resolveUpdaterObjectFromArgument } = require('./lib/updaters');
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import bump from './lib/lifecycles/bump.mjs';
+import changelog, { START_OF_LAST_RELEASE_PATTERN } from './lib/lifecycles/changelog.mjs';
+import commit from './lib/lifecycles/commit.mjs';
+import latestSemverTag from './lib/latest-semver-tag.mjs';
+import printError from './lib/print-error.mjs';
+import tag from './lib/lifecycles/tag.mjs';
+import { resolveUpdaterObjectFromArgument } from './lib/updaters/index.mjs';
 
-module.exports = async function standardVersion(argv) {
-  const defaults = require('./defaults');
+export default async function standardVersion(argv) {
+  const defaults = (await import('./defaults.mjs')).default;
   /**
    * `--message` (`-m`) support will be removed in the next major version.
    */
@@ -39,10 +39,10 @@ module.exports = async function standardVersion(argv) {
 
   if (
     argv.header &&
-    argv.header.search(changelog.START_OF_LAST_RELEASE_PATTERN) !== -1
+    argv.header.search(START_OF_LAST_RELEASE_PATTERN) !== -1
   ) {
     throw Error(
-      `custom changelog header must not match ${changelog.START_OF_LAST_RELEASE_PATTERN}`,
+      `custom changelog header must not match ${START_OF_LAST_RELEASE_PATTERN}`,
     );
   }
 
@@ -56,11 +56,11 @@ module.exports = async function standardVersion(argv) {
   const args = Object.assign({}, defaults, argv);
   let pkg;
   for (const packageFile of args.packageFiles) {
-    const updater = resolveUpdaterObjectFromArgument(packageFile);
+    const updater = await resolveUpdaterObjectFromArgument(packageFile);
     if (!updater) return;
-    const pkgPath = path.resolve(process.cwd(), updater.filename);
+    const pkgPath = resolve(process.cwd(), updater.filename);
     try {
-      const contents = fs.readFileSync(pkgPath, 'utf8');
+      const contents = readFileSync(pkgPath, 'utf8');
       pkg = {
         version: updater.updater.readVersion(contents),
         private:
@@ -76,7 +76,7 @@ module.exports = async function standardVersion(argv) {
   }
   try {
     let version;
-    if (pkg && pkg.version) {
+    if (pkg?.version) {
       version = pkg.version;
     } else if (args.gitTagFallback) {
       version = await latestSemverTag(args.tagPrefix);
@@ -92,4 +92,4 @@ module.exports = async function standardVersion(argv) {
     printError(args, err.message);
     throw err;
   }
-};
+}

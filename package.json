@@ -2,7 +2,7 @@
   "name": "commit-and-tag-version",
   "version": "12.5.0",
   "description": "replacement for `npm version` with automatic CHANGELOG generation",
-  "bin": "bin/cli.js",
+  "bin": "bin/cli.mjs",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -13,7 +13,7 @@
     "test": "jest",
     "test:unit": "jest --testPathIgnorePatterns test/git.integration-test.js",
     "test:git-integration": "jest --testPathPattern test/git.integration-test.js",
-    "release": "bin/cli.js"
+    "release": "node bin/cli.mjs"
   },
   "repository": "absolute-version/commit-and-tag-version",
   "engines": {
