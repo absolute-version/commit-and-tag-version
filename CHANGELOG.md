@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.5.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.0...v12.5.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* ignore other prerelease tags when finding latest tag ([#211](https://github.com/absolute-version/commit-and-tag-version/issues/211)) ([#213](https://github.com/absolute-version/commit-and-tag-version/issues/213)) ([1bcdf40](https://github.com/absolute-version/commit-and-tag-version/commit/1bcdf408cac54aff37aa4d5611444f6877aad6f9))
+
 ## [12.5.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.4...v12.5.0) (2024-10-10)
 
 
