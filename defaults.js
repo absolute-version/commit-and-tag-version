@@ -17,6 +17,7 @@ const defaults = {
   gitTagFallback: true,
   preset: require.resolve('conventional-changelog-conventionalcommits'),
   npmPublishHint: undefined,
+  config: undefined,
 };
 
 /**
