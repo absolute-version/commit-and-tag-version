@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.5.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.1...v12.5.2) (2025-07-30)
+
+
+### Bug Fixes
+
+* Correct use of fs, so we no longer emit a deprecation warning for `fs.F_OK` ([7fe66bb](https://github.com/absolute-version/commit-and-tag-version/commit/7fe66bb590103a593ecacabeb8effb8716862517)), closes [#240](https://github.com/absolute-version/commit-and-tag-version/issues/240)
+
 ## [12.5.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.0...v12.5.1) (2025-04-09)
 
 
