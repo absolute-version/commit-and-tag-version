@@ -38,6 +38,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
     - [Release as a Pre-Release](#release-as-a-pre-release)
     - [Release as a Target Type Imperatively (`npm version`-like)](#release-as-a-target-type-imperatively-npm-version-like)
     - [Prevent Git Hooks](#prevent-git-hooks)
+    - [Custom Config Path](#custom-config-path)
     - [Signing Commits and Tags](#signing-commits-and-tags)
     - [Lifecycle Scripts](#lifecycle-scripts)
     - [Skipping Lifecycle Steps](#skipping-lifecycle-steps)
@@ -310,6 +311,23 @@ If you use git hooks, like pre-commit, to test your code before committing, you 
 npm run release -- --no-verify
 # or global bin
 commit-and-tag-version --no-verify
+```
+
+### Custom Config Path
+
+Specify a custom path to the configuration file using the `--config` option
+
+```sh
+commit-and-tag-version --config ./path/to/.versionrc.js
+
+# or using alias
+commit-and-tag-version -c ./path/to/.versionrc.js
+```
+
+All config file formats can be used:
+
+```sh
+commit-and-tag-version -c ./path/to/.versionrc[.js|.cjs|.json]
 ```
 
 ### Signing Commits and Tags

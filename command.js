@@ -132,6 +132,12 @@ const yargs = require('yargs')
     default: defaults.npmPublishHint,
     describe: 'Customized publishing hint',
   })
+  .option('config', {
+    type: 'string',
+    default: defaults.config,
+    alias: 'c',
+    describe: 'Path to a custom configuration file',
+  })
   .check((argv) => {
     if (typeof argv.scripts !== 'object' || Array.isArray(argv.scripts)) {
       throw Error('scripts must be an object');
@@ -150,8 +156,9 @@ const yargs = require('yargs')
   )
   .pkgConf('standard-version')
   .pkgConf('commit-and-tag-version')
-  .config(getConfiguration())
   .wrap(97);
+
+yargs.config(getConfiguration(yargs.argv.config));
 
 Object.keys(spec.properties).forEach((propertyKey) => {
   const property = spec.properties[propertyKey];

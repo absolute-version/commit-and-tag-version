@@ -86,6 +86,30 @@ describe('config files', function () {
     expect(content).toContain(issueUrlFormat);
   });
 
+  it('reads config from custom path', async function () {
+    const issueUrlFormat = 'http://www.foo.com/{{id}}';
+    const changelog = ({ preset }) => preset.issueUrlFormat;
+    mock({ bump: 'minor', changelog });
+    fs.mkdirSync('custom-folder');
+    fs.writeFileSync(
+      'custom-folder/.versionrc.json',
+      JSON.stringify({ issueUrlFormat }),
+      'utf-8',
+    );
+
+    // Override process.argv to simulate CLI arguments before `exec`.
+    // This ensures yargs parses the custom config argument.
+    const originalArgv = process.argv;
+    process.argv = ['node', 'script.js', '-c', 'custom-folder/.versionrc.json'];
+
+    await exec(['-c', 'custom-folder/.versionrc.json']);
+    const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
+    expect(content).toContain(issueUrlFormat);
+
+    // Restore original process.argv
+    process.argv = originalArgv;
+  });
+
   it('evaluates a config-function from .versionrc.js', async function () {
     const issueUrlFormat = 'http://www.foo.com/{{id}}';
     const src = `module.exports = function() { return ${JSON.stringify({

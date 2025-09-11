@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.6.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.2...v12.6.0) (2025-08-27)
+
+
+### Features
+
+* add --config option to allow custom config file path ([#237](https://github.com/absolute-version/commit-and-tag-version/issues/237)) ([3958e68](https://github.com/absolute-version/commit-and-tag-version/commit/3958e688a60df4f1ba46137d1f4147a65817c8d7))
+
 ## [12.5.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.1...v12.5.2) (2025-07-30)
 
 
