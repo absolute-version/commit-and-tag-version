@@ -248,6 +248,24 @@ describe('git', function () {
     expect(getPackageVersion()).toEqual('1.1.0-0');
   });
 
+  it('increments prerelease number when same prerelease tag already exists', async function () {
+    writePackageJson('1.4.3-abc.0');
+    // Simulate existing tags where v1.4.3-xyz.0 already exists from git history
+    mock({ bump: 'patch', tags: ['v1.4.3-xyz.0'] });
+    await exec('--prerelease xyz');
+    // Base remains 1.4.3 when switching prerelease channel mid-cycle; must bump numeric suffix to avoid tag collision
+    expect(getPackageVersion()).toEqual('1.4.3-xyz.1');
+  });
+
+  it('increments prerelease number with gitTagFallback when same prerelease tag already exists', async function () {
+    // Setup without package.json and with existing tags only
+    shell.rm('package.json');
+    mock({ bump: 'patch', tags: ['v1.4.3-xyz.0'] });
+    await exec({ packageFiles: [], gitTagFallback: true, prerelease: 'xyz' });
+    const output = shell.exec('git tag').stdout;
+    expect(output).toMatch(/v1\.4\.3-xyz\.1/);
+  });
+
   describe('gitTagFallback', function () {
     beforeEach(function () {
       setup();
