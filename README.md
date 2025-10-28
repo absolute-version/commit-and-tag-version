@@ -284,6 +284,20 @@ npm run release -- --prerelease alpha
 
 This will tag the version as: `1.0.1-alpha.0`
 
+#### Prerelease Tag Collision Avoidance
+
+When cutting a prerelease with `--prerelease`, `commit-and-tag-version` automatically checks existing git tags (respecting your `tagPrefix` configuration) for the same base version and prerelease channel. If a tag already exists, the numeric suffix is automatically incremented to avoid conflicts.
+
+For example, if you're working with multiple prerelease channels simultaneously:
+
+```bash
+commit-and-tag-version --prerelease xyz  # Creates v1.4.3-xyz.0
+commit-and-tag-version --prerelease abc  # Creates v1.4.3-abc.0
+commit-and-tag-version --prerelease xyz  # Creates v1.4.3-xyz.1 (auto-incremented)
+```
+
+This behavior applies to both named prereleases (e.g., `-alpha.0`, `-beta.1`) and unnamed prereleases (e.g., `-0`, `-1`), ensuring that you can safely cut multiple prerelease versions without encountering git tag conflicts.
+
 ### Release as a Target Type Imperatively (`npm version`-like)
 
 To forgo the automated version bump use `--release-as` with the argument `major`, `minor` or `patch`.
