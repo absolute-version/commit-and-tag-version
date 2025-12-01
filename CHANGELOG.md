@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.6.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.6.0...v12.6.1) (2025-12-01)
+
+
+### Bug Fixes
+
+* **bump:** auto-increment prerelease when tag already exists ([#258](https://github.com/absolute-version/commit-and-tag-version/issues/258)) ([75d69a6](https://github.com/absolute-version/commit-and-tag-version/commit/75d69a6a63c545062525c5566b60d2903a4666f4))
+* use `fast-xml-parser` to parse and build XML. This substantially reduces the bundle size. ([#234](https://github.com/absolute-version/commit-and-tag-version/issues/234)) ([6075f4b](https://github.com/absolute-version/commit-and-tag-version/commit/6075f4bb1e34d55fc403a3b5b49390af0e760684))
+
 ## [12.6.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.2...v12.6.0) (2025-08-27)
 
 
