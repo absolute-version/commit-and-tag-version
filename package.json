@@ -45,7 +45,7 @@
     "conventional-changelog-conventionalcommits": "6.1.0",
     "conventional-recommended-bump": "7.0.1",
     "detect-indent": "^6.1.0",
-    "detect-newline": "^3.1.0",
+    "detect-newline": "^4.0.1",
     "dotgitignore": "^2.1.0",
     "fast-xml-parser": "^5.2.5",
     "figures": "^3.2.0",
