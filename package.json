@@ -1,24 +1,23 @@
 {
   "name": "commit-and-tag-version",
-  "version": "11.2.3",
+  "version": "12.6.1",
   "description": "replacement for `npm version` with automatic CHANGELOG generation",
   "bin": "bin/cli.js",
   "scripts": {
-    "fix": "eslint . --fix",
-    "posttest": "eslint .",
-    "test": "nyc mocha --timeout=30000",
-    "test:unit": "mocha --exclude test/git.spec.js",
-    "coverage": "nyc report --reporter=lcov",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "posttest": "npm run lint && npm run format:check",
+    "format:base": "prettier \"./**/*.{ts,js}\"",
+    "format:fix": "npm run format:base -- --write",
+    "format:check": "npm run format:base -- --check",
+    "test": "jest",
+    "test:unit": "jest --testPathIgnorePatterns test/git.integration-test.js",
+    "test:git-integration": "jest --testPathPattern test/git.integration-test.js",
     "release": "bin/cli.js"
-  },
-  "nyc": {
-    "exclude": [
-      "tmp/**"
-    ]
   },
   "repository": "absolute-version/commit-and-tag-version",
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "keywords": [
     "conventional-changelog",
@@ -41,32 +40,33 @@
   "homepage": "https://github.com/absolute-version/commit-and-tag-version#readme",
   "dependencies": {
     "chalk": "^2.4.2",
-    "conventional-changelog": "3.1.25",
+    "conventional-changelog": "4.0.0",
     "conventional-changelog-config-spec": "2.1.0",
     "conventional-changelog-conventionalcommits": "6.1.0",
     "conventional-recommended-bump": "7.0.1",
-    "detect-indent": "^6.0.0",
+    "detect-indent": "^6.1.0",
     "detect-newline": "^3.1.0",
     "dotgitignore": "^2.1.0",
-    "figures": "^3.1.0",
+    "fast-xml-parser": "^5.3.4",
+    "figures": "^3.2.0",
     "find-up": "^5.0.0",
-    "git-semver-tags": "^5.0.0",
-    "semver": "^7.1.1",
-    "yargs": "^17.0.0"
+    "git-semver-tags": "^5.0.1",
+    "semver": "^7.7.2",
+    "yaml": "^2.6.0",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^8.16.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "mocha": "^10.0.0",
-    "mock-fs": "^5.0.0",
-    "mockery": "^2.1.0",
-    "nyc": "^15.1.0",
-    "shelljs": "^0.8.4",
-    "std-mocks": "^1.0.1",
-    "strip-ansi": "^6.0.0"
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^28.8.3",
+    "eslint-plugin-n": "^17.21.3",
+    "eslint-plugin-promise": "^7.1.0",
+    "jest": "^29.7.0",
+    "jest-serial-runner": "^1.2.1",
+    "prettier": "^3.3.3",
+    "shelljs": "^0.10.0",
+    "strip-ansi": "^6.0.1"
   }
 }

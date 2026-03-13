@@ -2,8 +2,9 @@
 
 > **`commit-and-tag-version` is a fork of `standard-version`**. Because of maintainer availability, `standard-version` was [deprecated on 15th May 2022](https://github.com/conventional-changelog/standard-version/pull/907). The previous maintainer recommends [release-please](https://github.com/googleapis/release-please) as an alternative for those who are using GitHub actions. This fork exists for those who can't switch to `release-please`, or who would like to continue using `standard-version`.
 
-> **`Why was it renamed commit-and-tag-version?`**. I didn't want to scope the package or name it `standard-version-fork`, and it was a good opportunity to make the purpose of the tool clearer. I also wanted to distinguish it from the other tool in this organisation, [`absolute-version`](https://github.com/absolute-version/absolute-version-js), which just prints version information for pre-releases. To migrate, you can drop in `commit-and-tag-version` in place of `standard-version`. There are no changes in 9.5.0, other than to add the package.json config key `commit-and-tag-version` (the previous configuration key `standard-version` will still work).
+> **`Can I simply swap the library to migrate?`** To migrate, you can drop in `commit-and-tag-version` in place of `standard-version`. There are no changes in 9.5.0, other than to add the package.json config key `commit-and-tag-version` (the previous configuration key `standard-version` will still work). 10.x drops support for deprecated node versions, 11.x is a formatting change if you're relying on the exact markdown format in the changelog, and 12.x drops support for node 14/16.
 
+> **`Why was it renamed commit-and-tag-version?`**. I didn't want to scope the package or name it `standard-version-fork`, and it was a good opportunity to make the purpose of the tool clearer. I also wanted to distinguish it from the other tool in this organisation, [`absolute-version`](https://github.com/absolute-version/absolute-version-js), which just prints version information for pre-releases. 
 
 A utility for versioning using [semver](https://semver.org/) and CHANGELOG generation powered by [Conventional Commits](https://conventionalcommits.org).
 
@@ -18,7 +19,12 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
 - [Commit and Tag Version](#commit-and-tag-version)
     - [How It Works:](#how-it-works)
     - [`bumpFiles`, `packageFiles` and `updaters`](#bumpfiles-packagefiles-and-updaters)
+    - [Maven Support (Java/Kotlin)](#maven-support-javakotlin)
     - [Gradle Support (Java/Kotlin)](#gradle-support-javakotlin)
+    - [.NET Support](#net-support)
+    - [YAML Support](#yaml-support)
+    - [OpenAPI Support](#openapi-support)
+    - [Python Support](#python-support)
   - [Installing `commit-and-tag-version`](#installing-commit-and-tag-version)
     - [As a local `npm run` script](#as-a-local-npm-run-script)
     - [As global `bin`](#as-global-bin)
@@ -32,6 +38,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
     - [Release as a Pre-Release](#release-as-a-pre-release)
     - [Release as a Target Type Imperatively (`npm version`-like)](#release-as-a-target-type-imperatively-npm-version-like)
     - [Prevent Git Hooks](#prevent-git-hooks)
+    - [Custom Config Path](#custom-config-path)
     - [Signing Commits and Tags](#signing-commits-and-tags)
     - [Lifecycle Scripts](#lifecycle-scripts)
     - [Skipping Lifecycle Steps](#skipping-lifecycle-steps)
@@ -52,7 +59,7 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
   - [License](#license)
 
 
-### How It Works:
+### How It Works
 
 1. Follow the [Conventional Commits Specification](https://conventionalcommits.org) in your repository.
 2. When you're ready to release, run `commit-and-tag-version`.
@@ -80,6 +87,14 @@ By default, `commit-and-tag-version` assumes you're working in a NodeJS based pr
 
 That said, if you find your self asking [How can I use commit-and-tag-version for additional metadata files, languages or version files?](#can-i-use-commit-and-tag-version-for-additional-metadata-files-languages-or-version-files) – these configuration options will help!
 
+### Maven Support (Java/Kotlin)
+
+If you are using Maven, then just point to your `pom.xml` file.
+
+```sh
+commit-and-tag-version --packageFiles pom.xml --bumpFiles pom.xml
+```
+
 ### Gradle Support (Java/Kotlin)
 
 If you are using Gradle, then just point to your `build.gradle` file (or `build.gradle.kts` if using Kotlin DSL).
@@ -88,6 +103,39 @@ If you are using Gradle, then just point to your `build.gradle` file (or `build.
 commit-and-tag-version --packageFiles build.gradle --bumpFiles build.gradle
 ```
 
+### .NET Support
+
+If you are using .NET with `.csproj` files.
+This is going to read and update only the `<Version>` tag in the file.
+
+```sh
+commit-and-tag-version --packageFiles <YOUR-PROJECT-NAME>.csproj --bumpFiles <YOUR-PROJECT-NAME>.csproj
+```
+
+### YAML Support
+
+If you are using YAML files.
+This is going to read and update only the `version:` tag in the file.
+
+```sh
+commit-and-tag-version --packageFiles file.yaml --bumpFiles file.yaml
+```
+
+### OpenAPI Support
+
+If you are using OpenAPI, then just point to your `openapi.yaml` file.
+
+```sh
+commit-and-tag-version --packageFiles openapi.yaml --bumpFiles openapi.yaml
+```
+
+### Python Support
+
+If you are using Python ***with Poetry***, then point to your `pyproject.toml` file.
+
+```sh
+commit-and-tag-version --packageFiles pyproject.toml --bumpFiles pyproject.toml
+```
 
 ## Installing `commit-and-tag-version`
 
@@ -138,7 +186,7 @@ You can configure `commit-and-tag-version` either by:
 1. Placing a `commit-and-tag-version` stanza in your `package.json` (assuming
    your project is JavaScript).
 
-   > Note for users who have migrated to 
+   > Note for users who have migrated to
    `commit-and-tag-version` from `standard-version`: the previous package.json configuration key of `standard-version` will still work.
 
 2. Creating a `.versionrc`, `.versionrc.json` or `.versionrc.js`.
@@ -236,6 +284,20 @@ npm run release -- --prerelease alpha
 
 This will tag the version as: `1.0.1-alpha.0`
 
+#### Prerelease Tag Collision Avoidance
+
+When cutting a prerelease with `--prerelease`, `commit-and-tag-version` automatically checks existing git tags (respecting your `tagPrefix` configuration) for the same base version and prerelease channel. If a tag already exists, the numeric suffix is automatically incremented to avoid conflicts.
+
+For example, if you're working with multiple prerelease channels simultaneously:
+
+```bash
+commit-and-tag-version --prerelease xyz  # Creates v1.4.3-xyz.0
+commit-and-tag-version --prerelease abc  # Creates v1.4.3-abc.0
+commit-and-tag-version --prerelease xyz  # Creates v1.4.3-xyz.1 (auto-incremented)
+```
+
+This behavior applies to both named prereleases (e.g., `-alpha.0`, `-beta.1`) and unnamed prereleases (e.g., `-0`, `-1`), ensuring that you can safely cut multiple prerelease versions without encountering git tag conflicts.
+
 ### Release as a Target Type Imperatively (`npm version`-like)
 
 To forgo the automated version bump use `--release-as` with the argument `major`, `minor` or `patch`.
@@ -265,9 +327,30 @@ npm run release -- --no-verify
 commit-and-tag-version --no-verify
 ```
 
+### Custom Config Path
+
+Specify a custom path to the configuration file using the `--config` option
+
+```sh
+commit-and-tag-version --config ./path/to/.versionrc.js
+
+# or using alias
+commit-and-tag-version -c ./path/to/.versionrc.js
+```
+
+All config file formats can be used:
+
+```sh
+commit-and-tag-version -c ./path/to/.versionrc[.js|.cjs|.json]
+```
+
 ### Signing Commits and Tags
 
 If you have your GPG key set up, add the `--sign` or `-s` flag to your `commit-and-tag-version` command.
+
+### Signed-off-by trailer
+
+To add the "Signed-off-by" trailer to the commit message add the `--signoff` flag to your `commit-and-tag-version` command.
 
 ### Lifecycle Scripts
 
@@ -298,7 +381,7 @@ Simply add the following to your package.json to configure lifecycle scripts:
 ```
 
 As an example to change from using GitHub to track your items to using your projects Jira use a
-`postchangelog` script to replace the url fragment containing 'https://github.com/`myproject`/issues/'
+`postchangelog` script to replace the url fragment containing '<https://github.com/`myproject`/issues/>'
 with a link to your Jira - assuming you have already installed [replace](https://www.npmjs.com/package/replace)
 
 ```json
@@ -577,6 +660,14 @@ what bets to make. `commit-and-tag-version` follows the same convention (along
 with other package managers for other ecosystems).
 
 When you are ready to release v1.0.0, add `--release-as 1.0.0` to the options.
+
+### Why do my `refactor`, `chore` etc changes not appear in the changelog?
+
+By default, the conventional commits preset is used. This means that only `fix`, `feat` and anything marked as a breaking change will appear in the changelog.
+
+Conventional commits is meant to make it easy for machines to reason about the user-facing changes,
+and the changelog generation makes it easy for humans to consume this information too. 
+Usually, you wouldn't want non-user facing changes like refactor in the changelog. 
 
 ## License
 

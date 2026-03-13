@@ -2,6 +2,130 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.6.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.6.0...v12.6.1) (2025-12-01)
+
+
+### Bug Fixes
+
+* **bump:** auto-increment prerelease when tag already exists ([#258](https://github.com/absolute-version/commit-and-tag-version/issues/258)) ([75d69a6](https://github.com/absolute-version/commit-and-tag-version/commit/75d69a6a63c545062525c5566b60d2903a4666f4))
+* use `fast-xml-parser` to parse and build XML. This substantially reduces the bundle size. ([#234](https://github.com/absolute-version/commit-and-tag-version/issues/234)) ([6075f4b](https://github.com/absolute-version/commit-and-tag-version/commit/6075f4bb1e34d55fc403a3b5b49390af0e760684))
+
+## [12.6.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.2...v12.6.0) (2025-08-27)
+
+
+### Features
+
+* add --config option to allow custom config file path ([#237](https://github.com/absolute-version/commit-and-tag-version/issues/237)) ([3958e68](https://github.com/absolute-version/commit-and-tag-version/commit/3958e688a60df4f1ba46137d1f4147a65817c8d7))
+
+## [12.5.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.1...v12.5.2) (2025-07-30)
+
+
+### Bug Fixes
+
+* Correct use of fs, so we no longer emit a deprecation warning for `fs.F_OK` ([7fe66bb](https://github.com/absolute-version/commit-and-tag-version/commit/7fe66bb590103a593ecacabeb8effb8716862517)), closes [#240](https://github.com/absolute-version/commit-and-tag-version/issues/240)
+
+## [12.5.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.5.0...v12.5.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* ignore other prerelease tags when finding latest tag ([#211](https://github.com/absolute-version/commit-and-tag-version/issues/211)) ([#213](https://github.com/absolute-version/commit-and-tag-version/issues/213)) ([1bcdf40](https://github.com/absolute-version/commit-and-tag-version/commit/1bcdf408cac54aff37aa4d5611444f6877aad6f9))
+
+## [12.5.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.4...v12.5.0) (2024-10-10)
+
+
+### Features
+
+* **python:** add poetry support ([#188](https://github.com/absolute-version/commit-and-tag-version/issues/188)) ([01f08e9](https://github.com/absolute-version/commit-and-tag-version/commit/01f08e9093e255f81394c97bcac59e057f5717dc))
+
+## [12.4.4](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.3...v12.4.4) (2024-09-15)
+
+
+### Bug Fixes
+
+* sanitize double quotes result from stdout ([#186](https://github.com/absolute-version/commit-and-tag-version/issues/186)) ([8dbeb79](https://github.com/absolute-version/commit-and-tag-version/commit/8dbeb794b960c6ea27527353ad2c55884f48b469))
+
+## [12.4.3](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.2...v12.4.3) (2024-09-09)
+
+
+### Bug Fixes
+
+* Correct issue where downstream dependency would throw `options.debug is not a function` ([4280bcf](https://github.com/absolute-version/commit-and-tag-version/commit/4280bcf102b78d1995b24ec9238219db81730ebd))
+
+## [12.4.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.1...v12.4.2) (2024-08-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency conventional-changelog to v4 ([#176](https://github.com/absolute-version/commit-and-tag-version/issues/176)) ([8d15fc7](https://github.com/absolute-version/commit-and-tag-version/commit/8d15fc788edc2fd5d901ccbbbacb3452eabc3091))
+
+## [12.4.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.4.0...v12.4.1) (2024-04-28)
+
+
+### Bug Fixes
+
+* raise the 'openapi'-updater to a higher order of precedence above the 'yaml'-updater ([#143](https://github.com/absolute-version/commit-and-tag-version/issues/143)) ([37fe178](https://github.com/absolute-version/commit-and-tag-version/commit/37fe178fdba051c665414565fe4b0e61336aff18))
+
+## [12.4.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.3.0...v12.4.0) (2024-04-19)
+
+
+### Features
+
+* Add OpenAPI version support ([#136](https://github.com/absolute-version/commit-and-tag-version/issues/136)) ([007b1b0](https://github.com/absolute-version/commit-and-tag-version/commit/007b1b0386651f2fbd6e8a9f552a2a34702086ca))
+
+## [12.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.2.0...v12.3.0) (2024-04-19)
+
+
+### Features
+
+* **updater:** add YAML support ([#137](https://github.com/absolute-version/commit-and-tag-version/issues/137)) ([b9dccc2](https://github.com/absolute-version/commit-and-tag-version/commit/b9dccc23ec05e4026899c676f3275d4dedf8c686))
+
+
+### Bug Fixes
+
+* Add debug messages for exclusions during bump lifecycle ([#131](https://github.com/absolute-version/commit-and-tag-version/issues/131)) ([a9191f2](https://github.com/absolute-version/commit-and-tag-version/commit/a9191f293eb9302afb1093ad37e9fa076f6b37a2))
+
+## [12.2.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.1.0...v12.2.0) (2024-01-15)
+
+
+### Features
+
+* **updater:** add maven pom.xml file support ([#33](https://github.com/absolute-version/commit-and-tag-version/issues/33), [#109](https://github.com/absolute-version/commit-and-tag-version/issues/109)) ([#123](https://github.com/absolute-version/commit-and-tag-version/issues/123)) ([6466beb](https://github.com/absolute-version/commit-and-tag-version/commit/6466bebf849bbdcdaebf493a1ccce9670c469fde))
+
+## [12.1.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.0.0...v12.1.0) (2024-01-06)
+
+
+### Features
+
+* Add signoff option ([#120](https://github.com/absolute-version/commit-and-tag-version/issues/120)) ([d107e38](https://github.com/absolute-version/commit-and-tag-version/commit/d107e38eb906dfb21658d12803b7308f2e3dda7d))
+
+## [12.0.0](https://github.com/absolute-version/commit-and-tag-version/compare/v11.3.0...v12.0.0) (2023-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop support for node 14, 16. Now supports node 18 and 20.
+
+### Bug Fixes
+
+* Drop support for node 14, 16. Now supports node 18 and 20. ([b1a58bc](https://github.com/absolute-version/commit-and-tag-version/commit/b1a58bc2a786da48fbcec248204ff8631c79606e))
+* preserve frontmatter when updating changelog  ([#108](https://github.com/absolute-version/commit-and-tag-version/issues/108)) ([abdcfe2](https://github.com/absolute-version/commit-and-tag-version/commit/abdcfe295023f46c8724463940fff6a220434fad))
+
+## [11.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.4...v11.3.0) (2023-10-10)
+
+
+### Features
+
+* **updater:** add .csproj file support ([#95](https://github.com/absolute-version/commit-and-tag-version/issues/95)) ([a96554c](https://github.com/absolute-version/commit-and-tag-version/commit/a96554c9467bacdf6c9d898b223883ee32f63c15))
+
+## [11.2.4](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.3...v11.2.4) (2023-10-02)
+
+
+### Bug Fixes
+
+* allow bump task to handle versions with build metadata ([33913ee](https://github.com/absolute-version/commit-and-tag-version/commit/33913ee03bff2dfc26c9ffc942e1191c1f767949))
+* handle invalid versions passed to releaseAs ([33913ee](https://github.com/absolute-version/commit-and-tag-version/commit/33913ee03bff2dfc26c9ffc942e1191c1f767949))
+
 ## [11.2.3](https://github.com/absolute-version/commit-and-tag-version/compare/v11.2.2...v11.2.3) (2023-08-22)
 
 

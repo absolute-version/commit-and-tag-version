@@ -14,3 +14,7 @@ npm-debug.log
 
 # coverage
 coverage
+
+# temp dirs
+*-temp
+tmp

@@ -1,0 +1,33 @@
+# This is a comment that should be preserved
+name: mock
+description: "A mock YAML file"
+version: 6.3.1
+
+environment:
+  dart: ">=3.2.6 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+  generate: true
+
+  # More comments here nested under one entry
+  #
+  # These comments should also be preserved.
+
+  # Another comment block, separated from the first one
+  assets:
+    - assets/icons/
+    - assets/images/
