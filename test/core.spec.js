@@ -158,6 +158,7 @@ function mock({
   bump,
   changelog,
   tags,
+  commits,
   existingChangelog,
   testFiles,
   realTestFiles,
@@ -172,6 +173,10 @@ function mock({
 
   mockers.mockGitSemverTags({
     tags,
+  });
+
+  mockers.mockGitRawCommits({
+    commits,
   });
 
   // needs to be set after mockery, but before mock-fs
@@ -912,6 +917,58 @@ describe('cli', function () {
       await exec('--silent');
       expect(consoleErrorSpy).not.toHaveBeenCalled();
       expect(consoleInfoSpy).not.toHaveBeenCalled();
+    });
+
+    it('bumps using actual recommendedBump when there are no semver relevant changes and --noBumpWhenEmptyChanges flag is not set', async function () {
+      mock({
+        bump: jest.requireActual('conventional-recommended-bump'),
+        changelog: ['chore release\n'],
+        tags: ['v1.0.0'],
+        commits: ['chore: update deps\n\n-hash-\nabc123\n'],
+      });
+
+      await exec();
+
+      verifyPackageVersion({ writeFileSyncSpy, expectedVersion: '1.0.1' });
+    });
+
+    it('bumps using actual recommendedBump when there are semver relevant changes and --noBumpWhenEmptyChanges flag is not set', async function () {
+      mock({
+        bump: jest.requireActual('conventional-recommended-bump'),
+        changelog: ['feat release\n'],
+        tags: ['v1.0.0'],
+        commits: ['feat: shiny new stuff\n\n-hash-\nabc123\n'],
+      });
+
+      await exec();
+
+      verifyPackageVersion({ writeFileSyncSpy, expectedVersion: '1.1.0' });
+    });
+
+    it('does not bump when there are no semver relevant changes and --noBumpWhenEmptyChanges flag is set', async function () {
+      mock({
+        bump: jest.requireActual('conventional-recommended-bump'),
+        changelog: ['chore release\n'],
+        tags: ['v1.0.0'],
+        commits: ['chore: update deps\n\n-hash-\nabc123\n'],
+      });
+
+      await exec('--noBumpWhenEmptyChanges');
+
+      expect(writeFileSyncSpy).not.toHaveBeenCalled();
+    });
+
+    it('bumps when there are semver relevant changes and --noBumpWhenEmptyChanges flag is set', async function () {
+      mock({
+        bump: jest.requireActual('conventional-recommended-bump'),
+        changelog: ['feat release\n'],
+        tags: ['v1.0.0'],
+        commits: ['feat: shiny new stuff\n\n-hash-\nabc123\n'],
+      });
+
+      await exec('--noBumpWhenEmptyChanges');
+
+      verifyPackageVersion({ writeFileSyncSpy, expectedVersion: '1.1.0' });
     });
   });
 
