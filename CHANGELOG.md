@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.7.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.6.1...v12.7.0) (2026-03-17)
+
+
+### Features
+
+* add --noBumpWhenEmptyChanges flag ([#274](https://github.com/absolute-version/commit-and-tag-version/issues/274)) ([b60fb23](https://github.com/absolute-version/commit-and-tag-version/commit/b60fb237b78622a5d523423d1b40e87aeb8631b5))
+
+
+### Bug Fixes
+
+* make prerelease-flag work with gradle files ([#273](https://github.com/absolute-version/commit-and-tag-version/issues/273)) ([24e2f02](https://github.com/absolute-version/commit-and-tag-version/commit/24e2f028ac5634f278bcd2980d87faabd70647e4))
+
 ## [12.6.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.6.0...v12.6.1) (2025-12-01)
 
 
