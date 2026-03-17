@@ -141,7 +141,8 @@ const yargs = require('yargs')
   .option('noBumpWhenEmptyChanges', {
     type: 'boolean',
     default: false,
-    describe: 'Avoid bumping files and generating changelog if there are no changes.'
+    describe:
+      'Avoid bumping files and generating changelog if there are no changes.',
   })
   .check((argv) => {
     if (typeof argv.scripts !== 'object' || Array.isArray(argv.scripts)) {
