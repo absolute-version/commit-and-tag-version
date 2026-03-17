@@ -1445,6 +1445,43 @@ describe('cli', function () {
       expect(calledWithContentStr).toEqual(expected);
     });
 
+    it('bumps to prerelease version in Gradle `build.gradle.kts` file', async function () {
+      const expected = fs.readFileSync(
+        './test/mocks/build-6.4.0-snapshot.gradle.kts',
+        'utf-8',
+      );
+
+      const filename = 'build.gradle.kts';
+      mock({
+        bump: 'minor',
+        realTestFiles: [
+          {
+            filename,
+            path: './test/mocks/build-6.3.1.gradle.kts',
+          },
+        ],
+      });
+
+      await exec({
+        prerelease: 'SNAPSHOT',
+        packageFiles: [{ filename, type: 'gradle' }],
+        bumpFiles: [{ filename, type: 'gradle' }],
+      });
+
+      // filePath is the first arg passed to writeFileSync
+      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+        writeFileSyncSpy,
+        filename,
+      });
+
+      if (!packageJsonWriteFileSynchCall) {
+        throw new Error(`writeFileSynch not invoked with path ${filename}`);
+      }
+
+      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+      expect(calledWithContentStr).toEqual(expected);
+    });
+
     it('bumps version in .NET `Project.csproj` file', async function () {
       const expected = fs.readFileSync(
         './test/mocks/Project-6.4.0.csproj',
