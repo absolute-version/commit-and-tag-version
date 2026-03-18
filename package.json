@@ -62,13 +62,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@vitest/coverage-istanbul": "^4.1.0",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^17.21.3",
     "eslint-plugin-promise": "^7.2.1",
-    "prettier": "^3.3.3",
     "eslint-plugin-vitest": "^0.5.4",
+    "prettier": "^3.3.3",
     "shelljs": "^0.10.0",
     "strip-ansi": "^6.0.1",
     "vitest": "^4.1.0"
