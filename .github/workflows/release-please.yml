@@ -27,10 +27,12 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: 'https://registry.npmjs.org'
+        if: ${{ steps.release.outputs.release_created }}
+      - run: npm install -g npm@latest
         if: ${{ steps.release.outputs.release_created }}
       - run: npm ci
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish
+      - run: npm publish --provenance
         if: ${{ steps.release.outputs.release_created }}
