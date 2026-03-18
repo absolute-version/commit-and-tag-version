@@ -1,11 +1,12 @@
 import shell from 'shelljs';
 import fs from 'fs';
-import cli from '../command';
-import standardVersion from '../index';
 
-function exec(opt) {
+async function exec(opt) {
+  vi.resetModules();
+  const { default: cli } = await import('../command');
   opt = cli.parse(`commit-and-tag-version ${opt} --silent`);
   opt.skip = { commit: true, tag: true };
+  const { default: standardVersion } = await import('../index');
   return standardVersion(opt);
 }
 

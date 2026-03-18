@@ -2,7 +2,7 @@ import shell from 'shelljs';
 import stripAnsi from 'strip-ansi';
 
 // Set up CJS require() hook + create mock fns (must be before any source imports)
-const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup());
+const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup({ mockRunExecFile: true }));
 
 // Register vi.mock for ESM imports in this test file
 vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));

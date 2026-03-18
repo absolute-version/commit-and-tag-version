@@ -51,7 +51,7 @@ export default [
   },
   {
     ...vitest.configs.recommended,
-    "files": ["test/**/*{spec,test,integration-test}.{js,cjs,mjs}"],
+    "files": ["test/**/*{spec,test,integration-test}.{js,cjs,mjs}", "test/mocks/jest-mocks.js"],
     "languageOptions": {
       "globals": {
         ...vitest.environments.env.globals

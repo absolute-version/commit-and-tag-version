@@ -1,7 +1,5 @@
 import shell from 'shelljs';
 import fs from 'fs';
-import cli from '../command';
-import standardVersion from '../index';
 
 const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup());
 vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));
@@ -9,9 +7,12 @@ vi.mock('conventional-recommended-bump', () => ({ default: mockers.conventionalR
 vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
 vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 
-function exec() {
+async function exec() {
+  vi.resetModules();
+  const { default: cli } = await import('../command');
   const opt = cli.parse('commit-and-tag-version');
   opt.skip = { commit: true, tag: true };
+  const { default: standardVersion } = await import('../index');
   return standardVersion(opt);
 }
 
@@ -71,6 +72,6 @@ describe('invalid .versionrc', function () {
     mock({ bump: 'minor' });
     fs.writeFileSync('.versionrc.js', 'module.exports = 3', 'utf-8');
 
-    expect(exec).toThrow(/Invalid configuration/);
+    await expect(exec()).rejects.toThrow(/Invalid configuration/);
   });
 });

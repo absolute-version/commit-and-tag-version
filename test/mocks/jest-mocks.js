@@ -15,7 +15,7 @@ const { Readable } = require('stream');
  *   vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
  *   vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
  */
-function setup() {
+function setup({ mockRunExecFile = false } = {}) {
   const gitSemverTags = vi.fn();
   const conventionalChangelog = vi.fn();
   const conventionalRecommendedBump = vi.fn();
@@ -40,8 +40,9 @@ function setup() {
   Module._load = function (request, parent, isMain) {
     if (MOCK_MAP[request]) return MOCK_MAP[request];
     if (request === 'fs') return fsProxy;
-    // Intercept run-execFile (local module, matched by path suffix)
-    if (request.endsWith('run-execFile') || request.endsWith('run-execFile.js')) {
+    // Only intercept run-execFile when explicitly requested (core.spec.js).
+    // Integration tests need the real run-execFile for git operations.
+    if (mockRunExecFile && (request.endsWith('run-execFile') || request.endsWith('run-execFile.js'))) {
       return runExecFile;
     }
     return origLoad.call(this, request, parent, isMain);

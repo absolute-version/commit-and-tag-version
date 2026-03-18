@@ -1,7 +1,5 @@
 import shell from 'shelljs';
 import fs from 'fs';
-import cli from '../command';
-import standardVersion from '../index';
 
 const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup());
 vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));
@@ -12,10 +10,13 @@ vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
 const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation();
 
-function exec(opt = '') {
+async function exec(opt = '') {
+  vi.resetModules();
+  const { default: cli } = await import('../command');
   if (typeof opt === 'string') {
     opt = cli.parse(`commit-and-tag-version ${opt}`);
   }
+  const { default: standardVersion } = await import('../index');
   return standardVersion(opt);
 }
 
