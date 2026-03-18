@@ -2,8 +2,12 @@ import shell from 'shelljs';
 import fs from 'fs';
 
 const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup());
-vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));
-vi.mock('conventional-recommended-bump', () => ({ default: mockers.conventionalRecommendedBump }));
+vi.mock('conventional-changelog', () => ({
+  default: mockers.conventionalChangelog,
+}));
+vi.mock('conventional-recommended-bump', () => ({
+  default: mockers.conventionalRecommendedBump,
+}));
 vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
 vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 

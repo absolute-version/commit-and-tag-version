@@ -2,11 +2,17 @@ import shell from 'shelljs';
 import stripAnsi from 'strip-ansi';
 
 // Set up CJS require() hook + create mock fns (must be before any source imports)
-const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup({ mockRunExecFile: true }));
+const mockers = vi.hoisted(() =>
+  require('./mocks/jest-mocks').setup({ mockRunExecFile: true }),
+);
 
 // Register vi.mock for ESM imports in this test file
-vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));
-vi.mock('conventional-recommended-bump', () => ({ default: mockers.conventionalRecommendedBump }));
+vi.mock('conventional-changelog', () => ({
+  default: mockers.conventionalChangelog,
+}));
+vi.mock('conventional-recommended-bump', () => ({
+  default: mockers.conventionalRecommendedBump,
+}));
 vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
 vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 vi.mock('../lib/run-execFile', () => ({ default: mockers.runExecFile }));
@@ -39,7 +45,9 @@ import fs from 'fs';
 // set by mock()
 let readFileSyncSpy;
 let lstatSyncSpy;
-let writeFileSyncSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+let writeFileSyncSpy = vi
+  .spyOn(fs, 'writeFileSync')
+  .mockImplementation(() => {});
 
 const consoleErrorSpy = vi.spyOn(console, 'warn').mockImplementation();
 const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation();

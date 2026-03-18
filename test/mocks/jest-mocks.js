@@ -42,7 +42,10 @@ function setup({ mockRunExecFile = false } = {}) {
     if (request === 'fs') return fsProxy;
     // Only intercept run-execFile when explicitly requested (core.spec.js).
     // Integration tests need the real run-execFile for git operations.
-    if (mockRunExecFile && (request.endsWith('run-execFile') || request.endsWith('run-execFile.js'))) {
+    if (
+      mockRunExecFile &&
+      (request.endsWith('run-execFile') || request.endsWith('run-execFile.js'))
+    ) {
       return runExecFile;
     }
     return origLoad.call(this, request, parent, isMain);
