@@ -18,16 +18,9 @@ export default defineConfig({
       reporter: ['lcov', 'text'],
     },
     pool: 'forks',
+    execArgv: ['--require', './test/setup-coverage.js'],
     sequence: {
       concurrent: false,
-    },
-    server: {
-      deps: {
-        // Inline source dependencies so vi.mock() can intercept CJS require()
-        // in the source code's dependency graph.
-        // Must not inline coverage/vitest internals or they break.
-        inline: [/^(?!.*@vitest\/)(?!.*vitest\/)/],
-      },
     },
   },
 });
