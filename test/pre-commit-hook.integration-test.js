@@ -13,11 +13,11 @@ vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 
 // Jest swallows most standard console logs not explicitly defined into a custom logger
 // see: https://stackoverflow.com/questions/51555568/remove-logging-the-origin-line-in-jest
-const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
+const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation();
+const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
-const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
+const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
 async function exec(opt = '') {
   vi.resetModules();

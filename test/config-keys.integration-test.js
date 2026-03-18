@@ -11,6 +11,9 @@ vi.mock('conventional-recommended-bump', () => ({
 vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
 vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 
+vi.spyOn(console, 'info').mockImplementation(() => {});
+vi.spyOn(console, 'warn').mockImplementation(() => {});
+
 async function exec() {
   vi.resetModules();
   const { default: cli } = await import('../command');

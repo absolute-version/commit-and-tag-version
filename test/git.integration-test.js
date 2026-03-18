@@ -11,8 +11,8 @@ vi.mock('conventional-recommended-bump', () => ({
 vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
 vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 
-const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
-const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation();
+const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
 async function exec(opt = '') {
   vi.resetModules();

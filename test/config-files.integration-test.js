@@ -11,6 +11,9 @@ vi.mock('conventional-recommended-bump', () => ({
 vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
 vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 
+vi.spyOn(console, 'info').mockImplementation(() => {});
+vi.spyOn(console, 'warn').mockImplementation(() => {});
+
 // command.js must be loaded AFTER shell.cd() changes CWD, because yargs.config()
 // reads .versionrc at module load time. Use dynamic import with vi.resetModules().
 async function exec() {
