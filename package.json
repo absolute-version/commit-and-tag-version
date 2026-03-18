@@ -12,7 +12,7 @@
     "format:base": "prettier \"./**/*.{ts,js}\"",
     "format:fix": "npm run format:base -- --write",
     "format:check": "npm run format:base -- --check",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "test:unit": "vitest run --exclude 'test/*.integration-test.js'",
     "test:git-integration": "vitest run test/git.integration-test.js",
     "release": "bin/cli.js"
