@@ -1,26 +1,29 @@
-'use strict';
+import shell from 'shelljs';
+import fs from 'fs';
+import cli from '../command';
+import standardVersion from '../index';
 
-const shell = require('shelljs');
-const fs = require('fs');
-
-const mockers = require('./mocks/jest-mocks');
+const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup());
+vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));
+vi.mock('conventional-recommended-bump', () => ({ default: mockers.conventionalRecommendedBump }));
+vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
+vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 
 // Jest swallows most standard console logs not explicitly defined into a custom logger
 // see: https://stackoverflow.com/questions/51555568/remove-logging-the-origin-line-in-jest
-const consoleWarnSpy = jest.spyOn(global.console, 'warn').mockImplementation();
+const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
 
-const consoleInfoSpy = jest.spyOn(global.console, 'info').mockImplementation();
+const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation();
 
-const consoleErrorSpy = jest
-  .spyOn(global.console, 'error')
+const consoleErrorSpy = vi
+  .spyOn(console, 'error')
   .mockImplementation();
 
 function exec(opt = '') {
   if (typeof opt === 'string') {
-    const cli = require('../command');
     opt = cli.parse(`commit-and-tag-version ${opt}`);
   }
-  return require('../index')(opt);
+  return standardVersion(opt);
 }
 
 function writePackageJson(version, option) {
