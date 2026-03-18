@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.7.3](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.2...v12.7.3) (2026-03-18)
+
+
+### Bug Fixes
+
+* update release workflow for npm OIDC trusted publishing ([#281](https://github.com/absolute-version/commit-and-tag-version/issues/281)) ([d0e3408](https://github.com/absolute-version/commit-and-tag-version/commit/d0e3408a17ad9e20ab2e7d9b187d0a22da012cf7))
+
 ## [12.7.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.1...v12.7.2) (2026-03-18)
 
 
