@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.7.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.0...v12.7.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* 🐛 updating dependency fast-xml-parser ([#277](https://github.com/absolute-version/commit-and-tag-version/issues/277)) ([dac372b](https://github.com/absolute-version/commit-and-tag-version/commit/dac372bfa8b8b124a1e9a8760074a86a641476f9))
+
 ## [12.7.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.6.1...v12.7.0) (2026-03-17)
 
 
