@@ -2,7 +2,9 @@
   "name": "commit-and-tag-version",
   "version": "12.7.1",
   "description": "replacement for `npm version` with automatic CHANGELOG generation",
-  "bin": "bin/cli.js",
+  "bin": {
+    "commit-and-tag-version": "bin/cli.js"
+  },
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -15,7 +17,10 @@
     "test:git-integration": "jest --testPathPattern test/git.integration-test.js",
     "release": "bin/cli.js"
   },
-  "repository": "absolute-version/commit-and-tag-version",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/absolute-version/commit-and-tag-version.git"
+  },
   "engines": {
     "node": ">=18"
   },
