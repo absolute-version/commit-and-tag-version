@@ -1,11 +1,12 @@
-const shell = require('shelljs');
-const fs = require('fs');
+import shell from 'shelljs';
+import fs from 'fs';
+import cli from '../command';
+import standardVersion from '../index';
 
 function exec(opt) {
-  const cli = require('../command');
   opt = cli.parse(`commit-and-tag-version ${opt} --silent`);
   opt.skip = { commit: true, tag: true };
-  return require('../index')(opt);
+  return standardVersion(opt);
 }
 
 function setupTempGitRepo() {
