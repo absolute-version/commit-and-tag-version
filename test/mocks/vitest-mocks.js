@@ -8,7 +8,7 @@ const { Readable } = require('stream');
  *
  * Usage in test files:
  *
- *   const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup());
+ *   const mockers = vi.hoisted(() => require('./mocks/vitest-mocks').setup());
  *
  *   vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));
  *   vi.mock('conventional-recommended-bump', () => ({ default: mockers.conventionalRecommendedBump }));

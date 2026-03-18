@@ -1,7 +1,7 @@
 import shell from 'shelljs';
 import fs from 'fs';
 
-const mockers = vi.hoisted(() => require('./mocks/jest-mocks').setup());
+const mockers = vi.hoisted(() => require('./mocks/vitest-mocks').setup());
 vi.mock('conventional-changelog', () => ({
   default: mockers.conventionalChangelog,
 }));
