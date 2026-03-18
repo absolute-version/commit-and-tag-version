@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.7.2](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.1...v12.7.2) (2026-03-18)
+
+
+### Bug Fixes
+
+* **maven:** Preserve XML attributes when updating pom.xml files ([#279](https://github.com/absolute-version/commit-and-tag-version/issues/279)) ([81b4f98](https://github.com/absolute-version/commit-and-tag-version/commit/81b4f98319b88793f406139aa102d17a422cb8de))
+
 ## [12.7.1](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.0...v12.7.1) (2026-03-18)
 
 
