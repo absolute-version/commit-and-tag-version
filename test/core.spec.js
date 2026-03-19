@@ -1,29 +1,57 @@
-'use strict';
+import shell from 'shelljs';
+import stripAnsi from 'strip-ansi';
 
-const shell = require('shelljs');
-const stripAnsi = require('strip-ansi');
-const fs = require('fs');
+// Set up CJS require() hook + create mock fns (must be before any source imports)
+const mockers = vi.hoisted(() =>
+  require('./mocks/vitest-mocks').setup({ mockRunExecFile: true }),
+);
 
-const mockers = require('./mocks/jest-mocks');
+// Register vi.mock for ESM imports in this test file
+vi.mock('conventional-changelog', () => ({
+  default: mockers.conventionalChangelog,
+}));
+vi.mock('conventional-recommended-bump', () => ({
+  default: mockers.conventionalRecommendedBump,
+}));
+vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
+vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
+vi.mock('../lib/run-execFile', () => ({ default: mockers.runExecFile }));
+vi.mock('dotgitignore');
 
-const runExecFile = require('../lib/run-execFile');
+// Mock fs at the Vitest ESM level so spies work for both test and source code.
+vi.mock('fs', async (importOriginal) => {
+  const actual = await importOriginal();
+  const proxy = mockers.fsProxy;
+  return {
+    ...actual,
+    default: proxy,
+    readFileSync: (...args) => proxy.readFileSync(...args),
+    writeFileSync: (...args) => proxy.writeFileSync(...args),
+    lstatSync: (...args) => proxy.lstatSync(...args),
+    chmodSync: (...args) => proxy.chmodSync(...args),
+    promises: actual.promises,
+  };
+});
 
-const cli = require('../command');
-const formatCommitMessage = require('../lib/format-commit-message');
+const runExecFile = mockers.runExecFile;
+
+import cli from '../command';
+import formatCommitMessage from '../lib/format-commit-message';
+import standardVersion from '../index';
+import { header as defaultHeader } from '../defaults';
+import DotGitIgnore from 'dotgitignore';
+import fs from 'fs';
 
 // set by mock()
-let standardVersion;
 let readFileSyncSpy;
 let lstatSyncSpy;
+let writeFileSyncSpy = vi
+  .spyOn(fs, 'writeFileSync')
+  .mockImplementation(() => {});
 
-// Rather than trying to re-read something written out during tests, we can spy on writeFileSync
-// we can trust fs is capable of writing the file
-let writeFileSyncSpy;
-
-const consoleErrorSpy = jest.spyOn(console, 'warn').mockImplementation();
-const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
-
-jest.mock('../lib/run-execFile');
+const consoleErrorSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+vi.spyOn(console, 'error').mockImplementation(() => {});
 
 const { readFileSync: readFileSyncActual, lstatSync: lstatSyncActual } = fs;
 
@@ -54,7 +82,7 @@ const mockReadFilesFromDisk = ({
   testFiles,
   realTestFiles,
 }) =>
-  jest.spyOn(fs, 'readFileSync').mockImplementation((path, opts) => {
+  vi.spyOn(fs, 'readFileSync').mockImplementation((path, opts) => {
     if (path === 'CHANGELOG.md') {
       if (existingChangelog) {
         return existingChangelog;
@@ -113,7 +141,7 @@ const mockReadFilesFromDisk = ({
  * @return Jest spy on lstatSync
  */
 const mockFsLStat = ({ fs, lstatSyncActual, testFiles, realTestFiles }) =>
-  jest.spyOn(fs, 'lstatSync').mockImplementation((path) => {
+  vi.spyOn(fs, 'lstatSync').mockImplementation((path) => {
     if (testFiles) {
       const file = testFiles.find((otherFile) => {
         return path.includes(otherFile.path);
@@ -179,9 +207,6 @@ function mock({
     commits,
   });
 
-  // needs to be set after mockery, but before mock-fs
-  standardVersion = require('../index');
-
   // For fake and injected test files pretend they exist at root level when Fs queries lstat
   // Package.json works without this as it'll check the one in this actual repo...
   lstatSyncSpy = mockFsLStat({
@@ -200,7 +225,7 @@ function mock({
   });
 
   // Spies on writeFileSync to capture calls and ensure we don't actually try write anything to disc
-  writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation();
+  writeFileSyncSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
 }
 
 function clearCapturedSpyCalls() {
@@ -212,14 +237,17 @@ function restoreMocksToRealImplementation() {
   readFileSyncSpy.mockRestore();
   writeFileSyncSpy.mockRestore();
   lstatSyncSpy.mockRestore();
+  // Immediately re-protect against writes after restoring
+  writeFileSyncSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
 }
 
 function unmock() {
   clearCapturedSpyCalls();
 
-  restoreMocksToRealImplementation();
+  // Reset runExecFile mock between tests to prevent state leakage
+  runExecFile.mockReset();
 
-  standardVersion = null;
+  restoreMocksToRealImplementation();
 }
 
 describe('format-commit-message', function () {
@@ -314,7 +342,7 @@ describe('cli', function () {
     });
 
     it('appends the new release above the last release, replacing the old header (standard-version format) with header (new format), and retains any front matter', async function () {
-      const { header } = require('../defaults');
+      const header = defaultHeader;
 
       const standardVersionHeader =
         '# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.';
@@ -346,7 +374,7 @@ describe('cli', function () {
     });
 
     it('appends the new release above the last release, removing the old header (new format), and retains any front matter', async function () {
-      const { header } = require('../defaults');
+      const header = defaultHeader;
       const frontMatter = '---\nstatus: new\n---\n';
 
       const changelog101 =
@@ -374,7 +402,7 @@ describe('cli', function () {
     });
 
     it('appends the new release above the last release, removing the old header (new format)', async function () {
-      const { header } = require('../defaults');
+      const header = defaultHeader;
       const changelog1 =
         '### [1.0.1](/compare/v1.0.0...v1.0.1) (YYYY-MM-DD)\n\n\n### Bug Fixes\n\n* patch release ABCDEFXY\n';
       mock({ bump: 'patch', changelog: changelog1, tags: ['v1.0.0'] });
@@ -921,7 +949,7 @@ describe('cli', function () {
 
     it('bumps using actual recommendedBump when there are no semver relevant changes and --noBumpWhenEmptyChanges flag is not set', async function () {
       mock({
-        bump: jest.requireActual('conventional-recommended-bump'),
+        bump: mockers.actualConventionalRecommendedBump,
         changelog: ['chore release\n'],
         tags: ['v1.0.0'],
         commits: ['chore: update deps\n\n-hash-\nabc123\n'],
@@ -934,7 +962,7 @@ describe('cli', function () {
 
     it('bumps using actual recommendedBump when there are semver relevant changes and --noBumpWhenEmptyChanges flag is not set', async function () {
       mock({
-        bump: jest.requireActual('conventional-recommended-bump'),
+        bump: mockers.actualConventionalRecommendedBump,
         changelog: ['feat release\n'],
         tags: ['v1.0.0'],
         commits: ['feat: shiny new stuff\n\n-hash-\nabc123\n'],
@@ -947,7 +975,7 @@ describe('cli', function () {
 
     it('does not bump when there are no semver relevant changes and --noBumpWhenEmptyChanges flag is set', async function () {
       mock({
-        bump: jest.requireActual('conventional-recommended-bump'),
+        bump: mockers.actualConventionalRecommendedBump,
         changelog: ['chore release\n'],
         tags: ['v1.0.0'],
         commits: ['chore: update deps\n\n-hash-\nabc123\n'],
@@ -960,7 +988,7 @@ describe('cli', function () {
 
     it('bumps when there are semver relevant changes and --noBumpWhenEmptyChanges flag is set', async function () {
       mock({
-        bump: jest.requireActual('conventional-recommended-bump'),
+        bump: mockers.actualConventionalRecommendedBump,
         changelog: ['feat release\n'],
         tags: ['v1.0.0'],
         commits: ['feat: shiny new stuff\n\n-hash-\nabc123\n'],
@@ -1686,9 +1714,6 @@ describe('cli', function () {
     });
 
     it('does not update files present in .gitignore', async function () {
-      const DotGitIgnore = require('dotgitignore');
-      jest.mock('dotgitignore');
-
       DotGitIgnore.mockImplementation(() => {
         return {
           ignore: (filename) => {

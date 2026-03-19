@@ -11,9 +11,9 @@ jobs:
     strategy:
       matrix:
         node: [
-          18,
           20,
-          lts/*
+          lts/*,
+          24
         ]
         os: [
           ubuntu-latest,
