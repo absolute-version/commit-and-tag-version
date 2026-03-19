@@ -51,6 +51,7 @@ let writeFileSyncSpy = vi
 
 const consoleErrorSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+vi.spyOn(console, 'error').mockImplementation(() => {});
 
 const { readFileSync: readFileSyncActual, lstatSync: lstatSyncActual } = fs;
 
