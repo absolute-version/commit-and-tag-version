@@ -27,13 +27,13 @@ jobs:
       - run: git fetch --prune --unshallow
       - run: git config --global user.name 'Actions'
       - run: git config --global user.email 'dummy@example.org'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
       - run: node --version
       - run: npm install --engine-strict
       - run: npm test
       - name: Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           env_vars: OS, NODE_VERSION
