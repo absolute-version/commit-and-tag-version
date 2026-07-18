@@ -65,12 +65,12 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@vitest/coverage-istanbul": "^4.1.0",
+    "@vitest/eslint-plugin": "^1.6.23",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^17.21.3",
     "eslint-plugin-promise": "^7.2.1",
-    "eslint-plugin-vitest": "^0.5.4",
     "istanbul-lib-instrument": "^6.0.3",
     "pirates": "^4.0.7",
     "prettier": "^3.3.3",
