@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.0.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.3...v13.0.0) (2026-07-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update all conventional-changelog dependencies to their modern version. There are a few breaking changes that will affect users with custom presets, please see MIGRATION.md. This also raises the node minimum to node 22.
+* This package is now pure ESM. CLI uses should be unaffected. This raises the minimum engine to 20.19, and anyone using require will need to `require('commit-and-tag-version').default`
+
+### deps
+
+* Update all conventional-changelog dependencies to their modern version. There are a few breaking changes that will affect users with custom presets, please see MIGRATION.md. This also raises the node minimum to node 22. ([c2d26bf](https://github.com/absolute-version/commit-and-tag-version/commit/c2d26bf0b5692de6c357104613557f5bd41c95da))
+
+
+### Bug Fixes
+
+* **maven:** preserve comments in pom.xml ([#294](https://github.com/absolute-version/commit-and-tag-version/issues/294)) ([cbb6010](https://github.com/absolute-version/commit-and-tag-version/commit/cbb60100f194877924d9cb98587aa8b2591b8318))
+
+
+### Code Refactoring
+
+* This package is now pure ESM. CLI uses should be unaffected. This raises the minimum engine to 20.19, and anyone using require will need to `require('commit-and-tag-version').default` ([89ba82e](https://github.com/absolute-version/commit-and-tag-version/commit/89ba82eae4e2a167a5272c88a51d24a4e0a6b5da))
+
 ## [12.7.3](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.2...v12.7.3) (2026-03-18)
 
 
