@@ -1,4 +1,5 @@
-const { promises: fsp } = require('fs');
+import { promises as fsp } from 'fs';
+import { detectPMByLockFile } from '../lib/detect-package-manager';
 
 let mockFs;
 
@@ -6,7 +7,7 @@ const setLockFile = (lockFile) => {
   if (mockFs) {
     mockFs.mockRestore();
   }
-  mockFs = jest.spyOn(fsp, 'access').mockImplementation(async (path) => {
+  mockFs = vi.spyOn(fsp, 'access').mockImplementation(async (path) => {
     if (lockFile && path.endsWith(lockFile)) {
       return Promise.resolve();
     }
@@ -16,8 +17,6 @@ const setLockFile = (lockFile) => {
 
 describe('utils', function () {
   it('detectPMByLockFile should work', async function () {
-    const { detectPMByLockFile } = require('../lib/detect-package-manager');
-
     let pm = await detectPMByLockFile();
     expect(pm).toEqual('npm');
 

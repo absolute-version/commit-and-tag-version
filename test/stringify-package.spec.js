@@ -1,6 +1,4 @@
-'use strict';
-
-const stringifyPackage = require('../lib/stringify-package');
+import stringifyPackage from '../lib/stringify-package';
 
 describe('stringifyPackage()', function () {
   const dummy = { name: 'dummy' };

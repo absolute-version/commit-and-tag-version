@@ -1,6 +1,6 @@
 import globals from "globals";
 import js from "@eslint/js";
-import jest from "eslint-plugin-jest";
+import vitest from "eslint-plugin-vitest";
 import eslintConfigPrettier from "eslint-config-prettier";
 
 /**
@@ -50,18 +50,17 @@ export default [
     "name": "Node.js files"
   },
   {
-    ...jest.configs["flat/recommended"],
-    "files": ["test/**/*{spec,test}.{js,cjs,mjs}", "test/mocks/jest-mocks.js"],
+    ...vitest.configs.recommended,
+    "files": ["test/**/*{spec,test,integration-test}.{js,cjs,mjs}", "test/mocks/vitest-mocks.js"],
     "languageOptions": {
       "globals": {
-        ...globals.jest
+        ...vitest.environments.env.globals
       }
     },
     "name": "Test files",
     "rules": {
-      ...jest.configs["flat/recommended"].rules,
-      "jest/prefer-expect-assertions": "off",
-      "jest/expect-expect": "off"
+      ...vitest.configs.recommended.rules,
+      "vitest/expect-expect": "off"
     }
   }
 ];

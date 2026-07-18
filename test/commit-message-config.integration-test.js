@@ -1,16 +1,27 @@
-'use strict';
+import shell from 'shelljs';
+import fs from 'fs';
 
-const shell = require('shelljs');
-const fs = require('fs');
+const mockers = vi.hoisted(() => require('./mocks/vitest-mocks').setup());
+vi.mock('conventional-changelog', () => ({
+  default: mockers.conventionalChangelog,
+}));
+vi.mock('conventional-recommended-bump', () => ({
+  default: mockers.conventionalRecommendedBump,
+}));
+vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
+vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 
-const mockers = require('./mocks/jest-mocks');
+vi.spyOn(console, 'info').mockImplementation(() => {});
+vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-function exec(opt = '') {
+async function exec(opt = '') {
+  vi.resetModules();
+  const { default: cli } = await import('../command');
   if (typeof opt === 'string') {
-    const cli = require('../command');
     opt = cli.parse(`commit-and-tag-version ${opt}`);
   }
-  return require('../index')(opt);
+  const { default: standardVersion } = await import('../index');
+  return standardVersion(opt);
 }
 
 /**
