@@ -3,6 +3,7 @@
   <groupId>com.mycompany.app</groupId>
   <artifactId>my-module</artifactId>
   <version>6.3.1</version>
+  <!-- preserved-comment -->
   <build>
     <plugins>
       <plugin>
