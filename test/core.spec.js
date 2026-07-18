@@ -90,6 +90,13 @@ const mockReadFilesFromDisk = ({
   realTestFiles,
 }) =>
   vi.spyOn(fs, 'readFileSync').mockImplementation((path, opts) => {
+    // The ESM module loader reads files through fs with non-string paths
+    // (URL/Buffer/fd). Those aren't test fixtures, so pass them straight to
+    // real fs; only string paths get the fixture handling below.
+    if (typeof path !== 'string') {
+      return readFileSyncActual(path, opts);
+    }
+
     if (path === 'CHANGELOG.md') {
       if (existingChangelog) {
         return existingChangelog;
@@ -149,6 +156,12 @@ const mockReadFilesFromDisk = ({
  */
 const mockFsLStat = ({ fs, lstatSyncActual, testFiles, realTestFiles }) =>
   vi.spyOn(fs, 'lstatSync').mockImplementation((path) => {
+    // See readFileSync mock: non-string paths come from the module loader,
+    // not the test fixtures, so delegate them to real fs.
+    if (typeof path !== 'string') {
+      return lstatSyncActual(path);
+    }
+
     if (testFiles) {
       const file = testFiles.find((otherFile) => {
         return path.includes(otherFile.path);
