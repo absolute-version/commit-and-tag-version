@@ -2,6 +2,8 @@
   "name": "commit-and-tag-version",
   "version": "12.7.3",
   "description": "replacement for `npm version` with automatic CHANGELOG generation",
+  "type": "module",
+  "main": "index.js",
   "bin": {
     "commit-and-tag-version": "bin/cli.js"
   },
@@ -22,7 +24,7 @@
     "url": "git+https://github.com/absolute-version/commit-and-tag-version.git"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19"
   },
   "keywords": [
     "conventional-changelog",

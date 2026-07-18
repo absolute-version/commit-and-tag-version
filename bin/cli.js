@@ -6,8 +6,8 @@ if (process.version.match(/v(\d+)\./)[1] < 6) {
     'commit-and-tag-version: Node v6 or greater is required. `commit-and-tag-version` did not run.',
   );
 } else {
-  const standardVersion = require('../index');
-  const cmdParser = require('../command');
+  const { default: standardVersion } = await import('../index.js');
+  const { default: cmdParser } = await import('../command.js');
   standardVersion(cmdParser.argv).catch(() => {
     process.exit(1);
   });

@@ -16,7 +16,12 @@ vi.mock('conventional-recommended-bump', () => ({
 vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
 vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
 vi.mock('../lib/run-execFile', () => ({ default: mockers.runExecFile }));
-vi.mock('dotgitignore');
+// Now that the source is ESM, this mock applies to the source's import of
+// dotgitignore too (under CJS it only affected this file's import), so it
+// needs a working default implementation rather than a bare automock.
+vi.mock('dotgitignore', () => ({
+  default: vi.fn(() => ({ ignore: () => false })),
+}));
 
 // Mock fs at the Vitest ESM level so spies work for both test and source code.
 vi.mock('fs', async (importOriginal) => {

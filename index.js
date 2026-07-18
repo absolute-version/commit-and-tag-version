@@ -1,15 +1,15 @@
-const bump = require('./lib/lifecycles/bump');
-const changelog = require('./lib/lifecycles/changelog');
-const commit = require('./lib/lifecycles/commit');
-const fs = require('fs');
-const latestSemverTag = require('./lib/latest-semver-tag');
-const path = require('path');
-const printError = require('./lib/print-error');
-const tag = require('./lib/lifecycles/tag');
-const { resolveUpdaterObjectFromArgument } = require('./lib/updaters');
+import fs from 'fs';
+import path from 'path';
+import bump from './lib/lifecycles/bump.js';
+import changelog from './lib/lifecycles/changelog.js';
+import commit from './lib/lifecycles/commit.js';
+import latestSemverTag from './lib/latest-semver-tag.js';
+import printError from './lib/print-error.js';
+import tag from './lib/lifecycles/tag.js';
+import { resolveUpdaterObjectFromArgument } from './lib/updaters/index.js';
+import defaults from './defaults.js';
 
-module.exports = async function standardVersion(argv) {
-  const defaults = require('./defaults');
+export default async function standardVersion(argv) {
   /**
    * `--message` (`-m`) support will be removed in the next major version.
    */
@@ -93,4 +93,4 @@ module.exports = async function standardVersion(argv) {
     printError(args, err.message);
     throw err;
   }
-};
+}

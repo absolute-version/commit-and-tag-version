@@ -1,7 +1,12 @@
-const spec = require('conventional-changelog-config-spec');
-const { getConfiguration } = require('./lib/configuration');
-const defaults = require('./defaults');
+import { createRequire } from 'module';
+import spec from 'conventional-changelog-config-spec';
+import { getConfiguration } from './lib/configuration.js';
+import defaults from './defaults.js';
 
+const require = createRequire(import.meta.url);
+
+// Load the CommonJS build of yargs: the yargs ESM entrypoint does not provide
+// the argv singleton, and its help output wraps differently.
 const yargs = require('yargs')
   .usage('Usage: $0 [options]')
   .option('packageFiles', {
@@ -176,4 +181,4 @@ Object.keys(spec.properties).forEach((propertyKey) => {
   });
 });
 
-module.exports = yargs;
+export default yargs;

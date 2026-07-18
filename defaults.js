@@ -1,4 +1,7 @@
-const spec = require('conventional-changelog-config-spec');
+import { createRequire } from 'module';
+import spec from 'conventional-changelog-config-spec';
+
+const require = createRequire(import.meta.url);
 
 const defaults = {
   infile: 'CHANGELOG.md',
@@ -42,4 +45,6 @@ defaults.bumpFiles = defaults.packageFiles.concat([
   'npm-shrinkwrap.json',
 ]);
 
-module.exports = defaults;
+export const header = defaults.header;
+
+export default defaults;
