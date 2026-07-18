@@ -3,25 +3,18 @@ on:
     branches:
       - master
   pull_request:
-    types: [ assigned, opened, synchronize, reopened, labeled ]
+    types: [assigned, opened, synchronize, reopened, labeled]
 name: ci
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [
-          20,
-          lts/*,
-          24
-        ]
-        os: [
-          ubuntu-latest,
-          windows-latest
-        ]
+        node: [22, lts/*, 24]
+        os: [ubuntu-latest, windows-latest]
     env:
-        OS: ${{ matrix.os }}
-        NODE_VERSION: ${{ matrix.node }}
+      OS: ${{ matrix.os }}
+      NODE_VERSION: ${{ matrix.node }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
       - run: git fetch --prune --unshallow

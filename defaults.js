@@ -1,7 +1,4 @@
-import { createRequire } from 'module';
 import spec from 'conventional-changelog-config-spec';
-
-const require = createRequire(import.meta.url);
 
 const defaults = {
   infile: 'CHANGELOG.md',
@@ -18,7 +15,7 @@ const defaults = {
   dryRun: false,
   tagForce: false,
   gitTagFallback: true,
-  preset: require.resolve('conventional-changelog-conventionalcommits'),
+  preset: 'conventional-changelog-conventionalcommits',
   npmPublishHint: undefined,
   config: undefined,
 };

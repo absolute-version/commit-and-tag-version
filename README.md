@@ -4,7 +4,7 @@
 
 > **`Can I simply swap the library to migrate?`** To migrate, you can drop in `commit-and-tag-version` in place of `standard-version`. There are no changes in 9.5.0, other than to add the package.json config key `commit-and-tag-version` (the previous configuration key `standard-version` will still work). 10.x drops support for deprecated node versions, 11.x is a formatting change if you're relying on the exact markdown format in the changelog, and 12.x drops support for node 14/16.
 
-> **`Why was it renamed commit-and-tag-version?`**. I didn't want to scope the package or name it `standard-version-fork`, and it was a good opportunity to make the purpose of the tool clearer. I also wanted to distinguish it from the other tool in this organisation, [`absolute-version`](https://github.com/absolute-version/absolute-version-js), which just prints version information for pre-releases. 
+> **`Why was it renamed commit-and-tag-version?`**. I didn't want to scope the package or name it `standard-version-fork`, and it was a good opportunity to make the purpose of the tool clearer. I also wanted to distinguish it from the other tool in this organisation, [`absolute-version`](https://github.com/absolute-version/absolute-version-js), which just prints version information for pre-releases.
 
 A utility for versioning using [semver](https://semver.org/) and CHANGELOG generation powered by [Conventional Commits](https://conventionalcommits.org).
 
@@ -17,14 +17,14 @@ A utility for versioning using [semver](https://semver.org/) and CHANGELOG gener
 _Having problems? Want to contribute? Join us on the [node-tooling community Slack](http://devtoolscommunity.herokuapp.com)_.
 
 - [Commit and Tag Version](#commit-and-tag-version)
-    - [How It Works:](#how-it-works)
-    - [`bumpFiles`, `packageFiles` and `updaters`](#bumpfiles-packagefiles-and-updaters)
-    - [Maven Support (Java/Kotlin)](#maven-support-javakotlin)
-    - [Gradle Support (Java/Kotlin)](#gradle-support-javakotlin)
-    - [.NET Support](#net-support)
-    - [YAML Support](#yaml-support)
-    - [OpenAPI Support](#openapi-support)
-    - [Python Support](#python-support)
+  - [How It Works:](#how-it-works)
+  - [`bumpFiles`, `packageFiles` and `updaters`](#bumpfiles-packagefiles-and-updaters)
+  - [Maven Support (Java/Kotlin)](#maven-support-javakotlin)
+  - [Gradle Support (Java/Kotlin)](#gradle-support-javakotlin)
+  - [.NET Support](#net-support)
+  - [YAML Support](#yaml-support)
+  - [OpenAPI Support](#openapi-support)
+  - [Python Support](#python-support)
   - [Installing `commit-and-tag-version`](#installing-commit-and-tag-version)
     - [As a local `npm run` script](#as-a-local-npm-run-script)
     - [As global `bin`](#as-global-bin)
@@ -57,7 +57,6 @@ _Having problems? Want to contribute? Join us on the [node-tooling community Sla
         - [`readVersion(contents = string): string`](#readversioncontents--string-string)
         - [`writeVersion(contents = string, version: string): string`](#writeversioncontents--string-version-string-string)
   - [License](#license)
-
 
 ### How It Works
 
@@ -131,7 +130,7 @@ commit-and-tag-version --packageFiles openapi.yaml --bumpFiles openapi.yaml
 
 ### Python Support
 
-If you are using Python ***with Poetry***, then point to your `pyproject.toml` file.
+If you are using Python **_with Poetry_**, then point to your `pyproject.toml` file.
 
 ```sh
 commit-and-tag-version --packageFiles pyproject.toml --bumpFiles pyproject.toml
@@ -187,7 +186,7 @@ You can configure `commit-and-tag-version` either by:
    your project is JavaScript).
 
    > Note for users who have migrated to
-   `commit-and-tag-version` from `standard-version`: the previous package.json configuration key of `standard-version` will still work.
+   > `commit-and-tag-version` from `standard-version`: the previous package.json configuration key of `standard-version` will still work.
 
 2. Creating a `.versionrc`, `.versionrc.json` or `.versionrc.js`.
 
@@ -201,6 +200,8 @@ be provided via configuration. Please refer to the [conventional-changelog-confi
 By default, `commit-and-tag-version` uses the [conventionalcommits preset](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits).
 
 This preset adheres closely to the [conventionalcommits.org](https://www.conventionalcommits.org) specification.
+
+If you want to use a different preset (for example `--preset angular`), you can install its package (for example `conventional-changelog-angular`). Presets must use the modern conventional-changelog preset interface (a factory function, used by presets released since mid-2023).
 
 Suppose you're using GitLab, rather than GitHub, you might modify the following variables:
 
@@ -496,13 +497,13 @@ commit-and-tag-version --help
 ## Code Usage
 
 ```js
-const commitAndTagVersion = require("commit-and-tag-version");
+const commitAndTagVersion = require('commit-and-tag-version');
 
 // Options are the same as command line, except camelCase
 // commitAndTagVersion returns a Promise
 commitAndTagVersion({
   noVerify: true,
-  infile: "docs/CHANGELOG.md",
+  infile: 'docs/CHANGELOG.md',
   silent: true,
 })
   .then(() => {
@@ -574,8 +575,8 @@ If using `.versionrc.js` as your configuration file, the `updater` may also be s
 ```js
 // .versionrc.js
 const tracker = {
-  filename: "VERSION_TRACKER.json",
-  updater: require("./path/to/custom-version-updater"),
+  filename: 'VERSION_TRACKER.json',
+  updater: require('./path/to/custom-version-updater'),
 };
 
 module.exports = {
@@ -618,9 +619,9 @@ An acceptable `commit-and-tag-version-updater.js` would be:
 
 ```js
 // commit-and-tag-version-updater.js
-const stringifyPackage = require("stringify-package");
-const detectIndent = require("detect-indent");
-const detectNewline = require("detect-newline");
+const stringifyPackage = require('stringify-package');
+const detectIndent = require('detect-indent');
+const detectNewline = require('detect-newline');
 
 module.exports.readVersion = function (contents) {
   return JSON.parse(contents).tracker.package.version;
@@ -666,8 +667,8 @@ When you are ready to release v1.0.0, add `--release-as 1.0.0` to the options.
 By default, the conventional commits preset is used. This means that only `fix`, `feat` and anything marked as a breaking change will appear in the changelog.
 
 Conventional commits is meant to make it easy for machines to reason about the user-facing changes,
-and the changelog generation makes it easy for humans to consume this information too. 
-Usually, you wouldn't want non-user facing changes like refactor in the changelog. 
+and the changelog generation makes it easy for humans to consume this information too.
+Usually, you wouldn't want non-user facing changes like refactor in the changelog.
 
 ## License
 

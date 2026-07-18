@@ -24,7 +24,7 @@
     "url": "git+https://github.com/absolute-version/commit-and-tag-version.git"
   },
   "engines": {
-    "node": ">=20.19"
+    "node": ">=22"
   },
   "keywords": [
     "conventional-changelog",
@@ -46,18 +46,18 @@
   },
   "homepage": "https://github.com/absolute-version/commit-and-tag-version#readme",
   "dependencies": {
+    "@conventional-changelog/git-client": "3.1.0",
     "chalk": "^2.4.2",
-    "conventional-changelog": "4.0.0",
+    "conventional-changelog": "8.1.0",
     "conventional-changelog-config-spec": "2.1.0",
-    "conventional-changelog-conventionalcommits": "6.1.0",
-    "conventional-recommended-bump": "7.0.1",
+    "conventional-changelog-conventionalcommits": "10.2.1",
+    "conventional-recommended-bump": "12.1.0",
     "detect-indent": "^6.1.0",
     "detect-newline": "^3.1.0",
     "dotgitignore": "^2.1.0",
     "fast-xml-parser": "^5.5.6",
     "figures": "^3.2.0",
     "find-up": "^5.0.0",
-    "git-semver-tags": "^5.0.1",
     "semver": "^7.7.2",
     "yaml": "^2.6.0",
     "yargs": "^17.7.2"
@@ -66,6 +66,7 @@
     "@eslint/js": "^9.36.0",
     "@vitest/coverage-istanbul": "^4.1.0",
     "@vitest/eslint-plugin": "^1.6.23",
+    "conventional-changelog-angular": "^9.2.1",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.31.0",

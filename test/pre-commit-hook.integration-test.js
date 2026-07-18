@@ -2,14 +2,16 @@ import shell from 'shelljs';
 import fs from 'fs';
 
 const mockers = vi.hoisted(() => require('./mocks/vitest-mocks').setup());
-vi.mock('conventional-changelog', () => ({
-  default: mockers.conventionalChangelog,
-}));
-vi.mock('conventional-recommended-bump', () => ({
-  default: mockers.conventionalRecommendedBump,
-}));
-vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
-vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
+vi.mock('conventional-changelog', () => mockers.conventionalChangelogModule());
+vi.mock('conventional-recommended-bump', async (importOriginal) =>
+  mockers.conventionalRecommendedBumpModule(
+    await importOriginal(),
+    await import('@conventional-changelog/git-client'),
+  ),
+);
+vi.mock('@conventional-changelog/git-client', async (importOriginal) =>
+  mockers.gitClientModule(await importOriginal()),
+);
 
 // Jest swallows most standard console logs not explicitly defined into a custom logger
 // see: https://stackoverflow.com/questions/51555568/remove-logging-the-origin-line-in-jest

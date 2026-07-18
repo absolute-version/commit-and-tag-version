@@ -1,120 +1,255 @@
 'use strict';
 
-const { Readable } = require('stream');
-
 /**
- * Create mock functions and install a CJS hook to intercept require() calls
- * in the source code's dependency graph.
+ * Create mock state and module factories for the conventional-changelog
+ * ecosystem packages.
  *
  * Usage in test files:
  *
  *   const mockers = vi.hoisted(() => require('./mocks/vitest-mocks').setup());
  *
- *   vi.mock('conventional-changelog', () => ({ default: mockers.conventionalChangelog }));
- *   vi.mock('conventional-recommended-bump', () => ({ default: mockers.conventionalRecommendedBump }));
- *   vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
- *   vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
+ *   vi.mock('conventional-changelog', () =>
+ *     mockers.conventionalChangelogModule(),
+ *   );
+ *   vi.mock('conventional-recommended-bump', async (importOriginal) =>
+ *     mockers.conventionalRecommendedBumpModule(
+ *       await importOriginal(),
+ *       await import('@conventional-changelog/git-client'),
+ *     ),
+ *   );
+ *   vi.mock('@conventional-changelog/git-client', async (importOriginal) =>
+ *     mockers.gitClientModule(await importOriginal()),
+ *   );
  */
 function setup({ mockRunExecFile = false } = {}) {
-  const gitSemverTags = vi.fn();
-  const conventionalChangelog = vi.fn();
-  const conventionalRecommendedBump = vi.fn();
-  const gitRawCommits = vi.fn();
   const runExecFile = vi.fn();
 
   // Use the actual fs module object directly for spying
   const fsProxy = require('fs');
 
-  const MOCK_MAP = {
-    'conventional-changelog': conventionalChangelog,
-    'conventional-recommended-bump': conventionalRecommendedBump,
-    'git-semver-tags': gitSemverTags,
-    'git-raw-commits': gitRawCommits,
-  };
-
-  // Hook into Node's Module._load to intercept CJS require() calls
-  // in the source code's dependency graph. vi.mock() only intercepts
-  // ESM imports, so this hook is needed for CJS source code.
-  const Module = require('module');
-  const origLoad = Module._load;
-  Module._load = function (request, parent, isMain) {
-    if (MOCK_MAP[request]) return MOCK_MAP[request];
-    if (request === 'fs') return fsProxy;
-    // Only intercept run-execFile when explicitly requested (core.spec.js).
-    // Integration tests need the real run-execFile for git operations.
-    if (
-      mockRunExecFile &&
-      (request.endsWith('run-execFile') || request.endsWith('run-execFile.js'))
-    ) {
-      return runExecFile;
-    }
-    return origLoad.call(this, request, parent, isMain);
-  };
-
-  // Re-load the actual module AFTER the hook is installed so its internal
-  // requires (like git-raw-commits) go through our hook. This is needed
-  // for tests that use the actual conventionalRecommendedBump function.
-  const crbPath = require.resolve('conventional-recommended-bump');
-  delete require.cache[crbPath];
-  const actualConventionalRecommendedBump = origLoad.call(
-    Module,
-    'conventional-recommended-bump',
-    module,
-    false,
+  // Sentinel passed as `bump` by tests that want the real Bumper
+  // implementation to run (against the mocked git client).
+  const actualConventionalRecommendedBump = Symbol(
+    'actual-conventional-recommended-bump',
   );
 
+  // Shared mock data, updated by the mock* helpers below.
+  const state = {
+    tags: [], // string[] | Error - git tags yielded by the git client
+    commits: [], // string[] - raw commit bodies yielded by the git client
+    changelog: [], // Array<string | Error | fn | undefined> - changelog chunks
+    bump: undefined, // releaseType | Error | fn | actualConventionalRecommendedBump
+  };
+
+  /**
+   * Module factory for '@conventional-changelog/git-client': the real
+   * ConventionalGitClient with the raw git interactions (log for commits and
+   * tags) replaced by the mock state. Parsing and semver filtering still use
+   * the real implementation.
+   */
+  const gitClientModule = (actual) => {
+    class MockConventionalGitClient extends actual.ConventionalGitClient {
+      async *getRawCommits() {
+        for (const commit of state.commits || []) {
+          yield commit;
+        }
+      }
+
+      async *getTags() {
+        if (state.tags instanceof Error) throw state.tags;
+        for (const tag of state.tags || []) {
+          yield tag;
+        }
+      }
+    }
+
+    return { ...actual, ConventionalGitClient: MockConventionalGitClient };
+  };
+
+  /**
+   * Module factory for 'conventional-changelog': a chainable stub whose
+   * write() generator yields the queued changelog chunks.
+   */
+  const conventionalChangelogModule = () => {
+    class MockConventionalChangelog {
+      readPackage() {
+        return this;
+      }
+
+      package() {
+        return this;
+      }
+
+      loadPreset(preset) {
+        this.presetParams = preset;
+        return this;
+      }
+
+      config(config) {
+        this.configParams = config;
+        return this;
+      }
+
+      tags(params) {
+        this.tagsParams = params;
+        return this;
+      }
+
+      options(options) {
+        this.optionsParams = options;
+        return this;
+      }
+
+      context(context) {
+        this.contextParams = context;
+        return this;
+      }
+
+      commits(params, parserOptions) {
+        this.commitsParams = params;
+        this.parserOptions = parserOptions;
+        return this;
+      }
+
+      writer(options) {
+        this.writerOptions = options;
+        return this;
+      }
+
+      async *write() {
+        // Mirrors the behaviour of the old stream mock: consume queued
+        // entries until an empty entry ends the stream; an Error entry
+        // fails it; a function entry is called with the params captured
+        // from the chained setup calls.
+        for (;;) {
+          const next = state.changelog.shift();
+          if (next instanceof Error) throw next;
+          const chunk =
+            typeof next === 'function'
+              ? next({
+                  preset: this.presetParams,
+                  tags: this.tagsParams,
+                  options: this.optionsParams,
+                  context: this.contextParams,
+                  commits: this.commitsParams,
+                  parser: this.parserOptions,
+                  writer: this.writerOptions,
+                })
+              : next;
+          if (!chunk) return;
+          yield chunk;
+        }
+      }
+    }
+
+    return { ConventionalChangelog: MockConventionalChangelog };
+  };
+
+  /**
+   * Module factory for 'conventional-recommended-bump': a chainable Bumper
+   * stub driven by the `bump` mock state. When `bump` is the
+   * `actualConventionalRecommendedBump` sentinel, the real Bumper runs with
+   * the mocked git client, so real presets, parsing and whatBump logic are
+   * exercised against the mock commits/tags.
+   */
+  const conventionalRecommendedBumpModule = (actual, gitClientMod) => {
+    class MockBumper {
+      loadPreset(preset) {
+        this.presetParams = preset;
+        return this;
+      }
+
+      config(config) {
+        this.configParams = config;
+        return this;
+      }
+
+      options(options) {
+        this.optionsParams = options;
+        return this;
+      }
+
+      tag(params) {
+        this.tagParams = params;
+        return this;
+      }
+
+      commits(params, parserOptions) {
+        this.commitsParams = params;
+        this.parserOptions = parserOptions;
+        return this;
+      }
+
+      async bump(whatBump) {
+        const bump = state.bump;
+
+        if (bump === actualConventionalRecommendedBump) {
+          const bumper = new actual.Bumper(
+            new gitClientMod.ConventionalGitClient(process.cwd()),
+          );
+          if (this.presetParams) bumper.loadPreset(this.presetParams);
+          if (this.tagParams) bumper.tag(this.tagParams);
+          if (this.commitsParams || this.parserOptions) {
+            bumper.commits(this.commitsParams || {}, this.parserOptions);
+          }
+          if (this.optionsParams) bumper.options(this.optionsParams);
+          return bumper.bump(whatBump);
+        }
+
+        if (bump instanceof Error) throw bump;
+
+        if (typeof bump === 'function') {
+          // Legacy callback-style test hook: (opt, parserOpts, cb)
+          return new Promise((resolve, reject) => {
+            bump(
+              {
+                preset: this.presetParams,
+                tag: this.tagParams,
+                commits: this.commitsParams,
+              },
+              this.parserOptions,
+              (err, release) => {
+                if (err) reject(err);
+                else resolve({ commits: [], ...release });
+              },
+            );
+          });
+        }
+
+        if (bump) {
+          return { releaseType: bump, commits: [] };
+        }
+        return { commits: [] };
+      }
+    }
+
+    return { ...actual, Bumper: MockBumper };
+  };
+
   const mockGitSemverTags = ({ tags = [] }) => {
-    gitSemverTags.mockImplementation((opts, cb) => {
-      if (tags instanceof Error) cb(tags);
-      else cb(null, tags);
-    });
+    state.tags = tags;
   };
 
   const mockGitRawCommits = ({ commits = [] }) => {
-    gitRawCommits.mockImplementation(() => {
-      return new Readable({
-        read() {
-          commits.forEach((c) => this.push(c));
-          this.push(null);
-        },
-      });
-    });
+    state.commits = commits;
   };
 
   const mockConventionalChangelog = ({ changelog }) => {
-    conventionalChangelog.mockImplementation(
-      (opt) =>
-        new Readable({
-          read(_size) {
-            const next = changelog.shift();
-            if (next instanceof Error) {
-              this.destroy(next);
-            } else if (typeof next === 'function') {
-              this.push(next(opt));
-            } else {
-              this.push(next ? Buffer.from(next, 'utf8') : null);
-            }
-          },
-        }),
-    );
+    state.changelog = Array.isArray(changelog) ? changelog : [changelog];
   };
 
   const mockRecommendedBump = ({ bump }) => {
-    conventionalRecommendedBump.mockImplementation((opt, parserOpts, cb) => {
-      if (typeof bump === 'function') bump(opt, parserOpts, cb);
-      else if (bump instanceof Error) cb(bump);
-      else cb(null, bump ? { releaseType: bump } : {});
-    });
+    state.bump = bump;
   };
 
   return {
     fsProxy,
-    gitSemverTags,
-    conventionalChangelog,
-    conventionalRecommendedBump,
-    gitRawCommits,
     runExecFile,
+    mockRunExecFile,
     actualConventionalRecommendedBump,
+    gitClientModule,
+    conventionalChangelogModule,
+    conventionalRecommendedBumpModule,
     mockGitSemverTags,
     mockGitRawCommits,
     mockConventionalChangelog,

@@ -7,14 +7,16 @@ const mockers = vi.hoisted(() =>
 );
 
 // Register vi.mock for ESM imports in this test file
-vi.mock('conventional-changelog', () => ({
-  default: mockers.conventionalChangelog,
-}));
-vi.mock('conventional-recommended-bump', () => ({
-  default: mockers.conventionalRecommendedBump,
-}));
-vi.mock('git-semver-tags', () => ({ default: mockers.gitSemverTags }));
-vi.mock('git-raw-commits', () => ({ default: mockers.gitRawCommits }));
+vi.mock('conventional-changelog', () => mockers.conventionalChangelogModule());
+vi.mock('conventional-recommended-bump', async (importOriginal) =>
+  mockers.conventionalRecommendedBumpModule(
+    await importOriginal(),
+    await import('@conventional-changelog/git-client'),
+  ),
+);
+vi.mock('@conventional-changelog/git-client', async (importOriginal) =>
+  mockers.gitClientModule(await importOriginal()),
+);
 vi.mock('../lib/run-execFile', () => ({ default: mockers.runExecFile }));
 // Now that the source is ESM, this mock applies to the source's import of
 // dotgitignore too (under CJS it only affected this file's import), so it
