@@ -47,7 +47,7 @@
   "homepage": "https://github.com/absolute-version/commit-and-tag-version#readme",
   "dependencies": {
     "@conventional-changelog/git-client": "3.1.0",
-    "chalk": "^2.4.2",
+    "chalk": "^5.6.2",
     "conventional-changelog": "8.1.0",
     "conventional-changelog-config-spec": "2.1.0",
     "conventional-changelog-conventionalcommits": "10.2.1",
