@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.1.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.0.0...v13.1.0) (2026-07-21)
+
+
+### Features
+
+* support ESM configuration files ([#306](https://github.com/absolute-version/commit-and-tag-version/issues/306)) ([9e0e5ab](https://github.com/absolute-version/commit-and-tag-version/commit/9e0e5ab7ec8cf8a465b63d3858634126cd040542))
+
 ## [13.0.0](https://github.com/absolute-version/commit-and-tag-version/compare/v12.7.3...v13.0.0) (2026-07-18)
 
 
