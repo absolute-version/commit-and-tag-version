@@ -299,6 +299,28 @@ commit-and-tag-version --prerelease xyz  # Creates v1.4.3-xyz.1 (auto-incremente
 
 This behavior applies to both named prereleases (e.g., `-alpha.0`, `-beta.1`) and unnamed prereleases (e.g., `-0`, `-1`), ensuring that you can safely cut multiple prerelease versions without encountering git tag conflicts.
 
+#### Keeping Prereleases out of a Final Changelog
+
+`commit-and-tag-version` does not currently provide a general-purpose option to
+ignore every intermediary prerelease tag when generating a final release
+changelog. The `releaseCount` option controls how many release sections are
+generated; it does not exclude prerelease tags.
+
+To keep a final changelog based on the previous stable release, maintain a
+dedicated prerelease branch and merge the stable branch into it as product
+changes land. Cut prereleases only from that branch, keeping their tagged
+release commits unreachable from the stable branch. When the code is ready, cut
+the stable release from the stable branch without merging the prerelease branch
+back. If product changes exist only on the prerelease branch, transfer those
+changes selectively instead of bringing its generated prerelease versions,
+changelog entries, or release commits into stable history.
+
+Avoid deleting prerelease tags locally, cutting the stable release, and then
+fetching the tags again. That workaround makes changelog generation depend on
+an incomplete local tag set, can affect tag-derived version calculations, and
+temporarily puts local and remote tag state out of sync. Keeping the tags intact
+and using separate branch histories makes the release inputs reproducible.
+
 ### Release as a Target Type Imperatively (`npm version`-like)
 
 To forgo the automated version bump use `--release-as` with the argument `major`, `minor` or `patch`.
