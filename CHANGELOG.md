@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.1.1](https://github.com/absolute-version/commit-and-tag-version/compare/v13.1.0...v13.1.1) (2026-07-28)
+
+
+### Bug Fixes
+
+* Fix issue where prereleases were calculated from the wrong base (fixes [#310](https://github.com/absolute-version/commit-and-tag-version/issues/310)) ([1261803](https://github.com/absolute-version/commit-and-tag-version/commit/12618033a5b1a6c8bf3fd2aa65ceb062b6180c3a))
+
 ## [13.1.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.0.0...v13.1.0) (2026-07-21)
 
 
