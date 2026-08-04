@@ -42,10 +42,52 @@ The content of the changelog is otherwise unchanged. This only affects newly gen
 
 The new conventional-changelog packages require Node.js >= 22, so `commit-and-tag-version` now does too. Node 20 reached end-of-life in April 2026, so I expect this won't affect most users.
 
+### Custom writer templates use render functions
+
+[conventional-changelog v8.0.0](https://github.com/conventional-changelog/conventional-changelog/releases/tag/conventional-changelog-v8.0.0) replaced Handlebars template strings and partial files with JavaScript render functions ([#1477](https://github.com/conventional-changelog/conventional-changelog/issues/1477)). The following `writerOpts` options must now be functions:
+
+- `template`
+- `headerPartial`
+- `commitPartial`
+- `footerPartial`
+
+The old `mainTemplate` option must be migrated to `template(context)`. The official [`@conventional-changelog/template` helpers](https://conventional-changelog.js.org/template/) provide Markdown, URL, repository and composition helpers for building these render functions.
+
+Before:
+
+```js
+module.exports = {
+  writerOpts: {
+    mainTemplate: '...',
+    commitPartial: '- {{subject}}',
+  },
+};
+```
+
+After:
+
+```js
+import { words } from '@conventional-changelog/template';
+
+function commitPartial(_context, commit) {
+  return words(commit.subject || commit.header, commit.shortHash);
+}
+
+export default {
+  writerOpts: {
+    commitPartial,
+  },
+};
+```
+
+If you customized the main template, implement `template(context)` as well instead of continuing to use `mainTemplate`.
+
+ESM `.versionrc.js` and `.versionrc.mjs` configurations require [`commit-and-tag-version` 13.1.0](https://github.com/absolute-version/commit-and-tag-version/releases/tag/v13.1.0) or newer. Although `@conventional-changelog/template` is a direct dependency of `commit-and-tag-version`, a configuration file that imports it directly should also declare it as a direct dependency of the user project. This is required by strict dependency managers such as pnpm.
+
 ### Behaviour that is intentionally preserved
 
 The upstream packages made some breaking changes that `commit-and-tag-version` shields you from, so no action is needed for these — they're listed here for the record:
 
 - **`types[].hidden` and the URL format options still work.** conventional-changelog-conventionalcommits 10 replaced `types[].hidden` with `types[].effect`, and replaced the `commitUrlFormat`, `compareUrlFormat`, `issueUrlFormat` and `userUrlFormat` template strings with callback functions. `commit-and-tag-version` translates the [config-spec](https://github.com/conventional-changelog/conventional-changelog-config-spec) options for you, so existing configuration keeps working. (If you supply the new-style `effect` / `format*Url` options, they're passed through untouched.)
 - **Version bump recommendations are unchanged.** The new preset only recommends a release when there's at least one `feat`, `fix`, `perf`, `revert` or breaking change; `commit-and-tag-version` keeps its historical behaviour of always recommending at least a patch. Use `--noBumpWhenEmptyChanges` if you don't want a release when there are no relevant commits, as before. In a future major release, we might change this default, depending on feedback.
-- **`parserOpts` and `writerOpts` overrides work as before**, merged over the preset's options.
+- **`parserOpts` and non-template `writerOpts` overrides work as before**, merged over the preset's options. Custom writer templates are the exception and must use the render functions described above.
