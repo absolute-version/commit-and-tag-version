@@ -1,6 +1,6 @@
 import shell from 'shelljs';
 import fs from 'fs';
-import { execFileSync } from 'child_process';
+import { execFileSync, spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const CLI = fileURLToPath(new URL('../bin/cli.js', import.meta.url));
@@ -60,6 +60,34 @@ describe('ESM config files', function () {
 
     const output = runCli();
     expect(output).toContain('tagging release custom-1.0.1');
+  });
+
+  it('renders a custom writer function imported by an ES module config', function () {
+    fs.writeFileSync(
+      '.versionrc.js',
+      `import { words } from '@conventional-changelog/template'
+
+function commitPartial(_context, commit) {
+  return words(commit.subject || commit.header, commit.shortHash)
+}
+
+export default {
+  writerOpts: {
+    commitPartial,
+  },
+}`,
+      'utf-8',
+    );
+    shell.exec('git commit --allow-empty -m"fix: render custom writer"');
+
+    const result = spawnSync(process.execPath, [CLI, '--dry-run'], {
+      encoding: 'utf-8',
+    });
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(0);
+    expect(output).toContain('render custom writer');
+    expect(output).not.toContain('commitPartial is not a function');
   });
 
   it('reads an ES module config from .versionrc.mjs', function () {
