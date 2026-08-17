@@ -432,6 +432,8 @@ by adding the following to your package.json:
 }
 ```
 
+To set these options via the command line, use `commit-and-tag-version --skip.changelog`
+
 ### Committing Generated Artifacts in the Release Commit
 
 If you want to commit generated artifacts in the release commit, you can use the `--commit-all` or `-a` flag. You will need to stage the artifacts you want to commit, so your `release` command could look like this:
