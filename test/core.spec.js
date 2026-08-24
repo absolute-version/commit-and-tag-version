@@ -1836,6 +1836,50 @@ describe('cli', function () {
         await exec('-r major');
         verifyPackageVersion({ writeFileSyncSpy, expectedVersion: '1.0.0' });
       });
+
+      it('keeps feat at minor when version < 1.0.0 (no preMajor downgrade past minor)', async function () {
+        // Regression (13.1.2): legacyWhatBump downgraded feat (minor) to
+        // patch under preMajor, so 0.x projects shipped every feature as a
+        // patch release. preMajor softening applies to breaking changes only
+        // (major → minor); feat must stay minor.
+        mock({
+          bump: mockers.actualConventionalRecommendedBump,
+          changelog: ['feat release\n'],
+          tags: ['v0.5.0'],
+          commits: ['feat: shiny new stuff\n\n-hash-\nabc123\n'],
+          testFiles: [
+            {
+              path: 'package.json',
+              value: {
+                version: '0.5.0',
+                repository: { url: 'https://github.com/yargs/yargs.git' },
+              },
+            },
+          ],
+        });
+        await exec();
+        verifyPackageVersion({ writeFileSyncSpy, expectedVersion: '0.6.0' });
+      });
+
+      it('softens breaking change to minor (not patch) when version < 1.0.0', async function () {
+        mock({
+          bump: mockers.actualConventionalRecommendedBump,
+          changelog: ['breaking release\n'],
+          tags: ['v0.5.0'],
+          commits: ['feat!: this is a breaking change\n\n-hash-\nabc123\n'],
+          testFiles: [
+            {
+              path: 'package.json',
+              value: {
+                version: '0.5.0',
+                repository: { url: 'https://github.com/yargs/yargs.git' },
+              },
+            },
+          ],
+        });
+        await exec();
+        verifyPackageVersion({ writeFileSyncSpy, expectedVersion: '0.6.0' });
+      });
     });
   });
 
