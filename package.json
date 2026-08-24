@@ -78,5 +78,8 @@
     "shelljs": "^0.10.0",
     "strip-ansi": "^7.2.0",
     "vitest": "^4.1.0"
+  },
+  "overrides": {
+    "brace-expansion": "1.1.18"
   }
 }
