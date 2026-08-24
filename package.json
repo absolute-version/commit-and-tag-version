@@ -63,7 +63,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.36.0",
+    "@eslint/js": "^10.0.1",
     "@vitest/coverage-istanbul": "^4.1.0",
     "@vitest/eslint-plugin": "^1.6.26",
     "conventional-changelog-angular": "^9.2.1",
