@@ -1491,38 +1491,40 @@ describe('cli', function () {
       expect(calledWithContentStr).toEqual(expected);
     });
 
-    it('bumps version in multi-module Maven `pom.xml` file while preserving revisions', async function () {
-      const expected = fs.readFileSync(
-        './test/mocks/pom-6.4.0-mm.xml',
-        'utf-8',
-      );
-      const filename = 'pom.xml';
-      mock({
-        bump: 'minor',
-        realTestFiles: [
-          {
-            filename,
-            path: './test/mocks/pom-6.3.1-mm.xml',
-          },
-        ],
-      });
-      await exec({
-        packageFiles: [{ filename, type: 'maven' }],
-        bumpFiles: [{ filename, type: 'maven' }],
-      });
+    describe('multi-module maven pom.xml files', function () {
+      it('bumps version in multi-module Maven `pom.xml` file while preserving revisions', async function () {
+        const expected = fs.readFileSync(
+          './test/mocks/pom-6.4.0-mm.xml',
+          'utf-8',
+        );
+        const filename = 'pom.xml';
+        mock({
+          bump: 'minor',
+          realTestFiles: [
+            {
+              filename,
+              path: './test/mocks/pom-6.3.1-mm.xml',
+            },
+          ],
+        });
+        await exec({
+          packageFiles: [{ filename, type: 'maven' }],
+          bumpFiles: [{ filename, type: 'maven' }],
+        });
 
-      // filePath is the first arg passed to writeFileSync
-      const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
-        writeFileSyncSpy,
-        filename,
+        // filePath is the first arg passed to writeFileSync
+        const packageJsonWriteFileSynchCall = findWriteFileCallForPath({
+          writeFileSyncSpy,
+          filename,
+        });
+
+        if (!packageJsonWriteFileSynchCall) {
+          throw new Error(`writeFileSynch not invoked with path ${filename}`);
+        }
+
+        const calledWithContentStr = packageJsonWriteFileSynchCall[1];
+        expect(calledWithContentStr).toEqual(expected);
       });
-
-      if (!packageJsonWriteFileSynchCall) {
-        throw new Error(`writeFileSynch not invoked with path ${filename}`);
-      }
-
-      const calledWithContentStr = packageJsonWriteFileSynchCall[1];
-      expect(calledWithContentStr).toEqual(expected);
     });
 
     it('bumps version in Gradle `build.gradle.kts` file', async function () {
