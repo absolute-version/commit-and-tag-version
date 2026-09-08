@@ -1525,6 +1525,66 @@ describe('cli', function () {
         const calledWithContentStr = packageJsonWriteFileSynchCall[1];
         expect(calledWithContentStr).toEqual(expected);
       });
+
+      it('throws error in multi-module Maven `pom.xml` file when version is invalid syntax', async function () {
+        const filename = 'pom.xml';
+        mock({
+          bump: 'minor',
+          realTestFiles: [
+            {
+              filename,
+              path: './test/mocks/pom-6.3.1-mm-invalid-syntax.xml',
+            },
+          ],
+        });
+        await exec({
+          packageFiles: [{ filename, type: 'maven' }],
+          bumpFiles: [{ filename, type: 'maven' }],
+        });
+        const expectedLog =
+          'Failed to read the version field in your pom file - unexpected invalid property reference';
+        verifyLogPrinted({ consoleInfoSpy: consoleErrorSpy, expectedLog });
+      });
+
+      it('throws error in multi-module Maven `pom.xml` file when no properties are discovered', async function () {
+        const filename = 'pom.xml';
+        mock({
+          bump: 'minor',
+          realTestFiles: [
+            {
+              filename,
+              path: './test/mocks/pom-6.3.1-mm-no-properties.xml',
+            },
+          ],
+        });
+        await exec({
+          packageFiles: [{ filename, type: 'maven' }],
+          bumpFiles: [{ filename, type: 'maven' }],
+        });
+        const expectedLog =
+          'Failed to read the revision field in your pom file properties - is it present?';
+        verifyLogPrinted({ consoleInfoSpy: consoleErrorSpy, expectedLog });
+      });
+
+      it('throws error in multi-module Maven `pom.xml` file when associated property is missing', async function () {
+        const filename = 'pom.xml';
+        mock({
+          bump: 'minor',
+          realTestFiles: [
+            {
+              filename,
+              path: './test/mocks/pom-6.3.1-mm-missing-revision.xml',
+            },
+          ],
+        });
+        await exec({
+          packageFiles: [{ filename, type: 'maven' }],
+          bumpFiles: [{ filename, type: 'maven' }],
+        });
+        const expectedLog =
+          'Failed to read the revision field in your pom file properties - is it present?';
+        verifyLogPrinted({ consoleInfoSpy: consoleErrorSpy, expectedLog });
+      });
     });
 
     it('bumps version in Gradle `build.gradle.kts` file', async function () {

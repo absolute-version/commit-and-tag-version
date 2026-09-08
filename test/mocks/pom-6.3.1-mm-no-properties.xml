@@ -1,0 +1,31 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.mycompany.app</groupId>
+    <artifactId>my-app</artifactId>
+    <version>3.0.0</version>
+  </parent>
+
+  <groupId>com.mycompany.app</groupId>
+  <artifactId>my-multi-module-project</artifactId>
+  <version>${revision}</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>my-module</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.some.dependency</groupId>
+      <artifactId>some-artifact</artifactId>
+      <version>${some.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.another.dependency</groupId>
+      <artifactId>another-artifact</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+  </dependencies>
+</project>
