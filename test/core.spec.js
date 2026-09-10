@@ -389,7 +389,13 @@ describe('cli', function () {
       verifyNewChangelogContentEquals({
         writeFileSyncSpy,
         expectedContent:
-          frontMatter + '\n' + header + '\n' + changelog101 + changelog100,
+          frontMatter +
+          '\n' +
+          header +
+          '\n' +
+          changelog101 +
+          '\n' +
+          changelog100,
       });
     });
 
@@ -417,7 +423,13 @@ describe('cli', function () {
       verifyNewChangelogContentEquals({
         writeFileSyncSpy,
         expectedContent:
-          frontMatter + '\n' + header + '\n' + changelog101 + changelog100,
+          frontMatter +
+          '\n' +
+          header +
+          '\n' +
+          changelog101 +
+          '\n' +
+          changelog100,
       });
     });
 
@@ -446,7 +458,7 @@ describe('cli', function () {
       await exec();
       verifyNewChangelogContentEquals({
         writeFileSyncSpy,
-        expectedContent: header + '\n' + changelog2 + changelog1,
+        expectedContent: header + '\n' + changelog2 + '\n' + changelog1,
       });
     });
 
