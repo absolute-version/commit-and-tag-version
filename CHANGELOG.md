@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.2.1](https://github.com/absolute-version/commit-and-tag-version/compare/v13.2.0...v13.2.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* bring back the blank line between release notes sections ([#341](https://github.com/absolute-version/commit-and-tag-version/issues/341)) ([4248f1a](https://github.com/absolute-version/commit-and-tag-version/commit/4248f1ab142784e84b4dc3fb19d02a25b92705a3))
+
 ## [13.2.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.1.2...v13.2.0) (2026-09-08)
 
 
