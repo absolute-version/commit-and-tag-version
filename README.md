@@ -225,6 +225,8 @@ You can override both [parser](https://github.com/conventional-changelog/convent
 }
 ```
 
+`parser` and `writer` are accepted as aliases of `parserOpts` and `writerOpts`, matching the shape of presets built on conventional-changelog 7+, so such a preset can be used directly as the configuration (e.g. `commit-and-tag-version --config ./my-preset.js`). If both are set, `parserOpts`/`writerOpts` take precedence.
+
 ## CLI Usage
 
 > **NOTE:** To pass nested configurations to the CLI without defining them in the `package.json` use dot notation as the parameters `e.g. --skip.changelog`.

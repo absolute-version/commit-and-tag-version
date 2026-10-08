@@ -90,6 +90,43 @@ export default {
     expect(output).not.toContain('commitPartial is not a function');
   });
 
+  it('uses the parser and writer options of a preset used as the config', function () {
+    // conventional-changelog >= 7 presets return `parser` and `writer`
+    // instead of `parserOpts` and `writerOpts` (#328).
+    fs.writeFileSync(
+      '.versionrc.js',
+      `import createPreset from 'conventional-changelog-conventionalcommits'
+
+export default function () {
+  return createPreset({
+    types: [{ type: 'feat', section: 'Shiny Features' }],
+  })
+}`,
+      'utf-8',
+    );
+    shell.exec('git commit --allow-empty -m"feat: add a shiny thing"');
+
+    const output = runCli();
+    expect(output).toContain('Shiny Features');
+    expect(output).toContain('add a shiny thing');
+  });
+
+  it('accepts `parser` options in place of `parserOpts`', function () {
+    fs.writeFileSync(
+      '.versionrc.js',
+      "export default { parser: { noteKeywords: ['HEADS-UP'] } }",
+      'utf-8',
+    );
+    shell.exec(
+      'git commit --allow-empty -m"fix: rename an option" -m"HEADS-UP: the old name is gone"',
+    );
+
+    const output = runCli();
+    expect(output).toContain(
+      'bumping version in package.json from 1.0.0 to 2.0.0',
+    );
+  });
+
   it('reads an ES module config from .versionrc.mjs', function () {
     fs.writeFileSync(
       '.versionrc.mjs',
