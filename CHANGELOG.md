@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.2.2](https://github.com/absolute-version/commit-and-tag-version/compare/v13.2.1...v13.2.2) (2026-10-13)
+
+
+### Bug Fixes
+
+* accept parser and writer options from conventional-changelog 7+ presets ([#351](https://github.com/absolute-version/commit-and-tag-version/issues/351)) ([18b7416](https://github.com/absolute-version/commit-and-tag-version/commit/18b7416bd86651b1b0a62af212165baba0e771a7)), closes [#328](https://github.com/absolute-version/commit-and-tag-version/issues/328)
+* list only the changes since the previous prerelease with the same name in each prerelease changelog section, instead of repeating everything since the last stable release. Stable releases, and the first prerelease with a new name, still list everything since the last stable release. (fixes [#349](https://github.com/absolute-version/commit-and-tag-version/issues/349)) ([#350](https://github.com/absolute-version/commit-and-tag-version/issues/350)) ([a95edce](https://github.com/absolute-version/commit-and-tag-version/commit/a95edce7b350bb31376a1fd9553d2a81b43fcbfc))
+
 ## [13.2.1](https://github.com/absolute-version/commit-and-tag-version/compare/v13.2.0...v13.2.1) (2026-09-14)
 
 
