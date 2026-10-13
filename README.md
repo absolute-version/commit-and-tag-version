@@ -244,7 +244,7 @@ commit-and-tag-version --first-release
 npx commit-and-tag-version --first-release
 ```
 
-This will tag a release **without bumping the version `bumpFiles`[1]()**.
+This will tag a release **without bumping the version `bumpFiles`[1](<>)**.
 
 When you are ready, push the git tag and `npm publish` your first release. \o/
 
@@ -300,6 +300,29 @@ commit-and-tag-version --prerelease xyz  # Creates v1.4.3-xyz.1 (auto-incremente
 ```
 
 This behavior applies to both named prereleases (e.g., `-alpha.0`, `-beta.1`) and unnamed prereleases (e.g., `-0`, `-1`), ensuring that you can safely cut multiple prerelease versions without encountering git tag conflicts.
+
+#### What Each Changelog Section Covers
+
+Each release's changelog section starts where the previous release ended, and which earlier release counts as "previous" depends on what you are releasing:
+
+- A stable release covers everything since the last stable release, including changes that already appeared in prereleases.
+- A prerelease covers everything since the most recent tag that is either a stable release or a prerelease with the same name. Prereleases with other names are ignored.
+
+For example, starting from `v1.0.0`:
+
+```bash
+# feat: add a
+commit-and-tag-version --prerelease alpha  # v1.1.0-alpha.0 lists "add a"
+# feat: add b
+commit-and-tag-version --prerelease alpha  # v1.1.0-alpha.1 lists "add b" only
+# fix: correct c
+commit-and-tag-version --prerelease beta   # v1.1.0-beta.0 lists a, b and c: it is the first beta
+commit-and-tag-version                     # v1.1.0 lists a, b and c
+```
+
+The compare link in each heading starts from the same tag, so `v1.1.0-alpha.1` links to `v1.1.0-alpha.0...v1.1.0-alpha.1` and `v1.1.0` links to `v1.0.0...v1.1.0`.
+
+Unnamed prereleases (e.g., `-0`, `-1`) are treated as sharing one name.
 
 #### Keeping Prereleases out of a Final Changelog
 
@@ -665,7 +688,7 @@ module.exports.writeVersion = function (contents, version) {
 ### Why do breaking changes before 1.0.0 not trigger a 1.0.0 release?
 
 Below 1.0.0, the semver specification doesn't give any guarantees about the
-meaning of version numbers. 
+meaning of version numbers.
 
 However, with npm there is a community convention,
 and implementation-defined behaviour: If your version is between 0.1.0 and

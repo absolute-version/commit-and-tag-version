@@ -118,11 +118,50 @@ describe('prerelease bump and changelog windows (#310)', function () {
     runCli('--prerelease', 'dev');
     expect(tags()).toContain('v1.1.0-dev.1');
 
-    // Prerelease sections are cumulative: each one covers everything since
-    // the last stable release.
+    // Only the changes since the previous prerelease with this identifier
+    // are listed; the feat is already in the dev.0 section (#349).
     const devSection = changelogSection('1.1.0-dev.1');
-    expect(devSection).toContain('add feat');
+    expect(devSection).not.toContain('add feat');
     expect(devSection).toContain('add fix');
+    expect(devSection).toContain('v1.1.0-dev.0...v1.1.0-dev.1');
+    expect(changelogSection('1.1.0-dev.0')).toContain('add feat');
+  });
+
+  it('lists each change once across continued prereleases and again in the stable release', function () {
+    commit('feat: add a');
+    runCli('--prerelease', 'alpha');
+    commit('feat: add b');
+    runCli('--prerelease', 'alpha');
+    commit('fix: correct c');
+    runCli('--prerelease', 'alpha');
+
+    const prereleases = fs
+      .readFileSync('CHANGELOG.md', 'utf-8')
+      .split(/^#+ \[?1\.0\.0[\] ]/m)[0];
+    expect(prereleases.match(/add a/g)).toHaveLength(1);
+    expect(prereleases.match(/add b/g)).toHaveLength(1);
+    expect(prereleases.match(/correct c/g)).toHaveLength(1);
+
+    runCli();
+    const stableSection = changelogSection('1.1.0');
+    expect(stableSection).toContain('add a');
+    expect(stableSection).toContain('add b');
+    expect(stableSection).toContain('correct c');
+    expect(stableSection).toContain('v1.0.0...v1.1.0');
+  });
+
+  it('covers other prereleases when returning to an earlier identifier', function () {
+    commit('feat: add feat');
+    runCli('--prerelease', 'dev');
+    commit('fix: add fix');
+    runCli('--prerelease', 'rc');
+    commit('fix: second fix');
+    runCli('--prerelease', 'dev');
+
+    const devSection = changelogSection('1.1.0-dev.1');
+    expect(devSection).not.toContain('add feat');
+    expect(devSection).toContain('add fix');
+    expect(devSection).toContain('second fix');
   });
 
   it('escalates a continued prerelease when a bigger change lands', function () {
