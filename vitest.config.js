@@ -14,6 +14,7 @@ export default defineConfig({
         'test/**',
         'coverage/**',
         'bin/**',
+        '**/*.d.ts',
       ],
       reporter: ['lcov', 'text'],
     },
