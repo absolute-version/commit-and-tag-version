@@ -227,6 +227,18 @@ You can override both [parser](https://github.com/conventional-changelog/convent
 
 `parser` and `writer` are accepted as aliases of `parserOpts` and `writerOpts`, matching the shape of presets built on conventional-changelog 7+, so such a preset can be used directly as the configuration (e.g. `commit-and-tag-version --config ./my-preset.js`). If both are set, `parserOpts`/`writerOpts` take precedence.
 
+Custom writer templates must be render functions rather than Handlebars strings; see the [v13 migration guide](MIGRATION.md#custom-writer-templates-use-render-functions). The official [`@conventional-changelog/template`](https://conventional-changelog.js.org/template/) helpers are re-exported from this package, so they can be imported without installing anything else — including under strict package managers such as pnpm:
+
+```js
+import { words } from 'commit-and-tag-version/template';
+
+function commitPartial(_context, commit) {
+  return words(commit.subject || commit.header, commit.shortHash);
+}
+
+export default { writerOpts: { commitPartial } };
+```
+
 ## CLI Usage
 
 > **NOTE:** To pass nested configurations to the CLI without defining them in the `package.json` use dot notation as the parameters `e.g. --skip.changelog`.

@@ -82,7 +82,13 @@ export default {
 
 If you customized the main template, implement `template(context)` as well instead of continuing to use `mainTemplate`.
 
-ESM `.versionrc.js` and `.versionrc.mjs` configurations require [`commit-and-tag-version` 13.1.0](https://github.com/absolute-version/commit-and-tag-version/releases/tag/v13.1.0) or newer. Although `@conventional-changelog/template` is a direct dependency of `commit-and-tag-version`, a configuration file that imports it directly should also declare it as a direct dependency of the user project. This is required by strict dependency managers such as pnpm.
+ESM `.versionrc.js` and `.versionrc.mjs` configurations require [`commit-and-tag-version` 13.1.0](https://github.com/absolute-version/commit-and-tag-version/releases/tag/v13.1.0) or newer. From 13.3.0 the same helpers are re-exported as `commit-and-tag-version/template`, so a configuration file can import them without adding another dependency:
+
+```js
+import { words } from 'commit-and-tag-version/template';
+```
+
+If you import `@conventional-changelog/template` directly instead, declare it as a direct dependency of the user project. Strict dependency managers such as pnpm require it.
 
 ### Behaviour that is intentionally preserved
 
