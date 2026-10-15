@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.2.2...v13.3.0) (2026-10-15)
+
+
+### Features
+
+* **template:** expose the template helpers as a subpath export ([#357](https://github.com/absolute-version/commit-and-tag-version/issues/357)) ([0990f12](https://github.com/absolute-version/commit-and-tag-version/commit/0990f126f8dd3b6fa2a08b0feabc53a44dda12a3)), closes [#323](https://github.com/absolute-version/commit-and-tag-version/issues/323)
+
 ## [13.2.2](https://github.com/absolute-version/commit-and-tag-version/compare/v13.2.1...v13.2.2) (2026-10-13)
 
 
