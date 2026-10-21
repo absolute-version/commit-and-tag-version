@@ -1,13 +1,10 @@
-import { createRequire } from 'module';
 import spec from 'conventional-changelog-config-spec';
+import yargsFactory from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { getConfiguration } from './lib/configuration.js';
 import defaults from './defaults.js';
 
-const require = createRequire(import.meta.url);
-
-// Load the CommonJS build of yargs: the yargs ESM entrypoint does not provide
-// the argv singleton, and its help output wraps differently.
-const yargs = require('yargs')
+const yargs = yargsFactory(hideBin(process.argv))
   .usage('Usage: $0 [options]')
   .option('packageFiles', {
     default: defaults.packageFiles,
