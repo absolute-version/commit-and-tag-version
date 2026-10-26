@@ -67,7 +67,7 @@
     "dotgitignore": "^2.1.0",
     "fast-xml-parser": "^5.10.1",
     "figures": "^6.1.0",
-    "find-up": "^5.0.0",
+    "find-up": "^8.0.0",
     "semver": "^7.7.2",
     "yaml": "^2.9.0",
     "yargs": "^17.7.2"
