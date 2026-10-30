@@ -150,4 +150,40 @@ describe('config files', function () {
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
     expect(content).toContain(issueUrlFormat);
   });
+
+  it('merges multiple config files via getConfiguration (later overrides earlier)', async function () {
+    const issueUrlFormat = 'http://www.merged.com/{{id}}';
+    const changelog = ({ preset }) => preset.issueUrlFormat;
+    mock({ bump: 'minor', changelog });
+    fs.mkdirSync('shared');
+    fs.mkdirSync('pkg');
+    fs.writeFileSync(
+      'shared/.versionrc.json',
+      JSON.stringify({
+        issueUrlFormat: 'http://www.shared.com/{{id}}',
+        skip: { tag: true },
+      }),
+      'utf-8',
+    );
+    fs.writeFileSync(
+      'pkg/.versionrc.json',
+      JSON.stringify({ issueUrlFormat }),
+      'utf-8',
+    );
+
+    vi.resetModules();
+    const { getConfiguration } = await import('../lib/configuration.js');
+    const config = getConfiguration([
+      'shared/.versionrc.json',
+      'pkg/.versionrc.json',
+    ]);
+    const { default: standardVersion } = await import('../index');
+    await standardVersion({
+      ...config,
+      skip: { commit: true, tag: true },
+    });
+    const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
+    expect(content).toContain(issueUrlFormat);
+    expect(content).not.toContain('http://www.shared.com/{{id}}');
+  });
 });
