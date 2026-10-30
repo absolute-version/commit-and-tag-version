@@ -227,6 +227,22 @@ You can override both [parser](https://github.com/conventional-changelog/convent
 
 `parser` and `writer` are accepted as aliases of `parserOpts` and `writerOpts`, matching the shape of presets built on conventional-changelog 7+, so such a preset can be used directly as the configuration (e.g. `commit-and-tag-version --config ./my-preset.js`). If both are set, `parserOpts`/`writerOpts` take precedence.
 
+You can also pass commit-fetch options through to conventional-changelog via `gitRawCommitsOpts` (or the modern `commits` alias). This is useful for including extra git fields such as author name/email so a custom writer template can render them (#197):
+
+```js
+export default {
+  gitRawCommitsOpts: {
+    format:
+      '%B%n-hash-%n%H%n-gitTags-%n%d%n-committerDate-%n%ci%n-authorName-%n%an%n-authorEmail-%n%ae',
+  },
+  writerOpts: {
+    // commit.authorName / commit.authorEmail are then available
+  },
+};
+```
+
+`commits` is accepted as an alias of `gitRawCommitsOpts`. If both are set, `gitRawCommitsOpts` takes precedence. Lifecycle-owned fields (`path`, and `merges` for changelog generation) always win over user overrides.
+
 Custom writer templates must be render functions rather than Handlebars strings; see the [v13 migration guide](MIGRATION.md#custom-writer-templates-use-render-functions). The official [`@conventional-changelog/template`](https://conventional-changelog.js.org/template/) helpers are re-exported from this package, so they can be imported without installing anything else — including under strict package managers such as pnpm:
 
 ```js

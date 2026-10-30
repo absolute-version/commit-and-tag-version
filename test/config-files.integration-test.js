@@ -150,4 +150,27 @@ describe('config files', function () {
     const content = fs.readFileSync('CHANGELOG.md', 'utf-8');
     expect(content).toContain(issueUrlFormat);
   });
+
+  it('passes gitRawCommitsOpts through to ConventionalChangelog.commits (#197)', async function () {
+    const format =
+      '%B%n-hash-%n%H%n-gitTags-%n%d%n-committerDate-%n%ci%n-authorName-%n%an%n-authorEmail-%n%ae';
+    let seenCommits;
+    mock({
+      bump: 'minor',
+      changelog: ({ commits }) => {
+        seenCommits = commits;
+        return '## changelog\n';
+      },
+    });
+    // Use `.versionrc` (not `.versionrc.js`) so findUp picks this file before
+    // the repo-root `.versionrc` when walking from the temp directory.
+    fs.writeFileSync(
+      '.versionrc',
+      JSON.stringify({ gitRawCommitsOpts: { format } }),
+      'utf-8',
+    );
+
+    await exec();
+    expect(seenCommits).toMatchObject({ format, merges: null });
+  });
 });
