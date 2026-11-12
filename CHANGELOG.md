@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.3.1](https://github.com/absolute-version/commit-and-tag-version/compare/v13.3.0...v13.3.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* use an explicit releaseAs version when the bump step is skipped ([#368](https://github.com/absolute-version/commit-and-tag-version/issues/368)) ([66b20aa](https://github.com/absolute-version/commit-and-tag-version/commit/66b20aa5181f6ee89346bd9249cdcc8915c3b7a3))
+
 ## [13.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.2.2...v13.3.0) (2026-10-15)
 
 
