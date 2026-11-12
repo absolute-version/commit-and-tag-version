@@ -471,6 +471,8 @@ by adding the following to your package.json:
 
 To set these options via the command line, use `commit-and-tag-version --skip.changelog`
 
+When the `bump` step is skipped, no files are updated and the remaining steps use the current version. If you also pass an explicit version with `--release-as` (e.g. `--skip.bump --release-as 1.5.0`), the changelog, commit and tag use that version instead.
+
 ### Committing Generated Artifacts in the Release Commit
 
 If you want to commit generated artifacts in the release commit, you can use the `--commit-all` or `-a` flag. You will need to stage the artifacts you want to commit, so your `release` command could look like this:
