@@ -405,9 +405,14 @@ commit-and-tag-version -c ./path/to/.versionrc[.js|.cjs|.mjs|.json]
 ```
 
 Pass `--config` / `-c` multiple times to merge configuration files. Files are
-applied in order, and later files override earlier ones (nested objects such as
-`skip` and `scripts` are shallow-merged). This is useful in a monorepo when each
-package has a small local config and shares common settings from the repo root:
+applied in order, and later files override earlier ones. Option names are normalized
+to camelCase before merging, so `tagPrefix` and `tag-prefix` refer to the same option.
+Nested objects such as `skip` and `scripts` are shallow-merged, but arrays such as
+`types` and `bumpFiles` are replaced, not combined. Explicit command-line options
+still take precedence over configuration files. If an explicitly specified config
+file cannot be found, a warning is printed and the remaining files are still loaded.
+This is useful in a monorepo when each package has a small local config and shares
+common settings from the repo root:
 
 ```sh
 commit-and-tag-version \

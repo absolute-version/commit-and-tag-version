@@ -4,6 +4,36 @@ import path from 'path';
 import { getConfiguration, mergeConfiguration } from '../lib/configuration.js';
 
 describe('mergeConfiguration', function () {
+  it.each([
+    ['tag-prefix', 'tagPrefix'],
+    ['tagPrefix', 'tag-prefix'],
+  ])('normalizes %s and %s before merging', function (firstKey, lastKey) {
+    expect(
+      mergeConfiguration(
+        { [firstKey]: 'shared@v', 'bump-files': ['package.json'] },
+        { [lastKey]: 'pkg@v', bumpFiles: ['Cargo.toml'] },
+      ),
+    ).toEqual({ tagPrefix: 'pkg@v', bumpFiles: ['Cargo.toml'] });
+  });
+
+  it('preserves nested keys and replaces types rather than combining them', function () {
+    expect(
+      mergeConfiguration(
+        {
+          types: [{ type: 'feat', section: 'Features' }],
+          scripts: { 'custom-hook': './shared.sh' },
+        },
+        {
+          types: [{ type: 'fix', section: 'Fixes' }],
+          scripts: { postbump: './pkg.sh' },
+        },
+      ),
+    ).toEqual({
+      types: [{ type: 'fix', section: 'Fixes' }],
+      scripts: { 'custom-hook': './shared.sh', postbump: './pkg.sh' },
+    });
+  });
+
   it('shallow-merges nested plain objects and replaces other values', function () {
     expect(
       mergeConfiguration(
@@ -111,9 +141,47 @@ describe('getConfiguration', function () {
     });
   });
 
-  it('throws when an explicit config path cannot be found', function () {
-    expect(() => getConfiguration('missing/.versionrc.json')).toThrow(
-      /Configuration file `missing\/\.versionrc\.json` was not found/,
+  it('warns and returns an empty config when an explicit path cannot be found', function () {
+    fs.writeFileSync(
+      '.versionrc.json',
+      JSON.stringify({ tagPrefix: 'default@v' }),
     );
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      expect(getConfiguration('missing/.versionrc.json')).toEqual({});
+      expect(warn).toHaveBeenCalledExactlyOnceWith(
+        '[commit-and-tag-version] Configuration file `missing/.versionrc.json` was not found.',
+      );
+    } finally {
+      warn.mockRestore();
+    }
   });
+
+  it.each([0, 1, 2])(
+    'skips a missing config at index %i and loads the others',
+    function (index) {
+      fs.writeFileSync(
+        'first.json',
+        JSON.stringify({ tagPrefix: 'first@v', skip: { tag: true } }),
+      );
+      fs.writeFileSync(
+        'last.json',
+        JSON.stringify({ tagPrefix: 'last@v', skip: { commit: true } }),
+      );
+      const files = ['first.json', 'last.json'];
+      files.splice(index, 0, 'missing.json');
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      try {
+        expect(getConfiguration(files)).toEqual({
+          tagPrefix: 'last@v',
+          skip: { tag: true, commit: true },
+        });
+        expect(warn).toHaveBeenCalledExactlyOnceWith(
+          '[commit-and-tag-version] Configuration file `missing.json` was not found.',
+        );
+      } finally {
+        warn.mockRestore();
+      }
+    },
+  );
 });
