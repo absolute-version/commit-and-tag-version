@@ -228,9 +228,9 @@ The values the changelog template renders from can be overridden with the
 ```
 
 `linkCompare` controls the link on the version heading, and `linkReferences`
-controls the commit hash and `closes #123` links. Any other key is passed to the
+controls the commit hash and `closes #123` links. The `version` key is overwritten by commit-and-tag-version, any other key is passed to the
 [conventional-changelog writer context](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer)
-unchanged. The `version` is always the version being released.
+unchanged.
 
 ### Deeper customization
 
