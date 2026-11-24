@@ -211,6 +211,27 @@ Suppose you're using GitLab, rather than GitHub, you might modify the following 
 
 Making these URLs match GitLab's format, rather than GitHub's.
 
+### Overriding the changelog context
+
+The values the changelog template renders from can be overridden with the
+`context` option. For example, to generate a changelog without link markup:
+
+```json
+{
+  "commit-and-tag-version": {
+    "context": {
+      "linkCompare": false,
+      "linkReferences": false
+    }
+  }
+}
+```
+
+`linkCompare` controls the link on the version heading, and `linkReferences`
+controls the commit hash and `closes #123` links. The `version` key is overwritten by commit-and-tag-version, any other key is passed to the
+[conventional-changelog writer context](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer)
+unchanged.
+
 ### Deeper customization
 
 You can override both [parser](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-commits-parser) and [writer](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer) options (they will be merged into the preset we just mentioned). As an example, to list commits in the order that they were committed:
@@ -486,6 +507,8 @@ by adding the following to your package.json:
 ```
 
 To set these options via the command line, use `commit-and-tag-version --skip.changelog`
+
+When the `bump` step is skipped, no files are updated and the remaining steps use the current version. If you also pass an explicit version with `--release-as` (e.g. `--skip.bump --release-as 1.5.0`), the changelog, commit and tag use that version instead.
 
 ### Committing Generated Artifacts in the Release Commit
 

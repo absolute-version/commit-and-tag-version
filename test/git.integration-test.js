@@ -216,6 +216,16 @@ describe('git', function () {
     expect(shell.exec('git describe').stdout).toMatch(/v1\.1\.0/);
   });
 
+  it('uses an explicit releaseAs version when the bump is skipped', async function () {
+    mock({ bump: 'minor' });
+    await exec('--skip.bump --release-as 1.5.0');
+    expect(getPackageVersion()).toEqual('1.0.0');
+    expect(shell.exec('git describe').stdout).toMatch(/v1\.5\.0/);
+    expect(shell.exec('git log --oneline -n1').stdout).toMatch(
+      /chore\(release\): 1\.5\.0/,
+    );
+  });
+
   it('allows the commit phase to be skipped', async function () {
     const changelogContent = 'legacy header format<a name="1.0.0">\n';
     writePackageJson('1.0.0');

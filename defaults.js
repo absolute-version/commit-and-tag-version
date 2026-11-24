@@ -18,6 +18,7 @@ const defaults = {
   preset: 'conventional-changelog-conventionalcommits',
   npmPublishHint: undefined,
   config: undefined,
+  context: {},
 };
 
 /**
