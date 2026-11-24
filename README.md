@@ -211,6 +211,27 @@ Suppose you're using GitLab, rather than GitHub, you might modify the following 
 
 Making these URLs match GitLab's format, rather than GitHub's.
 
+### Overriding the changelog context
+
+The values the changelog template renders from can be overridden with the
+`context` option. For example, to generate a changelog without link markup:
+
+```json
+{
+  "commit-and-tag-version": {
+    "context": {
+      "linkCompare": false,
+      "linkReferences": false
+    }
+  }
+}
+```
+
+`linkCompare` controls the link on the version heading, and `linkReferences`
+controls the commit hash and `closes #123` links. The `version` key is overwritten by commit-and-tag-version, any other key is passed to the
+[conventional-changelog writer context](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer)
+unchanged.
+
 ### Deeper customization
 
 You can override both [parser](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-commits-parser) and [writer](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer) options (they will be merged into the preset we just mentioned). As an example, to list commits in the order that they were committed:
@@ -226,6 +247,22 @@ You can override both [parser](https://github.com/conventional-changelog/convent
 ```
 
 `parser` and `writer` are accepted as aliases of `parserOpts` and `writerOpts`, matching the shape of presets built on conventional-changelog 7+, so such a preset can be used directly as the configuration (e.g. `commit-and-tag-version --config ./my-preset.js`). If both are set, `parserOpts`/`writerOpts` take precedence.
+
+You can also pass commit-fetch options through to conventional-changelog via `gitRawCommitsOpts` (or the modern `commits` alias). This is useful for including extra git fields such as author name/email so a custom writer template can render them (#197):
+
+```js
+export default {
+  gitRawCommitsOpts: {
+    format:
+      '%B%n-hash-%n%H%n-gitTags-%n%d%n-committerDate-%n%ci%n-authorName-%n%an%n-authorEmail-%n%ae',
+  },
+  writerOpts: {
+    // commit.authorName / commit.authorEmail are then available
+  },
+};
+```
+
+`commits` is accepted as an alias of `gitRawCommitsOpts`. If both are set, `gitRawCommitsOpts` takes precedence. Lifecycle-owned fields (`path`, and `merges` for changelog generation) always win over user overrides.
 
 Custom writer templates must be render functions rather than Handlebars strings; see the [v13 migration guide](MIGRATION.md#custom-writer-templates-use-render-functions). The official [`@conventional-changelog/template`](https://conventional-changelog.js.org/template/) helpers are re-exported from this package, so they can be imported without installing anything else — including under strict package managers such as pnpm:
 
@@ -486,6 +523,8 @@ by adding the following to your package.json:
 ```
 
 To set these options via the command line, use `commit-and-tag-version --skip.changelog`
+
+When the `bump` step is skipped, no files are updated and the remaining steps use the current version. If you also pass an explicit version with `--release-as` (e.g. `--skip.bump --release-as 1.5.0`), the changelog, commit and tag use that version instead.
 
 ### Committing Generated Artifacts in the Release Commit
 

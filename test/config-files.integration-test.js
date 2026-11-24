@@ -186,4 +186,27 @@ describe('config files', function () {
     expect(content).toContain(issueUrlFormat);
     expect(content).not.toContain('http://www.shared.com/{{id}}');
   });
+
+  it('passes gitRawCommitsOpts through to ConventionalChangelog.commits (#197)', async function () {
+    const format =
+      '%B%n-hash-%n%H%n-gitTags-%n%d%n-committerDate-%n%ci%n-authorName-%n%an%n-authorEmail-%n%ae';
+    let seenCommits;
+    mock({
+      bump: 'minor',
+      changelog: ({ commits }) => {
+        seenCommits = commits;
+        return '## changelog\n';
+      },
+    });
+    // Use `.versionrc` (not `.versionrc.js`) so findUp picks this file before
+    // the repo-root `.versionrc` when walking from the temp directory.
+    fs.writeFileSync(
+      '.versionrc',
+      JSON.stringify({ gitRawCommitsOpts: { format } }),
+      'utf-8',
+    );
+
+    await exec();
+    expect(seenCommits).toMatchObject({ format, merges: null });
+  });
 });
