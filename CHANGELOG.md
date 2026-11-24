@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.4.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.3.0...v13.4.0) (2026-11-24)
+
+
+### Features
+
+* **changelog:** allow overriding the changelog context ([#370](https://github.com/absolute-version/commit-and-tag-version/issues/370)) ([f4be71f](https://github.com/absolute-version/commit-and-tag-version/commit/f4be71ff0d05b44bceae1fea78523f67d1986e3c))
+* pass gitRawCommitsOpts through to changelog and bump ([#367](https://github.com/absolute-version/commit-and-tag-version/issues/367)) ([2d37feb](https://github.com/absolute-version/commit-and-tag-version/commit/2d37feb551160c4dbbd9b07e790557cac16f9bb6)), closes [#197](https://github.com/absolute-version/commit-and-tag-version/issues/197)
+
+
+### Bug Fixes
+
+* use an explicit releaseAs version when the bump step is skipped ([#368](https://github.com/absolute-version/commit-and-tag-version/issues/368)) ([66b20aa](https://github.com/absolute-version/commit-and-tag-version/commit/66b20aa5181f6ee89346bd9249cdcc8915c3b7a3))
+
 ## [13.3.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.2.2...v13.3.0) (2026-10-15)
 
 
