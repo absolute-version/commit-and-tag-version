@@ -33,7 +33,7 @@
     "url": "git+https://github.com/absolute-version/commit-and-tag-version.git"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12.0"
   },
   "keywords": [
     "conventional-changelog",

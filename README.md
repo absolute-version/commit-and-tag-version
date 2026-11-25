@@ -190,7 +190,7 @@ You can configure `commit-and-tag-version` either by:
 
 2. Creating a `.versionrc`, `.versionrc.json`, `.versionrc.js`, `.versionrc.cjs` or `.versionrc.mjs`.
 
-- If you are using a `.versionrc.js`, `.versionrc.cjs` or `.versionrc.mjs` your default export must be a configuration object, or a function returning a configuration object. Both CommonJS and ES module configs are supported (ES module configs require Node.js >= 22.12).
+- If you are using a `.versionrc.js`, `.versionrc.cjs` or `.versionrc.mjs` your default export must be a configuration object, or a function returning a configuration object. Both CommonJS and ES module configs are supported.
 
 Any of the command line parameters accepted by `commit-and-tag-version` can instead
 be provided via configuration. Please refer to the [conventional-changelog-config-spec](https://github.com/conventional-changelog/conventional-changelog-config-spec/) for details on available configuration options.
