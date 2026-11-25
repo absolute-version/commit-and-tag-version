@@ -136,9 +136,11 @@ const yargs = createYargs(hideBin(process.argv))
   })
   .option('config', {
     type: 'string',
+    array: true,
     default: defaults.config,
     alias: 'c',
-    describe: 'Path to a custom configuration file',
+    describe:
+      'Path to a custom configuration file; pass multiple times to merge configs (later files override earlier ones)',
   })
   .option('noBumpWhenEmptyChanges', {
     type: 'boolean',
