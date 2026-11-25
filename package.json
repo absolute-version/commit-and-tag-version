@@ -63,18 +63,18 @@
     "conventional-changelog-conventionalcommits": "10.4.0",
     "conventional-recommended-bump": "12.1.0",
     "detect-indent": "^7.0.2",
-    "detect-newline": "^3.1.0",
+    "detect-newline": "^4.0.1",
     "dotgitignore": "^2.1.0",
     "fast-xml-parser": "^5.11.2",
     "figures": "^6.1.0",
-    "find-up": "^5.0.0",
+    "find-up": "^8.0.0",
     "semver": "^7.7.2",
     "yaml": "^2.9.0",
-    "yargs": "^17.7.2"
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@vitest/coverage-istanbul": "^4.1.11",
+    "@vitest/coverage-istanbul": "^5.1.1",
     "@vitest/eslint-plugin": "^1.6.27",
     "conventional-changelog-angular": "^9.4.0",
     "eslint": "^10.8.1",
@@ -85,6 +85,6 @@
     "prettier": "^3.9.10",
     "shelljs": "^0.10.0",
     "strip-ansi": "^7.2.0",
-    "vitest": "^4.1.0"
+    "vitest": "^5.1.1"
   }
 }
