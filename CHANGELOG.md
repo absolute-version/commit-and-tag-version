@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.5.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.4.0...v13.5.0) (2026-11-25)
+
+
+### Features
+
+* **config:** support multiple --config files ([#366](https://github.com/absolute-version/commit-and-tag-version/issues/366)) ([3322a9f](https://github.com/absolute-version/commit-and-tag-version/commit/3322a9f3ca68840fb07419465ef588d96408f0b5))
+
 ## [13.4.0](https://github.com/absolute-version/commit-and-tag-version/compare/v13.3.0...v13.4.0) (2026-11-24)
 
 
